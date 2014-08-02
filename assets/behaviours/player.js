@@ -8,7 +8,7 @@ var Player = function(_gameobject) {
   this.speed = 200;
   this.acc = 10;
   this.dead = false;
-  this.jumpPower = 400;
+  this.jumpPower = 300;
 
 	this.cursors = this.go.game.input.keyboard.createCursorKeys();
 
@@ -147,13 +147,14 @@ Player.prototype.die = function(){
       this);
 }
 
-Player.prototype.finish = function(){  
+//Called by a trigger finish (in general)
+Player.prototype.finish = function(_data){  
   this.entity.animations.play('win', 10, true);
   this.enabled = false;
   //set a timer
   this.entity.game.time.events.add(
     Phaser.Timer.SECOND * 3, 
-    function(){ this.entity.game.state.start("Level",true,false,{levelName: "landing"});},
+    function(){ this.entity.game.state.start("Level",true,false,{levelName: _data.level});},
     this);
 }
 
