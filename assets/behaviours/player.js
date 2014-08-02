@@ -153,7 +153,7 @@ Player.prototype.finish = function(_data){
   this.enabled = false;
   //set a timer
   this.entity.game.time.events.add(
-    Phaser.Timer.SECOND * 3, 
+    Phaser.Timer.SECOND * 0.1, 
     function(){ this.entity.game.state.start("Level",true,false,{levelName: _data.level});},
     this);
 }
