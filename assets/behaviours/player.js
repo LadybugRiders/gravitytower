@@ -40,6 +40,7 @@ var Player = function(_gameobject) {
   //State
   this.state = "idle";
   this.lastState = this.state;
+
 };
 
 Player.prototype = Object.create(LR.Behaviour.prototype);
@@ -65,6 +66,7 @@ Player.prototype.postUpdate = function(){
 
 //This method is automatically called when the body of the player collides with another cody
 Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
+  console.log(this.go.layer + " " + _otherBody.go.layer);
   //if the collision is from the feet shape
   if( _myShape == this.feetSensor ){
     if( _otherBody.go.layer == "ground" ||_otherBody.go.layer == "box"){

@@ -35,20 +35,20 @@ GravityZone.prototype.update = function(){
             var centerinZone = ( colObj.x >= this.left ) && ( colObj.x <= this.right );
    			//verify if its center is in the zone
             if( centerinZone ){       
-               //remove it from the collidings to check           
-               //this.collidingObjects.splice(i,1);
                //change gravity according to delta to the object's gravity point
                this.changeGravity(colObj)
             }
    		}else{
+            //when out, remove
             this.collidingObjects.splice(i,1);
    		}
    }
 }
 
 GravityZone.prototype.onBeginContact = function(_otherbody,_myshape, _othershape, _equation){
+   
    var gravityReact = _otherbody.go.getBehaviour(GravityReact);
-   if( _otherbody.go.layer == "player" )//|| gravityReact != null )
+   if( _otherbody.go.layer == "player" || gravityReact != null )
   	   this.collidingObjects.push(_otherbody.go);
 }
 
