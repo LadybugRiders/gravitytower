@@ -47,7 +47,11 @@ GravityZone.prototype.update = function(){
 
 GravityZone.prototype.onBeginContact = function(_otherbody,_myshape, _othershape, _equation){
    
-   var gravityReact = _otherbody.go.getBehaviour(GravityReact);
+   var gravityReact = null 
+   try{ 
+      gravityReact = _otherbody.go.getBehaviour(GravityReact);
+   }catch(e){}
+
    if( _otherbody.go.layer == "player" || gravityReact != null )
   	   this.collidingObjects.push(_otherbody.go);
 }
