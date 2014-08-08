@@ -22,7 +22,8 @@ var Player = function(_gameobject) {
 
   //============= INPUTS =======================
   //use the inputManager to be notified when the JUMP key is pressed
-  this.go.game.inputManager.bindKeyPress("jump",this.jump,this);
+  this.go.game.inputManager.bindKeyPress("jump",this.onJump,this);
+  this.go.game.inputManager.bindKeyRelease("jump",this.onJumpRelease,this);
   //press to move
   this.go.game.inputManager.bindKeyPress("left", this.onMoveLeft, this);
   this.go.game.inputManager.bindKeyPress("right", this.onMoveRight, this);
@@ -32,6 +33,11 @@ var Player = function(_gameobject) {
 
   //inputs variables
   this.isMovePressed = false;
+  this.isJumpPressed = false;
+
+  //Allowing variables
+  this.canJump = true;
+  this.canMove = true;
 
   //Make camera follow the player
   this.entity.game.camera.bounds = null;
@@ -55,6 +61,8 @@ Player.prototype.update = function() {
     return;
   switch(this.state){
     case "run" : this.updateRun(); 
+      break;
+    case "jump" : this.updateJump();
       break;
   }
 }
@@ -93,6 +101,14 @@ Player.prototype.updateRun = function(){
   this.entity.body.velocity.x = this.direction * this.speed;
 }
 
+Player.prototype.updateJump = function(){
+  //wait for the body to fall (according to gravity)
+  //when this.fall is called, the state changes, so updateJump is not called anymore
+  if( this.entity.body.velocity.y * this.gravity < 0){
+    this.fall();
+  }
+}
+
 Player.prototype.updateHair = function(){  
   this.hair.x = this.go.x;
   this.hair.y = this.go.y;
@@ -107,21 +123,46 @@ Player.prototype.updateHair = function(){
 
 Player.prototype.onMoveLeft = function(_key){
   this.isMovePressed = true;
+  if( ! this.canMove ){
+    return;
+  }
   this.run(-1);
   this.scaleByGravity();
 }
 
 Player.prototype.onMoveRight = function(_key){
-  this.isMovePressed = true;
+  this.isMovePressed = true;  
+  if( ! this.canMove ){
+    return;
+  }
   this.run(1);
   this.scaleByGravity();
 }
 
 Player.prototype.onMoveRelease = function(){
   this.isMovePressed = false;
+
+  if( ! this.canMove )
+    return;
+
   if( this.onGround ){
     this.idleize();
   }
+}
+
+Player.prototype.onJump = function(_key){
+  this.isJumpPressed = true;
+
+  if( ! this.canJump )
+    return;
+
+  this.jump();
+}
+
+Player.prototype.onJumpRelease = function(_key){
+  this.isJumpPressed = false;
+  if( ! this.canJump )
+    return;
 }
 
 Player.prototype.idleize = function(_key){
@@ -142,10 +183,17 @@ Player.prototype.idle = function(_direction){
   this.go.entity.scale.x = this.direction * this.gravity;
   this.scaleByGravity();
 
+      console.log("ok");
   this.entity.animations.play('idle');
-  this.hair.entity.play('idle');
+  this.hair.entity.animations.play('idle');
 
   this.preBlink();
+}
+
+Player.prototype.fall = function(){
+  this.changeState("fall");
+  this.entity.play("fall");
+  this.onGround = false;
 }
 
 
