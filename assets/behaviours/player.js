@@ -8,6 +8,7 @@ var Player = function(_gameobject) {
   //Speed Values
   this.baseSpeed = 200;
   this.speed = this.baseSpeed;
+  this.airSpeed = this.speed;
   this.acc = 10;
 
   this.dead = false;
@@ -126,7 +127,11 @@ Player.prototype.onMoveLeft = function(_key){
   if( ! this.canMove ){
     return;
   }
-  this.run(-1);
+  if( this.onGround ){
+    this.run(-1);
+  }else{
+    this.runAir(-1,this.airSpeed)
+  }
   this.scaleByGravity();
 }
 
@@ -135,7 +140,11 @@ Player.prototype.onMoveRight = function(_key){
   if( ! this.canMove ){
     return;
   }
-  this.run(1);
+  if( this.onGround ){
+    this.run(1);
+  }else{
+    this.runAir(1,this.airSpeed);
+  }
   this.scaleByGravity();
 }
 
@@ -147,6 +156,8 @@ Player.prototype.onMoveRelease = function(){
 
   if( this.onGround ){
     this.idleize();
+  }else{
+    this.airSpeed = this.speed * 0.5;
   }
 }
 
@@ -183,7 +194,6 @@ Player.prototype.idle = function(_direction){
   this.go.entity.scale.x = this.direction * this.gravity;
   this.scaleByGravity();
 
-      console.log("ok");
   this.entity.animations.play('idle');
   this.hair.entity.animations.play('idle');
 
@@ -208,7 +218,17 @@ Player.prototype.run = function(_direction, _speed ){
   //play hair anim
   this.hair.entity.play('run');
 
-  this.entity.body.velocity.x = this.direction * _speed;
+  this.entity.body.velocity.x = this.direction * _speed ;
+}
+
+Player.prototype.runAir = function(_direction, _speed ){
+
+  if( _direction != null ) this.direction = _direction;
+  if( _speed == null ) _speed = this.speed;
+
+  console.log(_speed);
+  
+  this.entity.body.velocity.x = this.direction * _speed ;
 }
 
 
@@ -220,6 +240,8 @@ Player.prototype.jump = function(_force){
     this.go.body.velocity.y = -this.jumpPower * this.gravity;
     this.entity.animations.play('jump');
     this.scaleByGravity();
+    //affect air moving speed
+    this.airSpeed = this.isMovePressed ? this.speed : this.speed * 0.5;
   }
 }
 
