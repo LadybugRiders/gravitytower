@@ -11,6 +11,9 @@ var Player = function(_gameobject) {
   this.airSpeed = this.speed;
   this.acc = 10;
 
+  this.onGround = false;
+  this.groundContacts = 0;
+
   this.dead = false;
   this.jumpPower = 300;
   this.gravity = 1;
@@ -77,7 +80,8 @@ Player.prototype.postUpdate = function(){
 Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
   //if the collision is from the feet shape
   if( _myShape == this.feetSensor ){
-    if( _otherBody.go.layer == "ground" ||_otherBody.go.layer == "box"){
+    if( this.isLayerGround(_otherBody.go.layer) ){
+      this.groundContacts ++;
       this.onGround = true;
       if( this.isMovePressed )
         this.run();
@@ -92,6 +96,16 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
       this.die();
     }
   }
+}
+
+Player.prototype.onEndContact = function(contactData){
+  if( contactData.myShape == this.feetSensor && this.isLayerGround(contactData.otherBody.go.layer) ){
+    this.groundContacts --;
+    if( this.groundContacts == 0 && this.state != "jump"){
+      this.fall();
+    }
+  }
+  //console.log("endPlayer " + contactData.otherBody.go.name);
 }
 
 //=========================================================
@@ -225,8 +239,6 @@ Player.prototype.runAir = function(_direction, _speed ){
 
   if( _direction != null ) this.direction = _direction;
   if( _speed == null ) _speed = this.speed;
-
-  console.log(_speed);
   
   this.entity.body.velocity.x = this.direction * _speed ;
 }
@@ -328,4 +340,8 @@ Player.prototype.scaleByGravity = function(){
 Player.prototype.changeState = function(_newState){
   this.lastState = this.state;
   this.state = _newState;
+}
+
+Player.prototype.isLayerGround = function( _layer ){
+  return _layer == "ground" || _layer == "box";
 }
