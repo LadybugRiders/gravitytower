@@ -23,7 +23,7 @@ GravityReact.prototype.changeGravity = function(_data){
     	return;
  	//keep and apply gravity
 	this.gravity = _data.gravity < 0 ? -1 : 1;
-	this.entity.body.data.gravityScale = _data.gravity;
+	this.go.gravity = _data.gravity;
 	//rotate
 	if( this.rotate == true ){
 	  var angle = _data.gravity < 0 ? 180 : 0;

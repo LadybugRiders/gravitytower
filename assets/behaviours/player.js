@@ -116,7 +116,7 @@ Player.prototype.updateRun = function(){
   this.entity.body.velocity.x = this.direction * this.speed;
 }
 
-Player.prototype.updateJump = function(){
+Player.prototype.updateJump = function(){  
   //wait for the body to fall (according to gravity)
   //when this.fall is called, the state changes, so updateJump is not called anymore
   if( this.entity.body.velocity.y * this.gravity < 0){
@@ -193,6 +193,27 @@ Player.prototype.onJumpRelease = function(_key){
 Player.prototype.idleize = function(_key){
   this.idle();
   this.scaleByGravity();
+}
+
+//=========================================================
+//                  EXTERNAL CALLBACKS
+//=========================================================
+
+Player.prototype.onHang = function(){
+  this.changeState("hanged");
+  this.canMove = false;
+  this.canJump = false;
+  this.entity.body.setZeroVelocity();
+}
+
+Player.prototype.onReleaseHang = function(_gravity,_vector){
+  this.changeState("jump");
+  this.canMove = true;
+  this.canJump = true;
+  this.changeGravity( { "gravity":_gravity });
+  console.log(_vector);
+  this.entity.body.velocity.x = _vector.x * 200;
+  this.entity.body.velocity.y = _vector.y * -200;
 }
 
 //=========================================================
@@ -318,9 +339,12 @@ Player.prototype.finish = function(_data){
 
 // Change gravity. An object is passed as a parameter and contains the new gravity
 Player.prototype.changeGravity = function(_data){
+  if( ! this.isGravityAffected ){
+    return;
+  }
   //keep and apply gravity
   this.gravity = _data.gravity < 0 ? -1 : 1;
-  this.entity.body.data.gravityScale = _data.gravity;
+  this.go.gravity = _data.gravity;
   //rotate
   var angle = _data.gravity < 0 ? 180 : 0;
   this.entity.body.angle = angle;
@@ -345,3 +369,11 @@ Player.prototype.changeState = function(_newState){
 Player.prototype.isLayerGround = function( _layer ){
   return _layer == "ground" || _layer == "box";
 }
+
+Object.defineProperty( Player.prototype, "isGravityAffected",
+  {
+    get : function(){
+      return this.state != "hanged";
+    }
+  }
+);

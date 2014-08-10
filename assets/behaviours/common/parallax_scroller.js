@@ -16,7 +16,6 @@ LR.Behaviour.ParallaxScroller.prototype.constructor = LR.Behaviour.ParallaxScrol
 LR.Behaviour.ParallaxScroller.prototype.create = function(_data){
    if(_data.xParal != null) this.xParal = _data.xParal;
    if(_data.yParal != null) this.yParal = _data.yParal;
-   console.log(this.entity.type == Phaser.TILESPRITE);
 }
 
 LR.Behaviour.ParallaxScroller.prototype.update = function(){
