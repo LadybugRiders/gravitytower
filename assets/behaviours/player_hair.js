@@ -20,7 +20,7 @@ PlayerHair.prototype.update = function(){
 
 }
 
-PlayerHair.prototype.postUpdate = function(){
+PlayerHair.prototype.followPlayer = function(){
 
   this.go.x = this.player.go.x;
   this.go.y = this.player.go.y;
@@ -29,17 +29,31 @@ PlayerHair.prototype.postUpdate = function(){
   this.entity.angle = this.player.entity.angle;
 }
 
+PlayerHair.prototype.activatePower = function(_power){
+	switch( _power ){
+		case "hook" : this.hook();
+			break;
+	}
+}
+
 PlayerHair.prototype.idle = function(){
+	if( this.upgraded )
+		return;
 	this.entity.animations.play('idle');
+	this.state = "idle";
 }
 
 PlayerHair.prototype.run = function(){
+	if( this.upgraded )
+		return;
 	this.entity.animations.play('run');
+	this.state = "hook";
 }
 
 PlayerHair.prototype.hook = function(){
 	this.upgraded = true;
 	this.entity.animations.play('hook');
+	this.state = "hook";
 }
 
 

@@ -72,6 +72,10 @@ Player.prototype.update = function() {
   }
 }
 
+Player.prototype.postUpdate = function(){
+  this.hair.followPlayer();
+}
+
 //This method is automatically called when the body of the player collides with another cody
 Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
   //if the collision is from the feet shape
@@ -186,6 +190,10 @@ Player.prototype.idleize = function(_key){
 //=========================================================
 //                  EXTERNAL CALLBACKS
 //=========================================================
+
+Player.prototype.onActivatePower = function(_data){
+  this.hair.activatePower(_data.power);
+}
 
 Player.prototype.onHang = function(){
   this.changeState("hanged");
