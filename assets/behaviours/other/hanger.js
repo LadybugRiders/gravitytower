@@ -1,6 +1,7 @@
 "use strict";
 
 //>>LREditor.Behaviour.name: Hanger
+//>>LREditor.Behaviour.params : {"distance" : 30}
 var Hanger = function(_gameobject){
 	LR.Behaviour.call(this,_gameobject);
 	this.player = null;
@@ -14,7 +15,7 @@ var Hanger = function(_gameobject){
 	this.direction = 1;
 
 	this.speed = 150;
-	this.distance = 10;
+	this.distance = 30;
 
 	this.released = false;
 
@@ -25,6 +26,7 @@ Hanger.prototype = Object.create(LR.Behaviour.prototype);
 Hanger.prototype.constructor = Hanger;
 
 Hanger.prototype.create = function(_data){
+	if( _data.distance != null ) this.distance = _data.distance;
 }
 
 Hanger.prototype.update = function(){
@@ -65,33 +67,36 @@ Hanger.prototype.release = function(){
 		Phaser.Point.normalize(vector,vector);
 		//unhang the player
 		this.player.onReleaseHang(this.formerGrav, vector);	
-		this.player = null
+		this.player = null;
+		this.playerHair = null;
 		this.released = true;
 	}
 }
 
 //This method is automatically called when the body of the player collides with another cody
 Hanger.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
-	console.log("begin" + this.released + (this.player == null));
+	//console.log("begin" + this.released + (this.player == null));
   	if(_otherBody.go.layer == "player" && this.player == null && this.released == false){
-  	this.player = _otherBody.go.getBehaviour(Player);
 
-	  	if( this.player ){
+  		this.playerHair = _otherBody.go.getBehaviour(PlayerHair);
+
+	  	if( this.playerHair != null && this.playerHair.isHook ){
+  			this.player = this.playerHair.player;
 	  		this.player.onHang();
 
 	  		this.formerAngle = this.player.entity.angle;
 	  		this.formerGrav = this.player.go.gravity;
 
 	  		this.player.go.gravity = 0;
-	  		//keep base player position
-	  		this.playerBasePos = new Phaser.Point(this.player.entity.position.x, this.player.entity.position.y);
-	  		
+	  		//compute base values
+	  		this.currentAngle = LR.Utils.angle(new Phaser.Point(1,0), this.player.entity.position);	 		
+	  		this.direction = this.player.direction > 0 ? -1 : 1;
 	  	}
-  }
+    }
 }
 
 Hanger.prototype.onEndContact = function(_contactData){	
-	console.log("end " + this.released);
+	//console.log("end " + this.released);
 	if( this.released == false)
 		return;
 	this.released = false;

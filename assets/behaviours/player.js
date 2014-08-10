@@ -57,7 +57,8 @@ Player.prototype = Object.create(LR.Behaviour.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.create = function(_data) {
-  this.hair = _data.hair_object;
+  this.hair = _data.hair_object.getBehaviour(PlayerHair);
+  this.hair.player = this;
 }
 
 Player.prototype.update = function() {
@@ -70,11 +71,6 @@ Player.prototype.update = function() {
       break;
   }
 }
-
-Player.prototype.postUpdate = function(){
-  this.updateHair();
-}
-
 
 //This method is automatically called when the body of the player collides with another cody
 Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
@@ -122,14 +118,6 @@ Player.prototype.updateJump = function(){
   if( this.entity.body.velocity.y * this.gravity < 0){
     this.fall();
   }
-}
-
-Player.prototype.updateHair = function(){  
-  this.hair.x = this.go.x;
-  this.hair.y = this.go.y;
-
-  this.hair.entity.scale.x = this.entity.scale.x;
-  this.hair.entity.angle = this.entity.angle;
 }
 
 //=========================================================
@@ -211,7 +199,6 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
   this.canMove = true;
   this.canJump = true;
   this.changeGravity( { "gravity":_gravity });
-  console.log(_vector);
   this.entity.body.velocity.x = _vector.x * 200;
   this.entity.body.velocity.y = _vector.y * -200;
 }
@@ -230,7 +217,7 @@ Player.prototype.idle = function(_direction){
   this.scaleByGravity();
 
   this.entity.animations.play('idle');
-  this.hair.entity.animations.play('idle');
+  this.hair.idle();
 
   this.preBlink();
 }
@@ -251,7 +238,7 @@ Player.prototype.run = function(_direction, _speed ){
   this.entity.animations.play('run');
   this.scaleByGravity();
   //play hair anim
-  this.hair.entity.play('run');
+  this.hair.run();
 
   this.entity.body.velocity.x = this.direction * _speed ;
 }
