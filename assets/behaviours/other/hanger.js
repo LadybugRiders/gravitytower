@@ -1,7 +1,7 @@
 "use strict";
 
 //>>LREditor.Behaviour.name: Hanger
-//>>LREditor.Behaviour.params : {"distance" : 30}
+//>>LREditor.Behaviour.params : {"hookX" : 0, "hookY" : 0}
 var Hanger = function(_gameobject){
 	LR.Behaviour.call(this,_gameobject);
 	this.player = null;
@@ -9,13 +9,16 @@ var Hanger = function(_gameobject){
 	this.formerAngle = 0;
 	this.playerBasePos = null;
 
-	this.minAngle = 1;
-	this.maxAngle = 180;
+	this.minAngle = 20;
+	this.maxAngle = 160;
 	this.currentAngle = this.minAngle;
 	this.direction = 1;
 
 	this.speed = 150;
-	this.distance = 30;
+	this.distance = 1;
+
+	this.hookX = 0;
+	this.hookY = 0;
 
 	this.released = false;
 
@@ -27,6 +30,8 @@ Hanger.prototype.constructor = Hanger;
 
 Hanger.prototype.create = function(_data){
 	if( _data.distance != null ) this.distance = _data.distance;
+	if( _data.hookX != null ) this.hookX = _data.hookX;
+	if( _data.hookY != null ) this.hookY = _data.hookY;
 }
 
 Hanger.prototype.update = function(){
@@ -53,8 +58,8 @@ Hanger.prototype.update = function(){
   	rotatedPoint.x *= this.distance;
   	rotatedPoint.y *= this.distance;
 
-  	this.player.go.x = this.entity.x + rotatedPoint.x ;
-  	this.player.go.y = this.entity.y + rotatedPoint.y ;
+  	this.player.go.x = this.entity.x + this.hookX + rotatedPoint.x ;
+  	this.player.go.y = this.entity.y + this.hookY + rotatedPoint.y ;
 
   	this.player.entity.angle = this.currentAngle - 90;
   }
