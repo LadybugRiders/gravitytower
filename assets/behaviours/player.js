@@ -192,7 +192,6 @@ Player.prototype.idleize = function(_key){
 //=========================================================
 
 Player.prototype.onActivatePower = function(_data){
-  console.log(_data);
   this.hair.activatePower(_data.power);
 }
 

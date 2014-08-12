@@ -51,7 +51,6 @@ PlayerHair.prototype.run = function(){
 }
 
 PlayerHair.prototype.hook = function(){
-	console.log("hook0");
 	this.upgraded = true;
 	this.entity.animations.play('hook');
 	this.state = "hook";
