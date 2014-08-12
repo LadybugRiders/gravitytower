@@ -45,7 +45,6 @@ WindManager.prototype.update = function(){
 		if( wind.canDie && ! wind.inCamera){
 			this.activeWinds.splice(i,1);
 			wind.kill();
-			console.log("killed");
 		}
 	}
 }
