@@ -57,7 +57,7 @@ Player.prototype = Object.create(LR.Behaviour.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.create = function(_data) {
-  this.hair = _data.hair_object.getBehaviour(PlayerHair);
+  this.hair = LR.GameObject.FindByName(this.entity.parent, _data.hair_name).go.getBehaviour(PlayerHair);
   this.hair.player = this;
 }
 
