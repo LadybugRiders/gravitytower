@@ -324,7 +324,7 @@ Player.prototype.finish = function(_data){
   //set a timer
   this.entity.game.time.events.add(
     Phaser.Timer.SECOND * 0.1, 
-    function(){ this.entity.game.state.start("Level",true,false,{levelName: _data.level});},
+    function(){ this.entity.game.state.start("Level",true,false,{levelName: "menu_select_levels"});},
     this);
 }
 

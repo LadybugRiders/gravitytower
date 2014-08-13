@@ -96,7 +96,8 @@ Hanger.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
 
 	  		this.player.go.gravity = 0;
 	  		//compute base values
-	  		this.currentAngle = LR.Utils.angle(new Phaser.Point(1,0), this.player.entity.position);	 		
+	  		var toPlayer = Phaser.Point.subtract(this.player.entity.position,this.entity.position);
+	  		this.currentAngle = LR.Utils.angle(new Phaser.Point(1,0), toPlayer.normalize());	 		
 	  		this.direction = this.player.direction > 0 ? -1 : 1;
 	  	}
     }
