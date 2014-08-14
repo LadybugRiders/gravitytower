@@ -207,8 +207,8 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
   this.canMove = true;
   this.canJump = true;
   this.changeGravity( { "gravity":_gravity });
-  this.entity.body.velocity.x = _vector.x * 200;
-  this.entity.body.velocity.y = _vector.y * -200;
+  this.entity.body.velocity.x = _vector.x * 220;
+  this.entity.body.velocity.y = _vector.y * -150 - Math.abs(_vector.x) * 220;
 }
 
 //=========================================================
@@ -260,12 +260,15 @@ Player.prototype.runAir = function(_direction, _speed ){
 }
 
 
-Player.prototype.jump = function(_force){
+Player.prototype.jump = function(_force, _jumpPower){
   if( this.onGround || _force == true){
     this.changeState("jump");
     this.onGround = false;
     //apply jump force
-    this.go.body.velocity.y = -this.jumpPower * this.gravity;
+    if( _jumpPower != null)
+      this.go.body.velocity.y = -_jumpPower * this.gravity;
+    else
+      this.go.body.velocity.y = -this.jumpPower * this.gravity;
     this.entity.animations.play('jump');
     this.scaleByGravity();
     //affect air moving speed
