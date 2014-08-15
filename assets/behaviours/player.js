@@ -80,17 +80,24 @@ Player.prototype.postUpdate = function(){
 Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
   //if the collision is from the feet shape
   if( _myShape == this.feetSensor ){
-    if( this.isLayerGround(_otherBody.go.layer) ){
+    //Enemy collision
+    if(_otherBody.go.layer == "enemy"){
+      var enemy = _otherBody.go.getBehaviour(Enemy);
+      if( enemy && enemy.jumpable ){
+        _otherBody.go.sendMessage("kill");
+        this.jump(true);
+      }else{
+        this.die();
+      }
+    }else if( _otherShape.sensor == false || _otherShape.sensor == null){
       this.groundContacts ++;
       this.onGround = true;
       if( this.isMovePressed )
         this.run();
       else
         this.idleize();
-    }else if(_otherBody.go.layer == "enemy"){
-      _otherBody.go.sendMessage("kill");
-      this.jump(true);
     }
+
   }else{
     if(_otherBody.go.layer == "enemy"){
       this.die();
