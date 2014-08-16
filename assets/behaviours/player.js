@@ -83,11 +83,9 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
     //Enemy collision
     if(_otherBody.go.layer == "enemy"){
       var enemy = _otherBody.go.getBehaviour(Enemy);
-      if( enemy && enemy.jumpable ){
-        _otherBody.go.sendMessage("kill");
+      if( enemy ){
+        _otherBody.go.sendMessage("onHitJump");
         this.jump(true);
-      }else{
-        this.die();
       }
     }else if( _otherShape.sensor == false || _otherShape.sensor == null){
       this.groundContacts ++;
@@ -96,11 +94,6 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
         this.run();
       else
         this.idleize();
-    }
-
-  }else{
-    if(_otherBody.go.layer == "enemy"){
-      this.die();
     }
   }
 }
@@ -305,6 +298,12 @@ Player.prototype.onBlinkTimerEnded = function(){
 //=========================================================
 //                  DEATH
 //=========================================================
+
+Player.prototype.hit = function(_data){
+  if( _data.shape !== this.mainShape)
+    return;
+  this.die();
+}
 
 Player.prototype.die = function(){
   if(this.dead == true)

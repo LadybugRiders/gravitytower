@@ -1,6 +1,6 @@
 "use strict";
 //>>LREditor.Behaviour.name: Enemy
-//>>LREditor.Behaviour.params : { "direction": 1, "jumpable" : true, "cutable" : true, "hatable":true, "dead":false}
+//>>LREditor.Behaviour.params : { "direction": 1, "jumpable" : true, "cutable" : true, "hatable":true, "dead":false, "smoke":null}
 var Enemy = function(_gameobject) {	
 	LR.Behaviour.call(this,_gameobject);
 	this.entity.body.setCircle(23,-1,-1);
@@ -13,7 +13,9 @@ var Enemy = function(_gameobject) {
   this.cutable = true;
   this.hatable = true;
 
-  this.dead = true;
+  this.dead = false;
+  this.initX = this.entity.x;
+  this.initY = this.entity.y;
 }
 
 Enemy.prototype = Object.create(LR.Behaviour.prototype);
@@ -24,11 +26,18 @@ Enemy.prototype.create = function( _data ){
   if( _data.jumpable ) this.jumpable = _data.jumpable;
   if( _data.cutable ) this.cutable = _data.cutable;
   if( _data.hatable ) this.hatable = _data.hatable;
+  if( _data.smoke ){
+   this.smoke = _data.smoke;
+   this.smoke.entity.visible = false;
+  }
   if(_data.dead == true ) this.entity.kill();
 }
 
 Enemy.prototype.pop = function( _data){
+  this.dead = false;
   this.entity.revive();
+  if( !_data)
+    return;
   if( _data.gravity != null ) this.go.gravity = _data.gravity;
 }
 
@@ -66,6 +75,12 @@ Enemy.prototype.run = function(_direction, _speed ){
 Enemy.prototype.die = function(_direction, _speed ){
   this.dead = true;
   this.entity.kill();
+  if(this.smoke){
+    this.smoke.entity.x = this.entity.x;
+    this.smoke.entity.y = this.entity.y;
+    this.smoke.entity.revive();
+    this.smoke.entity.animations.play("blow").killOnComplete = true;
+  }
 }
 
 //=================================================================
@@ -77,19 +92,23 @@ Enemy.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _eq
   //if the collision is from the feet shape
   if( _otherBody.go.layer == "ground" ){
   	this.onGround = true;
+    this.touchGround();
   }
 
   if( this.dead == false &&  _otherBody.go.layer == "player"){
     var playerHair = _otherBody.go.getBehaviour(PlayerHair);
-    console.log(playerHair);
     //hit by a blade
-    if( playerHair && playerHair.isShapeAndStatusBlade(_otherShape)){
-      this.onHitHBlade(playerHair.x > this.entity.x ? -1 : 1);
-    }
-    //if hit by a hat
-    if( playerHair && playerHair.isShapeAndStatusHat(_otherShape)){
-      this.onHitHat();
-    }
+    if( playerHair ){
+      if(playerHair.isShapeAndStatusBlade(_otherShape)){
+        this.onHitHBlade(playerHair.x > this.entity.x ? -1 : 1);
+      }
+      //if hit by a hat
+      if( playerHair.isShapeAndStatusHat(_otherShape)){
+        this.onHitHat();
+      }
+    }else{//else we hit the player
+      this.hitPlayer(_otherBody.go,_otherShape,_equation);
+    }    
   }
 }
 
@@ -99,10 +118,19 @@ Enemy.prototype.onEndContact = function(_otherBody, _myShape, _otherShape, _equa
   }
 }
 
+Enemy.prototype.hitPlayer = function(_go, _playerShape, _equation){
+  _go.sendMessage("hit", {"shape":_playerShape,"sender":this.go,"equation":_equation});
+}
+
+Enemy.prototype.touchGround = function(){
+  
+}
+
 //=================================================================
 //                  WEAKNESSES
 //=================================================================
 Enemy.prototype.onHitJump = function(){
+  console.log("jit");
   if(this.jumpable)
     this.die();
 }
@@ -113,8 +141,9 @@ Enemy.prototype.onHitBlade = function( _direction ){
 }
 
 Enemy.prototype.onHitHat = function(){
-  if(this.hatable)
+  if(this.hatable && this.entity.body.velocity.y < -1){
     this.die();
+  }
 }
 
 //=================================================================
