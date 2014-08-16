@@ -46,6 +46,11 @@ PlayerHair.prototype.activatePower = function(_power){
 	this.changeForm();
 }
 
+PlayerHair.prototype.deactivatePower = function(){
+	this.upgraded = false;
+	this.idle();
+}
+
 PlayerHair.prototype.idle = function(){
 	if( this.upgraded )
 		return;

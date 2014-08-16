@@ -18,7 +18,11 @@ FallingObject.prototype.create = function(_data){
 }
 
 FallingObject.prototype.touchGround = function(){
-	this.die();
+	this.die();	
+}
+
+FallingObject.prototype.die = function(){
+	Enemy.prototype.die.call(this);
 	if( this.repeatTime <0 )
 		return;
 	this.go.x = this.initX;
