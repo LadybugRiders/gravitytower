@@ -55,13 +55,16 @@ var Player = function(_gameobject) {
   this.respawnPosition = new Phaser.Point(this.entity.x, this.entity.y);
   this.respawnDirection = 1;
 
+  this.lives = this.entity.game.playerSave.getSave()["lives"];
+  this.entity.game.playerSave["coins"] = 0;
+
 };
 
 Player.prototype = Object.create(LR.Behaviour.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.create = function(_data) {
-  this.hair = LR.GameObject.FindByName(this.entity.parent, _data.hair_name).go.getBehaviour(PlayerHair);
+  this.hair = LR.Entity.FindByName(this.entity.parent, _data.hair_name).go.getBehaviour(PlayerHair);
   this.hair.player = this;
 }
 
@@ -215,6 +218,13 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
   this.entity.body.velocity.y = _vector.y * -150 - Math.abs(_vector.x) * 220;
 }
 
+Player.prototype.onCollectCoin = function(_data){
+  var count = 1;
+  if( _data.count ) count = _data.count;
+  this.entity.game.playerSave["coins"] += count;
+  this.entity.game.pollinator.dispatch("onCoinsChanged")
+}
+
 //=========================================================
 //                  ACTIONS
 //=========================================================
@@ -323,6 +333,21 @@ Player.prototype.die = function(){
   this.go.body.moveUp(300);
   this.entity.game.camera.follow(null);
 
+  //DEATH !!!
+  if(this.lives == 0){
+    //set a timer
+    this.entity.game.time.events.add(
+      Phaser.Timer.SECOND * 3, 
+      function(){ this.entity.game.state.start("Level",true,false,{levelName: "menu_select_levels"});},
+      this);
+    return;
+  }
+
+  //Accounts
+  this.lives --;
+  this.entity.game.playerSave.getSave()["lives"] = this.lives;
+  this.entity.game.pollinator.dispatch("onLivesChanged");
+
   //set a timer
     this.entity.game.time.events.add(
       Phaser.Timer.SECOND * 3, 
@@ -331,6 +356,7 @@ Player.prototype.die = function(){
 }
 
 Player.prototype.respawn = function(){
+  //this.entity.game.pollinator.dispatch("onPlayerRespawn");
   this.hair.deactivatePower();
   this.entity.body.setZeroVelocity();
   this.mainShape.sensor = false;
@@ -342,7 +368,6 @@ Player.prototype.respawn = function(){
   this.direction = this.respawnDirection;
   this.go.setPosition( this.respawnPosition.x, this.respawnPosition.y);
   this.scaleByGravity();
-  //this.entity.game.state.start("Level",true,false,{levelName: "menu_select_levels"});
 }
 
 //Called by a trigger finish (in general)
@@ -360,6 +385,7 @@ Player.prototype.checkpoint = function(_dataSent){
   this.respawnPosition = new Phaser.Point( _dataSent.sender.entity.x, _dataSent.sender.entity.y);
   if( _dataSent.direction )
     this.respawnDirection = _dataSent.direction;
+  _dataSent.sender.entity.frame = 1;
 }
 
 //=========================================================

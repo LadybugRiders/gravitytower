@@ -15,7 +15,7 @@ SelectLevelButton.prototype.create = function(_data) {
 	if( _data.level ) this.level = _data.level;
 	var slot = null;
 	for(var i=0; i < 3 ; i++){
-		slot = LR.GameObject.FindByName(this.entity.parent,"slot"+i);
+		slot = LR.Entity.FindByName(this.entity.parent,"slot"+i);
 		
 		if( slot )
 			this.slots.push(slot);

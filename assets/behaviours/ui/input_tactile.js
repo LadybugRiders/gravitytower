@@ -20,7 +20,7 @@ InputTactile.prototype.create = function(_data) {
 		return;
 	if( _data.player) this.player = _data.player.getBehaviour(Player);
 
-	var button = LR.GameObject.FindByName(this.entity, _data.leftName);
+	var button = LR.Entity.FindByName(this.entity, _data.leftName);
 	//LEFT BUTTON
 	if( button ){
 		button.visible = true;
@@ -29,7 +29,7 @@ InputTactile.prototype.create = function(_data) {
 		this.entity.game.inputManager.registerButton(this.leftButton.entity);
 	}
 	//RIGHT BUTTON
-	button = LR.GameObject.FindByName(this.entity, _data.rightName);
+	button = LR.Entity.FindByName(this.entity, _data.rightName);
 	if( button ){
 		button.visible = true;
 		this.rightButton = button.go.getBehaviour(DirectionButton);

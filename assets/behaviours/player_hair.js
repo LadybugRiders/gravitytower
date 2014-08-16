@@ -17,7 +17,7 @@ PlayerHair.prototype = Object.create(LR.Behaviour.prototype);
 PlayerHair.prototype.constructor = PlayerHair;
 
 PlayerHair.prototype.create = function(_data){
-	this.effect = LR.GameObject.FindByName(this.entity.parent, _data.effect);
+	this.effect = LR.Entity.FindByName(this.entity.parent, _data.effect);
 	this.effect.animations.getAnimation("blow").onComplete.add(this.onBlowComplete,this);
 	this.effect.animations.getAnimation("retract").onComplete.add(this.onRetractComplete,this);
 	this.effect.visible = false;
