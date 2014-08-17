@@ -36,7 +36,9 @@ GravityZone.prototype.update = function(){
    			//verify if its center is in the zone
             if( centerinZone ){       
                //change gravity according to delta to the object's gravity point
-               this.changeGravity(colObj)
+               this.changeGravity(colObj,this.gravity)
+            }else{
+               this.changeGravity(colObj,1)
             }
    		}else{
             //when out, remove
@@ -57,6 +59,6 @@ GravityZone.prototype.onBeginContact = function(_otherbody,_myshape, _othershape
 }
 
 //Change the gravity of the object according to its position ( represented by _signedNumber)
-GravityZone.prototype.changeGravity = function( _gameobject){
-	_gameobject.sendMessage("changeGravity", { gravity : this.gravity });   
+GravityZone.prototype.changeGravity = function( _gameobject, _gravity){
+	_gameobject.sendMessage("changeGravity", { gravity : _gravity });   
 }
