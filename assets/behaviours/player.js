@@ -9,7 +9,13 @@ var Player = function(_gameobject) {
   this.baseSpeed = 200;
   this.speed = this.baseSpeed;
   this.airSpeed = this.speed;
-  this.acc = 10;
+  this.runAcc = 10;
+  //Jump
+  this.jumpAcc = 20;
+  this.jumpHeight = 50;
+  this.jumpBaseY = 0;
+  this.jumpImpulse = 350;
+  this.jumpMinVelocity = 170;
 
   this.onGround = false;
   this.groundContacts = 0;
@@ -128,7 +134,19 @@ Player.prototype.updateJump = function(){
   //when this.fall is called, the state changes, so updateJump is not called anymore
   if( this.entity.body.velocity.y * this.gravity < 0){
     this.fall();
+    return;
   }
+  //check the height done by jump and button jump pressed
+  var deltaJumpOver = Math.abs( this.jumpBaseY - this.entity.y ) >= this.jumpHeight;
+  
+  if( deltaJumpOver || !this.isJumpPressed ){
+    this.fall();
+    return;
+  }
+  //keep velocity to a minimum if jump still effective
+  if( Math.abs( this.go.body.velocity.y) < this.jumpMinVelocity )
+    this.go.body.velocity.y = -this.gravity * this.jumpMinVelocity;
+
 }
 
 //=========================================================
@@ -278,6 +296,7 @@ Player.prototype.jump = function(_force, _jumpPower){
   if( this.onGround || _force == true){
     this.changeState("jump");
     this.onGround = false;
+    this.jumpBaseY = this.entity.y;
     //apply jump force
     if( _jumpPower != null)
       this.go.body.velocity.y = -_jumpPower * this.gravity;
