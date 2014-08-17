@@ -8,6 +8,8 @@ var Player = function(_gameobject) {
   //Speed Values
   this.baseSpeed = 200;
   this.speed = this.baseSpeed;
+  this.currentSpeed = 0;
+  this.maxSpeed = 200;
   this.airSpeed = this.speed;
   this.runAcc = 10;
   //Jump
@@ -103,10 +105,12 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
     }else if( _otherShape.sensor == false || _otherShape.sensor == null){
       this.groundContacts ++;
       this.onGround = true;
-      if( this.isMovePressed )
-        this.run();
-      else
-        this.idleize();
+      if( this.isMovePressed ){
+        this.currentSpeed = this.go.velocityX;
+        this.run(this.direction,Math.abs(this.currentSpeed));
+      }else{
+        this.idleize()
+      }
     }
   }
 }
@@ -126,7 +130,12 @@ Player.prototype.onEndContact = function(contactData){
 //=========================================================
 
 Player.prototype.updateRun = function(){
-  this.entity.body.velocity.x = this.direction * this.speed;
+  this.currentSpeed += this.direction *  this.runAcc * this.entity.game.time.elapsed * 0.1;
+  
+  if( Math.abs( this.currentSpeed ) > this.maxSpeed)
+    this.currentSpeed = this.direction * this.maxSpeed;
+
+  this.entity.body.velocity.x = this.currentSpeed;
 }
 
 Player.prototype.updateJump = function(){  
@@ -252,6 +261,7 @@ Player.prototype.idle = function(_direction){
   if( _direction != null ) this.direction = _direction;
 
   this.entity.body.velocity.x = 0;
+  this.currentSpeed = 0;
   //flip and play anim
   this.go.entity.scale.x = this.direction * this.gravity;
   this.scaleByGravity();
@@ -273,7 +283,7 @@ Player.prototype.run = function(_direction, _speed ){
   this.changeState("run");
   if( _direction != null ) this.direction = _direction;
   if( _speed == null ) _speed = this.speed;
-  
+
   //flip and play anim
   this.entity.animations.play('run');
   this.scaleByGravity();
