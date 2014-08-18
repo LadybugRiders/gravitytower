@@ -3,7 +3,6 @@
 //>>LREditor.Behaviour.params : { "direction": 1, "jumpable" : true, "cutable" : true, "hatable":true, "dead":false, "smoke":null}
 var Enemy = function(_gameobject) {	
 	LR.Behaviour.call(this,_gameobject);
-	this.entity.body.setCircle(23,-1,-1);
 	this.onGround = false;
 	this.jumpPower = 200;
 	this.gravity = 1;
@@ -92,7 +91,7 @@ Enemy.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _eq
   //if the collision is from the feet shape
   if( _otherBody.go.layer == "ground" ){
   	this.onGround = true;
-    this.touchGround();
+    this.onTouchGround();
   }
 
   if( this.dead == false &&  _otherBody.go.layer == "player"){
@@ -120,10 +119,15 @@ Enemy.prototype.onEndContact = function(_otherBody, _myShape, _otherShape, _equa
 
 Enemy.prototype.hitPlayer = function(_go, _playerShape, _equation){
   _go.sendMessage("hit", {"shape":_playerShape,"sender":this.go,"equation":_equation});
+  this.onHitPlayer();
 }
 
-Enemy.prototype.touchGround = function(){
+Enemy.prototype.onTouchGround = function(){
   
+}
+
+Enemy.prototype.onHitPlayer = function(){
+
 }
 
 //=================================================================

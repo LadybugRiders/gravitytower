@@ -1,7 +1,7 @@
 "use strict";
 
 //>>LREditor.Behaviour.name: Player
-
+//>>LREditor.Behaviour.params : {"hair_name":"hair", "acolyte":null}
 var Player = function(_gameobject) {
 	LR.Behaviour.call(this, _gameobject);
 
@@ -23,6 +23,7 @@ var Player = function(_gameobject) {
   this.groundContacts = 0;
 
   this.dead = false;
+  this.isHit = false;
   this.jumpPower = 300;
   this.gravity = 1;
 
@@ -72,8 +73,12 @@ Player.prototype = Object.create(LR.Behaviour.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.create = function(_data) {
-  this.hair = LR.Entity.FindByName(this.entity.parent, _data.hair_name).go.getBehaviour(PlayerHair);
+  //HAIR
+  this.hair = _data.hair.getBehaviour(PlayerHair);
   this.hair.player = this;
+  //Acolyte
+  this.acolyte = _data.acolyte.getBehaviour(Acolyte);
+  this.acolyte.player = this;
 }
 
 Player.prototype.update = function() {
@@ -93,6 +98,8 @@ Player.prototype.postUpdate = function(){
 
 //This method is automatically called when the body of the player collides with another cody
 Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
+  if(this.dead == true)
+    return;
   //if the collision is from the feet shape
   if( _myShape == this.feetSensor ){
     //Enemy collision
@@ -252,6 +259,10 @@ Player.prototype.onCollectCoin = function(_data){
   this.entity.game.pollinator.dispatch("onCoinsChanged")
 }
 
+Player.prototype.onGainHealth = function(){
+  this.acolyte.gainHealth();
+}
+
 //=========================================================
 //                  ACTIONS
 //=========================================================
@@ -343,9 +354,24 @@ Player.prototype.onBlinkTimerEnded = function(){
 //=========================================================
 
 Player.prototype.hit = function(_data){
-  if( _data.shape !== this.mainShape)
+  if( _data.shape !== this.mainShape || this.isHit == true || this.dead ==true)
     return;
-  this.die();
+  if( this.acolyte.dead){
+    this.die();
+  }else{
+    this.acolyte.loseHealth();    
+    var tween = this.entity.game.add.tween(this.entity);
+    tween.to( {alpha : 0},200,null,true,0,11,true);
+    tween.onComplete.add(this.onEndHit,this);
+    tween = this.entity.game.add.tween(this.hair.entity);
+    tween.to( {alpha : 0},200,null,true,0,11,true);
+    this.isHit = true;
+  }
+}
+
+Player.prototype.onEndHit =function(){
+  this.isHit = false;
+  this.entity.alpha = 1;
 }
 
 Player.prototype.die = function(){

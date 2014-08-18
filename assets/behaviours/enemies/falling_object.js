@@ -17,8 +17,12 @@ FallingObject.prototype.create = function(_data){
 	if( _data.repeatTime ) this.repeatTime = _data.repeatTime;
 }
 
-FallingObject.prototype.touchGround = function(){
+FallingObject.prototype.onTouchGround = function(){
 	this.die();	
+}
+
+FallingObject.prototype.onHitPlayer = function(){
+	this.die();
 }
 
 FallingObject.prototype.die = function(){
