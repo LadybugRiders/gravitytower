@@ -64,7 +64,6 @@ var Player = function(_gameobject) {
   this.respawnPosition = new Phaser.Point(this.entity.x, this.entity.y);
   this.respawnDirection = 1;
 
-  this.lives = this.entity.game.playerSave.getSave()["lives"];
   this.entity.game.playerSave["coins"] = 0;
 
 };
@@ -259,6 +258,11 @@ Player.prototype.onCollectCoin = function(_data){
   this.entity.game.pollinator.dispatch("onCoinsChanged")
 }
 
+Player.prototype.onCollectLife = function(){
+  this.entity.game.playerSave.getSave()["lives"] ++;
+  this.entity.game.pollinator.dispatch("onLivesChanged")
+}
+
 Player.prototype.onGainHealth = function(){
   this.acolyte.gainHealth();
 }
@@ -389,7 +393,7 @@ Player.prototype.die = function(){
   this.entity.game.camera.follow(null);
 
   //DEATH !!!
-  if(this.lives == 0){
+  if(this.entity.game.playerSave.getSave()["lives"] == 0){
     //set a timer
     this.entity.game.time.events.add(
       Phaser.Timer.SECOND * 3, 
@@ -399,9 +403,9 @@ Player.prototype.die = function(){
   }
 
   //Accounts
-  this.lives --;
-  this.entity.game.playerSave.getSave()["lives"] = this.lives;
+  this.entity.game.playerSave.getSave()["lives"] --; 
   this.entity.game.pollinator.dispatch("onLivesChanged");
+  this.entity.game.playerSave.writeSave();
 
   //set a timer
     this.entity.game.time.events.add(
