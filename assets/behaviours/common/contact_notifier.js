@@ -38,7 +38,7 @@ LR.Behaviour.ContactNotifier.prototype.getShapeBounds = function(_go,_shape){
 
 	//Rotate shape offset with the body, as offset isnt changed with rotations
 	var realOffset = new Phaser.Point(data.x,data.y); 
-	realOffset = LR.Utils.rotatePoint(realOffset, this.entity.body.angle);
+	realOffset = LR.Utils.rotatePoint(realOffset, _go.entity.body.angle);
 	data.x = realOffset.x;
 	data.y = realOffset.y;
 

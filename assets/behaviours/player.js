@@ -10,13 +10,14 @@ var Player = function(_gameobject) {
   this.speed = this.baseSpeed;
   this.currentSpeed = 0;
   this.maxSpeed = 200;
-  this.airSpeed = this.speed;
-  this.runAcc = 10;
+  this.airSpeed = this.speed * 0.5;
+  this.runAcc = 7;
+  this.airAcc = this.runAcc * 0.5;
   //Jump
-  this.jumpAcc = 20;
+  this.jumpAcc = 22;
   this.jumpHeight = 50;
   this.jumpBaseY = 0;
-  this.jumpImpulse = 350;
+  this.jumpImpulse = 360;
   this.jumpMinVelocity = 170;
 
   this.onGround = false;
@@ -78,6 +79,9 @@ Player.prototype.create = function(_data) {
   //Acolyte
   this.acolyte = _data.acolyte.getBehaviour(Acolyte);
   this.acolyte.player = this;
+  //dusts
+  this.dusts = [_data.dust1,_data.dust2];
+  this.dusts.forEach(function(_element){_element.entity.visible = false;});
 }
 
 Player.prototype.update = function() {
@@ -87,6 +91,8 @@ Player.prototype.update = function() {
     case "run" : this.updateRun(); 
       break;
     case "jump" : this.updateJump();
+      break;
+    case "fall" : this.updateRunAir();
       break;
   }
 }
@@ -108,7 +114,9 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
         _otherBody.go.sendMessage("onHitJump");
         this.jump(true);
       }
+    //any solid collision
     }else if( _otherShape.sensor == false || _otherShape.sensor == null){
+      this.blowDust();
       this.groundContacts ++;
       this.onGround = true;
       if( this.isMovePressed ){
@@ -117,6 +125,14 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
       }else{
         this.idleize()
       }
+    }
+  }
+  //If collision from the front (left or right given the direction)
+  if( this.collidesFront(_myShape) ){
+    //if the collision is solid
+    if( _otherShape.sensor == false || _otherShape.sensor == null){
+      this.currentSpeed = 0;
+      this.facingWall = _myShape.lr_name == "right" ? 1 : -1;
     }
   }
 }
@@ -128,6 +144,18 @@ Player.prototype.onEndContact = function(contactData){
       this.fall();
     }
   }
+  //BUG TO DO
+  if(contactData.myShape == null){
+    console.error("Shape null here !!")
+    return;
+  }
+  //If collision from the front (left or right given the direction)
+  if( contactData.myShape.lr_name == (this.facingWall > 0?"right":"left") ){
+    //if the collision is solid
+    if( contactData.otherShape.sensor == false || contactData.otherShape.sensor == null){
+      this.facingWall = 0;
+    }
+  }
   //console.log("endPlayer " + contactData.otherBody.go.name);
 }
 
@@ -136,6 +164,8 @@ Player.prototype.onEndContact = function(contactData){
 //=========================================================
 
 Player.prototype.updateRun = function(){
+  if( this.facingWall == this.direction)
+    return;
   this.currentSpeed += this.direction *  this.runAcc * this.entity.game.time.elapsed * 0.1;
   
   if( Math.abs( this.currentSpeed ) > this.maxSpeed)
@@ -144,7 +174,7 @@ Player.prototype.updateRun = function(){
   this.entity.body.velocity.x = this.currentSpeed;
 }
 
-Player.prototype.updateJump = function(){  
+Player.prototype.updateJump = function(){ 
   //wait for the body to fall (according to gravity)
   //when this.fall is called, the state changes, so updateJump is not called anymore
   if( this.entity.body.velocity.y * this.gravity < 0){
@@ -162,6 +192,24 @@ Player.prototype.updateJump = function(){
   if( Math.abs( this.go.body.velocity.y) < this.jumpMinVelocity )
     this.go.body.velocity.y = -this.gravity * this.jumpMinVelocity;
 
+  if( this.isMovePressed ){
+    this.updateRunAir();
+  }
+}
+
+Player.prototype.updateRunAir = function(){ 
+  if( this.facingWall == this.direction)
+    return;
+  if( this.isMovePressed ){
+    if( Math.abs( this.currentSpeed ) > this.airSpeed)
+      return;
+     this.currentSpeed += this.direction *  this.airAcc * this.entity.game.time.elapsed * 0.1;
+    
+    if( Math.abs( this.currentSpeed ) > this.airSpeed)
+      this.currentSpeed = this.direction * this.airSpeed;
+
+    this.entity.body.velocity.x = this.currentSpeed;
+  }
 }
 
 //=========================================================
@@ -169,41 +217,37 @@ Player.prototype.updateJump = function(){
 //=========================================================
 
 Player.prototype.onMoveLeft = function(_key){
-  this.isMovePressed = true;
+  this.isMovePressed ++;
   if( ! this.canMove ){
     return;
   }
+  this.direction = -1;
   if( this.onGround ){
-    this.run(-1);
-  }else{
-    this.runAir(-1,this.airSpeed)
+    this.run();
   }
   this.scaleByGravity();
 }
 
 Player.prototype.onMoveRight = function(_key){
-  this.isMovePressed = true;  
+  this.isMovePressed ++;  
   if( ! this.canMove ){
     return;
   }
+  this.direction = 1;
   if( this.onGround ){
-    this.run(1);
-  }else{
-    this.runAir(1,this.airSpeed);
+    this.run();
   }
   this.scaleByGravity();
 }
 
 Player.prototype.onMoveRelease = function(){
-  this.isMovePressed = false;
+  this.isMovePressed --;
 
   if( ! this.canMove )
     return;
 
-  if( this.onGround ){
+  if( this.onGround && this.isMovePressed == 0){
     this.idleize();
-  }else{
-    this.airSpeed = this.speed * 0.5;
   }
 }
 
@@ -297,7 +341,7 @@ Player.prototype.fall = function(){
 Player.prototype.run = function(_direction, _speed ){
   this.changeState("run");
   if( _direction != null ) this.direction = _direction;
-  if( _speed == null ) _speed = this.speed;
+  if( _speed == null ) _speed = this.runAcc;
 
   //flip and play anim
   this.entity.animations.play('run');
@@ -307,15 +351,6 @@ Player.prototype.run = function(_direction, _speed ){
 
   this.entity.body.velocity.x = this.direction * _speed ;
 }
-
-Player.prototype.runAir = function(_direction, _speed ){
-
-  if( _direction != null ) this.direction = _direction;
-  if( _speed == null ) _speed = this.speed;
-  
-  this.entity.body.velocity.x = this.direction * _speed ;
-}
-
 
 Player.prototype.jump = function(_force, _jumpPower){
   if( this.onGround || _force == true){
@@ -329,13 +364,11 @@ Player.prototype.jump = function(_force, _jumpPower){
       this.go.body.velocity.y = -this.jumpPower * this.gravity;
     this.entity.animations.play('jump');
     this.scaleByGravity();
-    //affect air moving speed
-    this.airSpeed = this.isMovePressed ? this.speed : this.speed * 0.5;
   }
 }
 
 //=========================================================
-//                  BLINK
+//                  BLINK / DUST
 //=========================================================
 
 Player.prototype.preBlink = function(){
@@ -351,6 +384,24 @@ Player.prototype.onBlinkTimerEnded = function(){
     this.entity.animations.play("blink");
     this.preBlink();
   }
+}
+
+Player.prototype.blowDust = function(){ 
+  if(this.go.velocityY < 70)
+    return;
+  this.dusts.forEach(
+    function(_element,_index){
+      _element.entity.visible = true;
+      var dir = _index == 0 ? -1 : 1;
+      _element.x = this.entity.x + dir * 5;
+      _element.y = this.entity.y + 10 * this.gravity;
+      _element.entity.alpha = 1;
+      var tween = this.entity.game.add.tween(_element.entity);
+      tween.to( { "x" : this.entity.x + dir * 30,alpha:0},700);
+      tween.start();
+    },
+    this
+  );
 }
 
 //=========================================================
@@ -482,6 +533,15 @@ Player.prototype.changeState = function(_newState){
 
 Player.prototype.isLayerGround = function( _layer ){
   return _layer == "ground" || _layer == "box";
+}
+
+Player.prototype.collidesFront = function(_shape){
+  var way = this.direction * this.gravity;
+  if( way > 0 && _shape.lr_name == "right")
+    return true;
+  if( way < 0 && _shape.lr_name == "left")
+    return true;
+  return false;
 }
 
 Object.defineProperty( Player.prototype, "isGravityAffected",
