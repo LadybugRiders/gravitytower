@@ -118,6 +118,7 @@ Enemy.prototype.onEndContact = function(_otherBody, _myShape, _otherShape, _equa
 }
 
 Enemy.prototype.hitPlayer = function(_go, _playerShape, _equation){
+  console.log("bilr");
   _go.sendMessage("hit", {"shape":_playerShape,"sender":this.go,"equation":_equation});
   this.onHitPlayer();
 }
@@ -134,7 +135,6 @@ Enemy.prototype.onHitPlayer = function(){
 //                  WEAKNESSES
 //=================================================================
 Enemy.prototype.onHitJump = function(){
-  console.log("jit");
   if(this.jumpable)
     this.die();
 }

@@ -123,16 +123,21 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
         this.currentSpeed = this.go.velocityX;
         this.run(this.direction,Math.abs(this.currentSpeed));
       }else{
-        this.idleize()
+        this.idleize();
       }
     }
   }
   //If collision from the front (left or right given the direction)
-  if( this.collidesFront(_myShape) ){
-    //if the collision is solid
-    if( _otherShape.sensor == false || _otherShape.sensor == null){
-      this.currentSpeed = 0;
-      this.facingWall = _myShape.lr_name == "right" ? 1 : -1;
+  if( this.collidesFront(_myShape) && !_otherBody.dynamic ){
+    //if the collision s solid
+    if( _otherShape.sensor == false || _otherShape.sensor == null ){
+      var mySides = LR.Utils.getRectShapeSides(this.go,_myShape);
+      var otherSides = LR.Utils.getRectShapeSides(_otherBody.go,_otherShape);
+      var t = mySides.right < otherSides.right && mySides.left > otherSides.left;
+      if( ! t ){
+        this.currentSpeed = 0;
+        this.facingWall = _myShape.lr_name == "right" ? 1 : -1;
+      }
     }
   }
 }
@@ -144,9 +149,11 @@ Player.prototype.onEndContact = function(contactData){
       this.fall();
     }
   }
+  
   //BUG TO DO
   if(contactData.myShape == null){
-    console.error("Shape null here !!")
+    console.error(contactData);
+    console.error("Shape null here !!" + contactData);
     return;
   }
   //If collision from the front (left or right given the direction)
@@ -221,6 +228,10 @@ Player.prototype.onMoveLeft = function(_key){
   if( ! this.canMove ){
     return;
   }
+  //Suppress Momentum in the air
+  if( !this.onGround && this.direction > 0){
+    this.currentSpeed = 0;
+  }
   this.direction = -1;
   if( this.onGround ){
     this.run();
@@ -233,6 +244,11 @@ Player.prototype.onMoveRight = function(_key){
   if( ! this.canMove ){
     return;
   }
+  //Suppress Momentum in the air
+  if( !this.onGround && this.direction < 0){
+    this.currentSpeed = 0;
+  }
+
   this.direction = 1;
   if( this.onGround ){
     this.run();
