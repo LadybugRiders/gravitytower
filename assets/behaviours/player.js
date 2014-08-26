@@ -169,7 +169,7 @@ Player.prototype.onEndContactLR = function(_contactData){
 //=========================================================
 
 Player.prototype.updateRun = function(){
-  if( this.facingWall == this.direction)
+  if( this.facingWall == this.direction || !this.canMove )
     return;
   this.currentSpeed += this.direction *  this.runAcc * this.entity.game.time.elapsed * 0.1;
   
@@ -256,6 +256,8 @@ Player.prototype.onMoveRight = function(_key){
 
 Player.prototype.onMoveRelease = function(){
   this.isMovePressed --;
+  if( this.isMovePressed < 0)
+    this.isMovePressed = 0;
 
   if( ! this.canMove )
     return;
@@ -381,6 +383,18 @@ Player.prototype.jump = function(_force, _jumpPower){
   }
 }
 
+Player.prototype.freeze = function(){
+  this.canMove = false;
+  this.canJump = false;
+  this.isMovePressed = 0;
+  this.entity.body.setZeroVelocity();
+  this.currentSpeed = 0;
+}
+
+Player.prototype.unfreeze = function(){
+  this.canMove = true;
+  this.canJump = true;
+}
 //=========================================================
 //                  BLINK / DUST
 //=========================================================
