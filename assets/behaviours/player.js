@@ -142,28 +142,26 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
   }
 }
 
-Player.prototype.onEndContact = function(contactData){
-  if( contactData.myShape == this.feetSensor && this.isLayerGround(contactData.otherBody.go.layer) ){
+
+Player.prototype.onContactLR = function(_contactData){
+
+}
+
+Player.prototype.onEndContactLR = function(_contactData){
+  if( _contactData.myShape == this.feetSensor && this.isLayerGround(_contactData.otherBody.go.layer) ){
     this.groundContacts --;
     if( this.groundContacts == 0 && this.state != "jump"){
       this.fall();
     }
   }
   
-  //BUG TO DO
-  if(contactData.myShape == null){
-    console.error(contactData);
-    console.error("Shape null here !!" + contactData);
-    return;
-  }
   //If collision from the front (left or right given the direction)
-  if( contactData.myShape.lr_name == (this.facingWall > 0?"right":"left") ){
+  if( _contactData.myShape.lr_name == (this.facingWall > 0?"right":"left") ){
     //if the collision is solid
-    if( contactData.otherShape.sensor == false || contactData.otherShape.sensor == null){
+    if( _contactData.otherShape.sensor == false || _contactData.otherShape.sensor == null){
       this.facingWall = 0;
     }
   }
-  //console.log("endPlayer " + contactData.otherBody.go.name);
 }
 
 //=========================================================

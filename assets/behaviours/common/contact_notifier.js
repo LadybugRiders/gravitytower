@@ -19,10 +19,9 @@ LR.Behaviour.ContactNotifier.prototype.update = function(){
          var itsShapeBounds = LR.Utils.getRectShapeSides(colData.otherBody.go, colData.otherShape);
    		//Check if the object is still overlapping
    		if( this.collides(myshapeBounds,itsShapeBounds) ){
-            this.go.sendMessage("onContact",colData);
+            this.go.sendMessage("onContactLR",colData);
    		}else{
-            console.log(colData.otherBody.go.name + " " + colData.myShape);
-            this.go.sendMessage("onEndContact", colData );
+            this.go.sendMessage("onEndContactLR", colData );
             //when out, remove
             this.collidingObjects.splice(i,1);
    		}
