@@ -389,6 +389,8 @@ Player.prototype.freeze = function(){
   this.isMovePressed = 0;
   this.entity.body.setZeroVelocity();
   this.currentSpeed = 0;
+  if(this.onGround)
+    this.idleize();
 }
 
 Player.prototype.unfreeze = function(){
@@ -512,10 +514,21 @@ Player.prototype.respawn = function(){
 Player.prototype.finish = function(_data){  
   this.entity.animations.play('win', 10, true);
   this.enabled = false;
+  this.freeze();
+  //set a timer
+  this.entity.game.time.events.add(
+    Phaser.Timer.SECOND * 1, 
+    function(){ this.entity.game.state.start("Level",true,false,{levelName: "menu_select_levels"});},
+    this);
+}
+
+//Called by a trigger finish (in general)
+Player.prototype.changeLevel = function(_data){  
+  this.entity.animations.play('win', 10, true);
   //set a timer
   this.entity.game.time.events.add(
     Phaser.Timer.SECOND * 0.1, 
-    function(){ this.entity.game.state.start("Level",true,false,{levelName: "menu_select_levels"});},
+    function(){ this.entity.game.state.start("Level",true,false,{levelName: _data.levelName});},
     this);
 }
 
