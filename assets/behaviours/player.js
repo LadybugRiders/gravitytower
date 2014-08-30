@@ -14,10 +14,10 @@ var Player = function(_gameobject) {
   this.runAcc = 7;
   this.airAcc = this.runAcc * 0.5;
   //Jump
-  this.jumpAcc = 22;
-  this.jumpHeight = 50;
+  this.jumpAcc = 26;
+  this.jumpHeight = 52;
   this.jumpBaseY = 0;
-  this.jumpImpulse = 360;
+  this.jumpMinHeight = 26;
   this.jumpMinVelocity = 170;
 
   this.onGround = false;
@@ -187,9 +187,10 @@ Player.prototype.updateJump = function(){
     return;
   }
   //check the height done by jump and button jump pressed
-  var deltaJumpOver = Math.abs( this.jumpBaseY - this.entity.y ) >= this.jumpHeight;
+  var delta = Math.abs( this.jumpBaseY - this.entity.y );
+  var deltaJumpOver = delta >= this.jumpHeight;
   
-  if( deltaJumpOver || !this.isJumpPressed ){
+  if( delta >= this.jumpMinHeight && (deltaJumpOver || !this.isJumpPressed) ){
     this.fall();
     return;
   }
@@ -273,7 +274,7 @@ Player.prototype.onJump = function(_key){
   if( ! this.canJump )
     return;
 
-  this.jump();
+  this.jump(false,this.jumpImpulse);
 }
 
 Player.prototype.onJumpRelease = function(_key){

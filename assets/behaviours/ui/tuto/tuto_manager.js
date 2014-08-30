@@ -5,8 +5,9 @@
 var TutoManager = function(_gameobject){
 	LR.Behaviour.call(this,_gameobject);
 	this.currentTuto = null;
-	this.maxCharPerLine = 28;
-	this.lines = 0;
+	this.open = false;
+	if( this.entity.game.device.desktop)
+		this.entity.game.inputManager.bindKeyPress("jump",this.onCloseTuto, this);
 }
 
 TutoManager.prototype = Object.create(LR.Behaviour.prototype);
@@ -35,6 +36,8 @@ TutoManager.prototype.create = function(_data){
 }
 
 TutoManager.prototype.launchTuto = function(_data){
+
+	this.open = true;
 	
 	this.button.entity.revive(),
 	this.background.entity.revive();
@@ -43,10 +46,14 @@ TutoManager.prototype.launchTuto = function(_data){
 	this.currentTuto = LR.Entity.FindByName(this.entity, _data.name );
 	if( this.currentTuto){
 		this.currentTuto.visible = true;
+		var mobile = LR.Entity.FindByName(this.currentTuto, "mobile");
+		var desktop = LR.Entity.FindByName(this.currentTuto, "desktop");
 		if( this.entity.game.device.desktop){
-			LR.Entity.FindByName(this.currentTuto, "mobile").destroy();
-		}else{
-			LR.Entity.FindByName(this.currentTuto, "desktop").destroy();			
+			desktop.visible = true;
+			mobile.destroy();
+		}else{			
+			mobile.visible = true;
+			desktop.destroy();
 		}
 	}
 	this.player.freeze();
@@ -62,10 +69,12 @@ TutoManager.prototype.launchTuto = function(_data){
 }
 
 TutoManager.prototype.closeTuto = function(){
+	this.open = false;
 	this.button.entity.kill();
 	this.background.entity.kill();
 	this.text.entity.visible = false;
 	this.button_text.entity.visible = false;
+	this.text.entity.text = "";
 	if( this.currentTuto ){
 		this.currentTuto.destroy();
 		this.currentTuto = null;
@@ -76,32 +85,26 @@ TutoManager.prototype.closeTuto = function(){
 TutoManager.prototype.onJsonLoaded = function(){
 	var json = this.entity.game.cache.getJSON("tuto_text");
 	if( !this.entity.game.device.desktop && json.mobile != null)
-		this.text.entity.text = this.wrapText(json.mobile);
+		this.text.entity.text = json.mobile;
 	else
-		this.text.entity.text = this.wrapText(json.text);
-	this.text.entity.y = this.textInitPos.y - (this.lines * this.text.entity.fontSize * 0.5);
+		this.text.entity.text = json.text;
+	this.text.entity.y = this.textInitPos.y - (this.text.entity.lines * this.text.entity.fontSize * 0.5);
+
+	//remove signals event binds
+	var loader = this.entity.game.load;
+	loader.onFileComplete.remove(this.onJsonLoaded, this);
+	loader.onFileError.remove(this.onJsonFailed, this);
 }
 
 TutoManager.prototype.onJsonFailed = function(){
 	this.text.entity.text = "";
+	//remove signals event binds
+	var loader = this.entity.game.load;
+	loader.onFileComplete.remove(this.onJsonLoaded, this);
+	loader.onFileError.remove(this.onJsonFailed, this);
 }
 
-TutoManager.prototype.wrapText = function(_string){
-	var s = "";
-	var array = _string.split(" ");
-	var i=0;
-	var count = 0;
-	this.lines = 0;
-	while( i< array.length ){
-		var word = array[i] + " ";
-		count += word.length;
-		if( count >= this.maxCharPerLine ){
-			count = 0;
-			s += "\n";
-			this.lines ++;
-		}
-		s+=word;
-		i++;
-	}
-	return s;
+TutoManager.prototype.onCloseTuto = function() {
+	if(this.open)
+		this.closeTuto();
 }
