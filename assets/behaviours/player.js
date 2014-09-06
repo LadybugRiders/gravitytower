@@ -15,17 +15,17 @@ var Player = function(_gameobject) {
   this.airAcc = this.runAcc * 0.5;
   //Jump
   this.jumpAcc = 26;
-  this.jumpHeight = 52;
+  this.jumpHeight = 60;
   this.jumpBaseY = 0;
   this.jumpMinHeight = 26;
-  this.jumpMinVelocity = 170;
+  this.jumpMinVelocity = 150;
 
   this.onGround = false;
   this.groundContacts = 0;
 
   this.dead = false;
   this.isHit = false;
-  this.jumpPower = 300;
+  this.jumpPower = 250;
   this.gravity = 1;
 
   this.direction = 1;
@@ -120,7 +120,7 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
       this.groundContacts ++;
       this.onGround = true;
       if( this.isMovePressed ){
-        this.currentSpeed = this.go.velocityX;
+        this.currentSpeed = this.go.body.velocity.x;
         this.run(this.direction,Math.abs(this.currentSpeed));
       }else{
         this.idleize();
@@ -180,9 +180,10 @@ Player.prototype.updateRun = function(){
 }
 
 Player.prototype.updateJump = function(){ 
+  
   //wait for the body to fall (according to gravity)
   //when this.fall is called, the state changes, so updateJump is not called anymore
-  if( this.entity.body.velocity.y * this.gravity < 0){
+  if( this.entity.body.velocity.y * this.gravity > 0){
     this.fall();
     return;
   }

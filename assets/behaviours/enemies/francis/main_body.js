@@ -20,23 +20,31 @@ Francis.MainBody.prototype.create = function(_data){
 	if(_data.legs) this.legs = _data.legs;
 	if(_data.eye) this.eye = _data.eye;
 
-	this.head = LR.Entity.FindByName(this.entity,"head");
-	this.body1 = LR.Entity.FindByName(this.entity,"body1");
-	this.body2 = LR.Entity.FindByName(this.entity,"body2");
-	this.little_pincer = LR.Entity.FindByName(this.entity,"pincer_back");
-
-	this.head.go.getBehaviour(Francis.Part).setMainBody(this);
-	this.body2.go.getBehaviour(Francis.Part).setMainBody(this);
-	this.little_pincer.go.getBehaviour(Francis.Part).setMainBody(this);
-
-	this.tail.setMainBody(this);
-	this.arm.setMainBody(this);
+	this.placeCamera();
+	//this.blink();
 }
 
+
 Francis.MainBody.prototype.update = function(){
-	this.body1.go.x-=0.1;
+	this.go.x-=0.1;
 }
 
 Francis.MainBody.prototype.moveTo = function(){
 
+}
+
+Francis.MainBody.prototype.placeCamera = function(){
+	this.entity.game.camera.deadzone.x = -20;
+	this.entity.game.camera.deadzone.y = 200;
+}
+
+Francis.MainBody.prototype.blink = function(){
+	//if( this.state == "idle"){
+    	this.eye.entity.animations.play("blink");
+ 	//}
+  //set a timer
+  	this.entity.game.time.events.add(
+      Phaser.Timer.SECOND * 6, 
+      this.blink,
+      this);
 }

@@ -6,7 +6,7 @@ if(!Francis)
 Francis.Part = function(_gameobject){
 	LR.Behaviour.call(this, _gameobject);
 	this.position = new Phaser.Point();
-	this.mainOffset = new Phaser.Point();
+	this.initPos = new Phaser.Point(this.entity.x,this.entity.y);
 }
 
 Francis.Part.prototype = Object.create(LR.Behaviour.prototype);
@@ -20,33 +20,29 @@ Francis.Part.prototype.create = function(_data){
 }
 
 Francis.Part.prototype.update = function(){
-	this.go.x = this.position.x + this.mainBody.body1.x + this.mainOffset.x;
-	this.go.y = this.position.y + this.mainBody.body1.y + this.mainOffset.y;
+	this.go.x = this.position.x ;
+	this.go.y = this.position.y ;
 }
 
 Francis.Part.prototype.goTo = function (_tweenData) {
+	var target = this.entity.body || this.entity;
 	var data = {};
 	data.x = _tweenData.x ;
 	data.y = _tweenData.y ;
-	this.entity.game.add.tween(this.position).to(
+	this.entity.game.add.tween(target).to(
 		this.idleBegin,2000,null,true,0,1,false
 	);
-	this.entity.game.add.tween(this.entity).to(
+	/*this.entity.game.add.tween(this.target).to(
 		{"angle":this.idleBegin.angle},2000,null,true,0,1,false
-	);
+	);*/
 }
 
 Francis.Part.prototype.idleize = function(){
-	this.entity.game.add.tween(this.position).to(
+	var target = this.entity.body || this.entity;
+	this.entity.game.add.tween(target).to(
 		this.idleEnd,2000,null,true,0,Number.MAX_VALUE,true
 	);
-	this.entity.game.add.tween(this.entity).to(
-		{angle:this.idleEnd.angle},2000,null,true,0,Number.MAX_VALUE,true
-	);
-}
-
-Francis.Part.prototype.setMainBody = function(_mainBody){
-	this.mainBody = _mainBody;
-	this.mainOffset.x = this.entity.x - this.mainBody.body1.x;
-	this.mainOffset.y = this.entity.y - this.mainBody.body1.y;
+// 	this.entity.game.add.tween(target).to(
+// 		{angle:this.idleEnd.angle},2000,null,true,0,Number.MAX_VALUE,true
+// 	);
 }

@@ -26,16 +26,9 @@ Francis.Arm.prototype.create = function(_data){
 }
 
 Francis.Arm.prototype.start = function(){
-	this.idleize();
+	//this.idleize();
 }
 
 Francis.Arm.prototype.idleize = function(){
-	this.parts.forEach(function(element){element.idleize()});
-}
-
-Francis.Arm.prototype.setMainBody = function(_mainBody){
-	this.mainBody = _mainBody;
-	for(var i=0; i < this.parts.length; i++){
-		this.parts[i].setMainBody(_mainBody);
-	}
+	//this.parts.forEach(function(element){element.idleize()});
 }

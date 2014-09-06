@@ -19,10 +19,10 @@ UIInGame.prototype.constructor = UIInGame;
 
 UIInGame.prototype.create = function(_data){
 	if( _data.coins ){
-		this.coinsScript = _data.coins.getBehaviour(BitmapNumber);
+		this.coinsScript = _data.coins.entity;
 	}
 	if( _data.lives ){
-		this.livesScript = _data.lives.getBehaviour(BitmapNumber);
+		this.livesScript = _data.lives.entity;
 	}
 }
 
@@ -33,11 +33,11 @@ UIInGame.prototype.start = function(_data){
 
 UIInGame.prototype.onLivesChanged = function(_data){
 	if(this.livesScript)
-		this.livesScript.setNumber(this.save.getSave()["lives"]);
+		this.livesScript.text = this.save.getSave()["lives"];
 }
 
 UIInGame.prototype.onCoinsChanged = function(_data){
 	if(this.coinsScript)
-		this.coinsScript.setNumber(this.save["coins"]);
+		this.coinsScript.text = this.save["coins"];
 }
 
