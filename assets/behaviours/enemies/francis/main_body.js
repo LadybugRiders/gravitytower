@@ -21,12 +21,11 @@ Francis.MainBody.prototype.create = function(_data){
 	if(_data.eye) this.eye = _data.eye;
 
 	this.placeCamera();
-	//this.blink();
 }
 
 
 Francis.MainBody.prototype.update = function(){
-	this.go.x-=0.1;
+	
 }
 
 Francis.MainBody.prototype.moveTo = function(){
@@ -36,15 +35,4 @@ Francis.MainBody.prototype.moveTo = function(){
 Francis.MainBody.prototype.placeCamera = function(){
 	this.entity.game.camera.deadzone.x = -20;
 	this.entity.game.camera.deadzone.y = 200;
-}
-
-Francis.MainBody.prototype.blink = function(){
-	//if( this.state == "idle"){
-    	this.eye.entity.animations.play("blink");
- 	//}
-  //set a timer
-  	this.entity.game.time.events.add(
-      Phaser.Timer.SECOND * 6, 
-      this.blink,
-      this);
 }

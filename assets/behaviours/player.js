@@ -147,8 +147,9 @@ Player.prototype.onContactLR = function(_contactData){
 
 }
 
-Player.prototype.onEndContactLR = function(_contactData){
-  if( _contactData.myShape == this.feetSensor && this.isLayerGround(_contactData.otherBody.go.layer) ){
+Player.prototype.onEndContact = function(_otherBody,_myShape, _otherShape){
+
+  if( _myShape == this.feetSensor && this.isLayerGround(_otherBody.go.layer) ){
     this.groundContacts --;
     if( this.groundContacts == 0 && this.state != "jump"){
       this.fall();
@@ -156,9 +157,9 @@ Player.prototype.onEndContactLR = function(_contactData){
   }
   
   //If collision from the front (left or right given the direction)
-  if( _contactData.myShape.lr_name == (this.facingWall > 0?"right":"left") ){
+  if( _myShape.lr_name == (this.facingWall > 0?"right":"left") ){
     //if the collision is solid
-    if( _contactData.otherShape.sensor == false || _contactData.otherShape.sensor == null){
+    if( _otherShape.sensor == false || _otherShape.sensor == null){
       this.facingWall = 0;
     }
   }
