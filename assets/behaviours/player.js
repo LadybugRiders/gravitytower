@@ -6,11 +6,11 @@ var Player = function(_gameobject) {
 	LR.Behaviour.call(this, _gameobject);
 
   //Speed Values
-  this.baseSpeed = 200;
+  this.baseSpeed = 10;
   this.speed = this.baseSpeed;
   this.currentSpeed = 0;
   this.maxSpeed = 200;
-  this.airSpeed = this.speed * 0.5;
+  this.airSpeed = this.maxSpeed * 0.4 ;
   this.runAcc = 7;
   this.airAcc = this.runAcc * 0.5;
   //Jump
@@ -209,8 +209,9 @@ Player.prototype.updateRunAir = function(){
   if( this.facingWall == this.direction)
     return;
   if( this.isMovePressed ){
-    if( Math.abs( this.currentSpeed ) > this.airSpeed)
+    if( Math.abs( this.currentSpeed ) > this.airSpeed){
       return;
+    }
      this.currentSpeed += this.direction *  this.airAcc * this.entity.game.time.elapsed * 0.1;
     
     if( Math.abs( this.currentSpeed ) > this.airSpeed)
@@ -310,8 +311,8 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
   this.canMove = true;
   this.canJump = true;
   this.changeGravity( { "gravity":_gravity });
-  this.entity.body.velocity.x = _vector.x * 220;
-  this.entity.body.velocity.y = _vector.y * -150 - Math.abs(_vector.x) * 220;
+  this.entity.body.velocity.x = _vector.x * 320;
+  this.entity.body.velocity.y = _vector.y * -180 - Math.abs(_vector.x) * 240;
 }
 
 Player.prototype.onCollectCoin = function(_data){

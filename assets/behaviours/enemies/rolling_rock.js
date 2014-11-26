@@ -7,11 +7,28 @@ var RollingRock = function(_gameobject) {
 	this.onGround = false;
 	this.gravity = 1;
 	this.speed = 100;
-  //weaknesses
-  this.jumpable = false;
-  this.cutable = false;
-  this.hatable = false;
+	//weaknesses
+	this.jumpable = false;
+	this.cutable = false;
+	this.hatable = false;
+	this.direction = 1;
+	this.launched = false;
 }
 
 RollingRock.prototype = Object.create(Enemy.prototype);
 RollingRock.prototype.constructor = RollingRock;
+
+RollingRock.prototype.create = function(_data){
+	if(_data.direction) this.direction = _data.direction;
+}
+
+RollingRock.prototype.launch = function(){
+	this.go.gravity = 1;
+	this.launched = true;
+}
+
+RollingRock.prototype.update = function(){
+	if( this.launched == true ){
+		this.entity.body.velocity.x = this.direction * 100;
+	}
+}
