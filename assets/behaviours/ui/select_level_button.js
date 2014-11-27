@@ -30,6 +30,11 @@ SelectLevelButton.prototype.fillSlots = function(_count) {
 }
 
 SelectLevelButton.prototype.onInputDown = function() {
+	var levelSave = this.entity.game.playerSave.getLevelSave(this.level);
+	if( levelSave == null)
+	 levelSave = this.entity.game.playerSave.createLevelSave(this.level);
+	levelSave.curLevelCoins = 0;
+	levelSave.curLevelAtCheckpointCoins = 0;
 	this.entity.game.state.start("Level",true,false,
 								{levelName: this.level}
 		);

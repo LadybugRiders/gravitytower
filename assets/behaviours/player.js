@@ -65,7 +65,7 @@ var Player = function(_gameobject) {
   this.respawnPosition = new Phaser.Point(this.entity.x, this.entity.y);
   this.respawnDirection = 1;
 
-  this.entity.game.playerSave["coins"] = 0;
+  this.playerSave = this.entity.game.playerSave;
 
 };
 
@@ -318,7 +318,7 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
 Player.prototype.onCollectCoin = function(_data){
   var count = 1;
   if( _data.count ) count = _data.count;
-  this.entity.game.playerSave["coins"] += count;
+  this.playerSave.getSave()["curLevelCoins"] += count;
   this.entity.game.pollinator.dispatch("onCoinsChanged")
 }
 
