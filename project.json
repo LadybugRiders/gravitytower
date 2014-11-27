@@ -1,4 +1,9 @@
 {
+<<<<<<< HEAD
 	"name": "Kimis'rescue",
 	"firstLevel": "landing"
+=======
+	"name": "KimisRescue",
+	"firstLevel": "level1_1"
+>>>>>>> 2027eef1ba153886569e07277a4cb25cc01161ce
 }
