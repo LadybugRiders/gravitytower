@@ -6,6 +6,7 @@ var TutoManager = function(_gameobject){
 	LR.Behaviour.call(this,_gameobject);
 	this.currentTuto = null;
 	this.open = false;
+	this.entity.visible = false;
 	if( this.entity.game.device.desktop)
 		this.entity.game.inputManager.bindKeyPress("jump",this.onCloseTuto, this);
 }
@@ -36,7 +37,7 @@ TutoManager.prototype.create = function(_data){
 }
 
 TutoManager.prototype.launchTuto = function(_data){
-
+	this.entity.visible = true;
 	this.open = true;
 	
 	this.button.entity.revive(),

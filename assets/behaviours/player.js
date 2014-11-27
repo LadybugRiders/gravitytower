@@ -311,7 +311,7 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
   this.canMove = true;
   this.canJump = true;
   this.changeGravity( { "gravity":_gravity });
-  this.entity.body.velocity.x = _vector.x * 320;
+  this.entity.body.velocity.x = _vector.x * 300;
   this.entity.body.velocity.y = _vector.y * -180 - Math.abs(_vector.x) * 240;
 }
 

@@ -1,35 +1,74 @@
 "use strict";
 //>>LREditor.Behaviour.name: Enemy
-//>>LREditor.Behaviour.params : { "direction": 1, "jumpable" : true, "cutable" : true, "hatable":true, "dead":false, "smoke":null}
+//>>LREditor.Behaviour.params : { "direction": 1, "gravity":1, "jumpable" : true, "cutable" : true, "hatable":true, "dead":false, "smoke":null}
 var Enemy = function(_gameobject) {	
 	LR.Behaviour.call(this,_gameobject);
 	this.onGround = false;
 	this.jumpPower = 200;
 	this.gravity = 1;
+  this.direction = 1;
 	this.speed = 100;
   //weaknesses
   this.jumpable = true;
   this.cutable = true;
   this.hatable = true;
+  //speed
+  this.baseSpeed = 10;
+  this.speed = this.baseSpeed;
+  this.currentSpeed = 0;
+  this.maxSpeed = 100;
+  this.runAcc = 7;
+  //vars
+  this.canMove = true;
+  this.facingWall = 0;
 
   this.dead = false;
-  this.initX = this.entity.x;
-  this.initY = this.entity.y;
+
+  this.state = "idle";
+  this.lastState = "idle";
+
 }
 
 Enemy.prototype = Object.create(LR.Behaviour.prototype);
 Enemy.prototype.constructor = Enemy;
+
+Enemy.prototype.start = function(){  
+  this.initX = this.entity.x;
+  this.initY = this.entity.y;
+}
 
 Enemy.prototype.create = function( _data ){
 	if(_data.direction) this.direction = _data.direction;
   if( _data.jumpable ) this.jumpable = _data.jumpable;
   if( _data.cutable ) this.cutable = _data.cutable;
   if( _data.hatable ) this.hatable = _data.hatable;
+  if( _data.gravity){
+    this.gravity = _data.gravity;
+    this.go.gravity = this.gravity;
+  }
   if( _data.smoke ){
    this.smoke = _data.smoke;
    this.smoke.entity.visible = false;
   }
   if(_data.dead == true ) this.entity.kill();
+
+  this.scaleByGravity();
+}
+
+
+//=================================================
+//        ACTIONS
+//=================================================
+
+Enemy.prototype.updateRun = function(){
+  if( this.facingWall == this.direction || !this.canMove )
+    return;
+  this.currentSpeed += this.direction *  this.runAcc * this.entity.game.time.elapsed * 0.1;
+  
+  if( Math.abs( this.currentSpeed ) > this.maxSpeed)
+    this.currentSpeed = this.direction * this.maxSpeed;
+
+  this.entity.body.velocity.x = this.currentSpeed;
 }
 
 Enemy.prototype.pop = function( _data){

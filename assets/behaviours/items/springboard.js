@@ -38,9 +38,12 @@ Springboard.prototype.create = function(_data){
 */
 Springboard.prototype.onTriggered = function(_gameobject){
 	if( _gameobject.layer == "player"){
-		if( _gameobject.entity.body.velocity.y > 0)
+
+		if( _gameobject.entity.body.velocity.y < 0)
 			return;
+
 		var playerScript = _gameobject.getBehaviour(Player);
-		playerScript.jump(true,this.force);
+		if( playerScript )
+			playerScript.jump(true,this.force);
 	}
 }
