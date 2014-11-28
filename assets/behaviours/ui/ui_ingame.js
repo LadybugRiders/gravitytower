@@ -51,9 +51,7 @@ function createDebugSave(_this){
 	var debugSave = _this.playerSave.createLevelSave("debug");
 	debugSave.coins = 0;
 	debugSave.kimis = [];
-	debugSave.coinsAtCheckpoint = 0;
-	debugSave.collectedCoinsIDs = [];
-	debugSave.collectedCoinsIDsAtCheckpoint = [];
-	debugSave.kimisAtCheckpoint = debugSave.kimis;
+	debugSave.coinsIDs = [];
+	debugSave.checkpoint = {active:false,kimis: debugSave.kimis, coinsIDs : []};
 	_this.playerSave.activateLevelSave("debug");
 }

@@ -48,11 +48,12 @@ SelectLevelButton.prototype.onInputDown = function() {
 
 	//reset level save for temporary data
 	levelSave.coins = 0;
-	levelSave.coinsAtCheckpoint = 0;
-	levelSave.collectedCoinsIDs = [];
-	levelSave.collectedCoinsIDsAtCheckpoint = [];
-	levelSave.kimisAtCheckpoint = levelSave.kimis;
-	levelSave.checkpointPassed = false;
+	levelSave.coinsIDs = [];
+	//checkpoint data
+	levelSave.checkpoint = { active : false,
+							kimis: levelSave.kimis, 
+							coinsIDs : []
+						};
 
 	//Write data
 	playerSave.writeSave();

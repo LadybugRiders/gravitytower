@@ -82,9 +82,11 @@ Player.prototype.create = function(_data) {
   this.levelSave = this.playerSave.getActiveLevelSave();
 
   //checkpoint
-  var checkpointData = this.playerSave.getValue("checkpoint");
-  if(checkpointData == null){
-    this.playerSave.setValue( "checkpoint",{x:this.entity.x,y:this.entity.y,direction:this.direction} );
+  var checkpointData = this.levelSave["checkpoint"];
+  if(!checkpointData.active){
+    checkpointData.x = this.entity.x;
+    checkpointData.y = this.entity.y;
+    checkpointData.direction = this.direction;
   }else{
     this.x = checkpointData.x; this.y = checkpointData.y;
     this.direction = checkpointData.direction;
@@ -508,11 +510,30 @@ Player.prototype.die = function(){
       this);
 }
 
+
+Player.prototype.checkpoint = function(_dataSent){
+  var checkpointData = this.levelSave.checkpoint;
+  checkpointData.x = _dataSent.sender.entity.x;
+  checkpointData.y = _dataSent.sender.entity.y;
+  if( _dataSent.direction )
+    checkpointData.direction = _dataSent.direction;
+  //keep collectables
+  checkpointData.kimis = this.levelSave.kimis;
+  checkpointData.coinsIDs = this.levelSave.coinsIDs;
+  //save data at checkpoint
+  this.playerSave.setValue( "checkpoint",checkpointData );
+  //change checkpoint image
+  _dataSent.sender.entity.frame = 1;
+}
+
 Player.prototype.respawn = function(){
   //this.entity.game.pollinator.dispatch("onPlayerRespawn");
-  var checkpointData = this.playerSave.getValue("checkpoint");
+  var checkpointData = this.levelSave["checkpoint"];
   this.go.setPosition( checkpointData.x, checkpointData.y);
-  console.log( this.game.state.restart);
+  //reset collected values
+  this.levelSave.kimis = checkpointData.kimis;
+  this.levelSave.coinsIDs = checkpointData.coinsIDs;
+  this.levelSave.coins = checkpointData.coinsIDs.length;
   this.game.state.restart();
   this.scaleByGravity();
 }
@@ -538,17 +559,6 @@ Player.prototype.changeLevel = function(_data){
     Phaser.Timer.SECOND * 0.1, 
     function(){ this.entity.game.state.start("Level",true,false,{levelName: _data.levelName});},
     this);
-}
-
-Player.prototype.checkpoint = function(_dataSent){
-  var checkpointData = {x: _dataSent.sender.entity.x, 
-                        y: _dataSent.sender.entity.y,
-                       direction : 1};
-  if( _dataSent.direction )
-    checkpointData.direction = _dataSent.direction;
-  this.playerSave.setValue( "checkpoint",checkpointData );
-  //change checkpoint image
-  _dataSent.sender.entity.frame = 1;
 }
 
 //=========================================================

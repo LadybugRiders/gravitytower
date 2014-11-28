@@ -14,8 +14,12 @@ Collectable.prototype.onBeginContact = function(_otherBody, _myShape, _otherShap
 	if( _otherBody.go.layer == "player"){
 		var player = _otherBody.go.getBehaviour(Player);
 		if( player ){
-			this.entity.kill();
+			this.onCollected();
 			LR.Behaviour.Trigger.prototype.onBeginContact.call(this,_otherBody, _myShape, _otherShape, _equation);			
 		}
 	}
+}
+
+Collectable.prototype.onCollected = function(_gameobject){
+	this.entity.kill();
 }

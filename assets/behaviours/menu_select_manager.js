@@ -6,7 +6,9 @@ var MenuSelectManager = function(_gameobject) {
 	LR.Behaviour.call(this, _gameobject);
   this.levelsGroup = {};
   this.playerSave = this.entity.game.playerSave;
-  //this.playerSave.deleteSave();
+  this.game.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(
+      this.playerSave.deleteSave,this 
+  );
   this.checkGameData();
 };
 
