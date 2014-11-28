@@ -11,8 +11,9 @@ Kimi.prototype.constructor = Kimi;
 
 Kimi.prototype.create = function( _data ){
 	if( _data.id ) this.kimi_id = _data.id;
-	var levelSave = this.entity.game.playerSave.getLevelSave();
+	var levelSave = this.entity.game.playerSave.getActiveLevelSave();
 	if( levelSave && levelSave.kimis ){
+		//console.log(levelSave);
 		this.kimisSave = levelSave.kimis;
 		//search for id and kill if already taken
 		for(var i=0; i < this.kimisSave.length ; i ++){
@@ -27,7 +28,9 @@ Kimi.prototype.create = function( _data ){
 Kimi.prototype.onTriggered = function(_gameobject){
 	if( _gameobject.layer == "player"){
 		this.entity.kill();
-		if( this.kimisSave )
-			this.kimisSave.push(this.id);
+		if( this.kimisSave ){
+			this.kimisSave.push(this.kimi_id);
+			this.entity.game.playerSave.getActiveLevelSave()['kimis'] = this.kimisSave;
+		}
 	}
 }

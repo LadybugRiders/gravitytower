@@ -65,8 +65,9 @@ var Player = function(_gameobject) {
   this.respawnPosition = new Phaser.Point(this.entity.x, this.entity.y);
   this.respawnDirection = 1;
 
+  //keep reference to the save
   this.playerSave = this.entity.game.playerSave;
-
+  this.levelSave = this.playerSave.getActiveLevelSave();
 };
 
 Player.prototype = Object.create(LR.Behaviour.prototype);
@@ -318,12 +319,12 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
 Player.prototype.onCollectCoin = function(_data){
   var count = 1;
   if( _data.count ) count = _data.count;
-  this.playerSave.getSave()["curLevelCoins"] += count;
+  this.levelSave["coins"] += count;
   this.entity.game.pollinator.dispatch("onCoinsChanged")
 }
 
 Player.prototype.onCollectLife = function(){
-  this.entity.game.playerSave.getSave()["lives"] ++;
+  this.entity.game.playerSave["lives"] ++;
   this.entity.game.pollinator.dispatch("onLivesChanged")
 }
 
@@ -490,7 +491,7 @@ Player.prototype.die = function(){
   //Accounts
   this.entity.game.playerSave.getSave()["lives"] --; 
   this.entity.game.pollinator.dispatch("onLivesChanged");
-  this.entity.game.playerSave.writeSave();
+  this.entity.game.playerSave.writeValue("lives");
 
   //set a timer
     this.entity.game.time.events.add(
@@ -519,6 +520,7 @@ Player.prototype.finish = function(_data){
   this.entity.animations.play('win', 10, true);
   this.enabled = false;
   this.freeze();
+  this.playerSave.setValue("finished",true);
   //set a timer
   this.entity.game.time.events.add(
     Phaser.Timer.SECOND * 1, 

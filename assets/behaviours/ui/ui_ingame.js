@@ -37,8 +37,7 @@ UIInGame.prototype.onLivesChanged = function(_data){
 }
 
 UIInGame.prototype.onCoinsChanged = function(_data){
-
 	if(this.coins)
-		this.coins.text = this.save.getValue("curLevelCoins");
+		this.coins.text = this.save.getActiveLevelSave("coins");
 }
 
