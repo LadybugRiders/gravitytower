@@ -121,7 +121,7 @@ MenuSelectManager.prototype.fillKimisSaved = function() {
     var levelData = this.playerSave.getLevelSave(this.levelButtons[i].levelID);
     if(levelData){
       var levelGroup = this.levelButtons[i].entity.parent;
-      console.log(levelData);
+      //fill slots according to the number of kimis resued by level 
       for(var k=0; k < levelData.kimis.length; k++){
         var slot = LR.GameObject.FindByName(levelGroup,"slot"+(k+1));
         if( slot ){

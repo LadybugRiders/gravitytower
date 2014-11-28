@@ -61,13 +61,6 @@ var Player = function(_gameobject) {
   this.state = "idle";
   this.lastState = this.state;
 
-  //respawn
-  this.respawnPosition = new Phaser.Point(this.entity.x, this.entity.y);
-  this.respawnDirection = 1;
-
-  //keep reference to the save
-  this.playerSave = this.entity.game.playerSave;
-  this.levelSave = this.playerSave.getActiveLevelSave();
 };
 
 Player.prototype = Object.create(LR.Behaviour.prototype);
@@ -83,6 +76,20 @@ Player.prototype.create = function(_data) {
   //dusts
   this.dusts = [_data.dust1,_data.dust2];
   this.dusts.forEach(function(_element){_element.entity.visible = false;});
+
+  //keep reference to the save
+  this.playerSave = this.entity.game.playerSave;
+  this.levelSave = this.playerSave.getActiveLevelSave();
+
+  //checkpoint
+  var checkpointData = this.playerSave.getValue("checkpoint");
+  if(checkpointData == null){
+    this.playerSave.setValue( "checkpoint",{x:this.entity.x,y:this.entity.y,direction:this.direction} );
+  }else{
+    this.x = checkpointData.x; this.y = checkpointData.y;
+    this.direction = checkpointData.direction;
+    this.scaleByGravity();
+  }
 }
 
 Player.prototype.update = function() {
@@ -480,6 +487,7 @@ Player.prototype.die = function(){
 
   //DEATH !!!
   if(this.entity.game.playerSave.getSave()["lives"] == 0){
+    console.log("DEATH !!!!");
     //set a timer
     this.entity.game.time.events.add(
       Phaser.Timer.SECOND * 3, 
@@ -502,16 +510,10 @@ Player.prototype.die = function(){
 
 Player.prototype.respawn = function(){
   //this.entity.game.pollinator.dispatch("onPlayerRespawn");
-  this.hair.deactivatePower();
-  this.entity.body.setZeroVelocity();
-  this.mainShape.sensor = false;
-  this.state = "jump";
-  this.entity.game.camera.follow(this.entity);
-  this.enableEvents = true;
-  this.dead = false;
-  //respawn
-  this.direction = this.respawnDirection;
-  this.go.setPosition( this.respawnPosition.x, this.respawnPosition.y);
+  var checkpointData = this.playerSave.getValue("checkpoint");
+  this.go.setPosition( checkpointData.x, checkpointData.y);
+  console.log( this.game.state.restart);
+  this.game.state.restart();
   this.scaleByGravity();
 }
 
@@ -539,9 +541,13 @@ Player.prototype.changeLevel = function(_data){
 }
 
 Player.prototype.checkpoint = function(_dataSent){
-  this.respawnPosition = new Phaser.Point( _dataSent.sender.entity.x, _dataSent.sender.entity.y);
+  var checkpointData = {x: _dataSent.sender.entity.x, 
+                        y: _dataSent.sender.entity.y,
+                       direction : 1};
   if( _dataSent.direction )
-    this.respawnDirection = _dataSent.direction;
+    checkpointData.direction = _dataSent.direction;
+  this.playerSave.setValue( "checkpoint",checkpointData );
+  //change checkpoint image
   _dataSent.sender.entity.frame = 1;
 }
 
