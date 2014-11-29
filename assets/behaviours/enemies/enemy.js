@@ -153,7 +153,8 @@ Enemy.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _eq
     //hit by a blade
     if( playerHair ){
       if(playerHair.isShapeAndStatusBlade(_otherShape)){
-        this.onHitHBlade(playerHair.x > this.entity.x ? -1 : 1);
+        console.log("HS");
+        this.onHitBlade(playerHair.x > this.entity.x ? -1 : 1);
       }
       //if hit by a hat
       if( playerHair.isShapeAndStatusHat(_otherShape)){
@@ -193,7 +194,7 @@ Enemy.prototype.onHitJump = function(){
 }
 
 Enemy.prototype.onHitBlade = function( _direction ){
-  if(this.bladable)
+  if(this.cutable)
     this.die();
 }
 

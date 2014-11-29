@@ -93,24 +93,24 @@ PlayerHair.prototype.isShapeAndStatusHook = function(_myShape){
 	if( ! this.isHook )
 		return false;
 	if( _myShape !== this.hookShape)
-		return;
+		return false;
 	return true;
 }
 
 PlayerHair.prototype.isShapeAndStatusBlade = function(_myShape){
 	if( ! this.isBlade )
 		return false;
-	if( (_myShape !== this.blade_right && this.player.direction > 0 )
-		|| ( _myShape !== this.blade_left && this.player.direction < 0) )
-		return;
-	return true;
+	if( (_myShape == this.bladeRShape && this.player.direction > 0 )
+		|| ( _myShape == this.bladeLShape && this.player.direction < 0) )
+		return true;
+	return false;
 }
 
 PlayerHair.prototype.isShapeAndStatusHat = function(_myShape){
 	if( ! this.isHat )
 		return false;
 	if( _myShape !== this.hatShape)
-		return;
+		return false;
 	return true;
 }
 
