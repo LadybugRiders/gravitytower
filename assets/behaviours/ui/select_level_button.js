@@ -51,7 +51,7 @@ SelectLevelButton.prototype.onInputDown = function() {
 	levelSave.coinsIDs = [];
 	//checkpoint data
 	levelSave.checkpoint = { active : false,
-							kimis: levelSave.kimis, 
+							kimis: JSON.parse(JSON.stringify(levelSave.kimis)), 
 							coinsIDs : []
 						};
 

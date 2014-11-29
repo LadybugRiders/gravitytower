@@ -518,8 +518,8 @@ Player.prototype.checkpoint = function(_dataSent){
   if( _dataSent.direction )
     checkpointData.direction = _dataSent.direction;
   //keep collectables
-  checkpointData.kimis = this.levelSave.kimis;
-  checkpointData.coinsIDs = this.levelSave.coinsIDs;
+  checkpointData.kimis = JSON.parse(JSON.stringify(this.levelSave.kimis));
+  checkpointData.coinsIDs = JSON.parse(JSON.stringify(this.levelSave.coinsIDs));
   //save data at checkpoint
   this.playerSave.setValue( "checkpoint",checkpointData );
   //change checkpoint image
@@ -531,8 +531,8 @@ Player.prototype.respawn = function(){
   var checkpointData = this.levelSave["checkpoint"];
   this.go.setPosition( checkpointData.x, checkpointData.y);
   //reset collected values
-  this.levelSave.kimis = checkpointData.kimis;
-  this.levelSave.coinsIDs = checkpointData.coinsIDs;
+  this.levelSave.kimis = JSON.parse(JSON.stringify(checkpointData.kimis));
+  this.levelSave.coinsIDs = JSON.parse(JSON.stringify(checkpointData.coinsIDs));
   this.levelSave.coins = checkpointData.coinsIDs.length;
   this.game.state.restart();
   this.scaleByGravity();

@@ -12,7 +12,6 @@ Coin.prototype.constructor = Coin;
 
 Coin.prototype.create = function(_gameobject){
 	Collectable.prototype.create.call(this,_gameobject);
-	console.log(this.game.playerSave.getActiveLevelSave());
 	var coinsIDs = this.game.playerSave.getActiveLevelSave().coinsIDs;
 	for(var i=0; i < coinsIDs.length; i++){
 		if( coinsIDs[i] == this.go.id ){

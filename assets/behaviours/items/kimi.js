@@ -28,9 +28,6 @@ Kimi.prototype.create = function( _data ){
 Kimi.prototype.onTriggered = function(_gameobject){
 	if( _gameobject.layer == "player"){
 		this.entity.kill();
-		if( this.kimisSave ){
-			this.kimisSave.push(this.kimi_id);
-			this.entity.game.playerSave.getActiveLevelSave()['kimis'] = this.kimisSave;
-		}
+		this.game.playerSave.getActiveLevelSave().kimis.push(this.kimi_id);
 	}
 }
