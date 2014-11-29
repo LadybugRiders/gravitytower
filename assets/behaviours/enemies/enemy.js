@@ -22,11 +22,12 @@ var Enemy = function(_gameobject) {
   this.canMove = true;
   this.facingWall = 0;
 
+  this.range = 100;
+
   this.dead = false;
 
   this.state = "idle";
   this.lastState = "idle";
-
 }
 
 Enemy.prototype = Object.create(LR.Behaviour.prototype);
@@ -69,6 +70,20 @@ Enemy.prototype.updateRun = function(){
     this.currentSpeed = this.direction * this.maxSpeed;
 
   this.entity.body.velocity.x = this.currentSpeed;
+}
+
+Enemy.prototype.updateMoveRange = function(){
+  var rangeDone = this.initX - this.entity.x ;
+  if(this.direction < 0 && rangeDone > this.range * 0.5){
+    this.direction = 1;
+    this.scaleByGravity();
+    this.currentSpeed = 0;
+  }
+  if(this.direction > 0 && rangeDone < -this.range *0.5){
+    this.direction = -1;
+    this.scaleByGravity();
+    this.currentSpeed = 0;
+  }
 }
 
 Enemy.prototype.pop = function( _data){

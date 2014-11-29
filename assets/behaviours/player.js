@@ -4,7 +4,7 @@
 //>>LREditor.Behaviour.params : {"hair_name":"hair", "acolyte":null}
 var Player = function(_gameobject) {
 	LR.Behaviour.call(this, _gameobject);
-
+  this.go.setPostBroadPhaseCallback(this.onPostBroadphase,this);
   //Speed Values
   this.baseSpeed = 10;
   this.speed = this.baseSpeed;
@@ -109,6 +109,12 @@ Player.prototype.update = function() {
 
 Player.prototype.postUpdate = function(){
   this.hair.followPlayer();
+}
+
+Player.prototype.onPostBroadphase = function(_otherBody){
+  if( this.isHit && _otherBody.go.layer=="enemy" )
+    return false;
+  return true;
 }
 
 //This method is automatically called when the body of the player collides with another cody
@@ -458,12 +464,19 @@ Player.prototype.hit = function(_data){
   if( this.acolyte.dead){
     this.die();
   }else{
-    this.acolyte.loseHealth();    
+    this.acolyte.loseHealth();  
+    //blinking alpha  
     var tween = this.entity.game.add.tween(this.entity);
     tween.to( {alpha : 0},200,null,true,0,11,true);
     tween.onComplete.add(this.onEndHit,this);
     tween = this.entity.game.add.tween(this.hair.entity);
     tween.to( {alpha : 0},200,null,true,0,11,true);
+    //Compute vector from the GameObject that hits the player
+    var vec = new Phaser.Point( this.world.x - _data.sender.world.x,
+                                this.world.y - _data.sender.world.y).normalize();
+    //apply force
+    this.currentSpeed = vec.x *150;
+    this.go.body.velocity.y = -200;
     this.isHit = true;
   }
 }
