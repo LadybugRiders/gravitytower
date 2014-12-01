@@ -1,23 +1,15 @@
 {"frames":[
 
 {
-	"filename": "bg_stones.png",
-	"frame":{"x":0,"y":0,"w":128,"h":64},
-	"rotated":false,
-	"trimmed":false,
-	"spriteSourceSize":{"x":0,"y":0,"w":128,"y":64},
-	"sourceSize":{"w":128,"h":64}
-},
-{
 	"filename": "hole_circle.png",
-	"frame":{"x":129,"y":0,"w":64,"h":64},
+	"frame":{"x":0,"y":0,"w":64,"h":64},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":64,"y":64},
 	"sourceSize":{"w":64,"h":64}
 },
 {
-	"filename": "ground.png",
+	"filename": "column_body_crushed.png",
 	"frame":{"x":0,"y":65,"w":64,"h":32},
 	"rotated":false,
 	"trimmed":false,
@@ -25,8 +17,32 @@
 	"sourceSize":{"w":64,"h":32}
 },
 {
-	"filename": "mini_block.png",
-	"frame":{"x":65,"y":65,"w":32,"h":32},
+	"filename": "column_foot1.png",
+	"frame":{"x":65,"y":0,"w":64,"h":32},
+	"rotated":false,
+	"trimmed":false,
+	"spriteSourceSize":{"x":0,"y":0,"w":64,"y":32},
+	"sourceSize":{"w":64,"h":32}
+},
+{
+	"filename": "wall_crackled.png",
+	"frame":{"x":65,"y":33,"w":32,"h":128},
+	"rotated":false,
+	"trimmed":false,
+	"spriteSourceSize":{"x":0,"y":0,"w":32,"y":128},
+	"sourceSize":{"w":32,"h":128}
+},
+{
+	"filename": "guardail_broken32x32.png",
+	"frame":{"x":0,"y":98,"w":32,"h":32},
+	"rotated":false,
+	"trimmed":false,
+	"spriteSourceSize":{"x":0,"y":0,"w":32,"y":32},
+	"sourceSize":{"w":32,"h":32}
+},
+{
+	"filename": "guardail_end32x32.png",
+	"frame":{"x":130,"y":0,"w":32,"h":32},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":32,"y":32},
