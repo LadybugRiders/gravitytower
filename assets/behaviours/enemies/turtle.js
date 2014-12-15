@@ -7,6 +7,7 @@ var Turtle = function(_gameobject) {
   this.entity.play("run");
   this.range = 100;
   this.maxSpeed = 50;
+  this.jumpable = false;
 }
 
 Turtle.prototype = Object.create(Enemy.prototype);

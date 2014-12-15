@@ -126,7 +126,7 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
     //Enemy collision
     if(_otherBody.go.layer == "enemy"){
       var enemy = _otherBody.go.getBehaviour(Enemy);
-      if( enemy ){
+      if( enemy && enemy.jumpable){
         _otherBody.go.sendMessage("onHitJump");
         this.jump(true);
       }
@@ -244,6 +244,8 @@ Player.prototype.updateRunAir = function(){
 Player.prototype.onMoveLeft = function(_key){
   this.isMovePressed ++;
   if( ! this.canMove ){
+    this.direction = -1;
+    this.scaleByGravity();
     return;
   }
   //Suppress Momentum in the air
@@ -260,6 +262,8 @@ Player.prototype.onMoveLeft = function(_key){
 Player.prototype.onMoveRight = function(_key){
   this.isMovePressed ++;  
   if( ! this.canMove ){
+    this.direction = 1;
+    this.scaleByGravity();
     return;
   }
   //Suppress Momentum in the air
@@ -328,7 +332,8 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
   this.canJump = true;
   this.changeGravity( { "gravity":_gravity });
   this.entity.body.velocity.x = _vector.x * 300;
-  this.entity.body.velocity.y = _vector.y * -180 - Math.abs(_vector.x) * 240;
+  this.entity.body.velocity.y = _vector.y * -180 - Math.abs(_vector.y) * 240;
+  this.currentSpeed = this.entity.body.velocity.x;
 }
 
 Player.prototype.onCollectCoin = function(_data){
@@ -459,7 +464,8 @@ Player.prototype.blowDust = function(){
 //=========================================================
 
 Player.prototype.hit = function(_data){
-  if( _data.shape !== this.mainShape || this.isHit == true || this.dead ==true)
+  if( ( _data.shape !== this.mainShape && _data.shape != null) 
+       || this.isHit == true || this.dead ==true)
     return;
   if( this.acolyte.dead){
     this.die();

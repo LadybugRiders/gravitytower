@@ -29,6 +29,7 @@ RollingRock.prototype.launch = function(){
 
 RollingRock.prototype.update = function(){
 	if( this.launched == true ){
+		this.entity.angle += 0.2 * this.game.time.elapsed;
 		this.entity.body.velocity.x = this.direction * 100;
 	}
 }

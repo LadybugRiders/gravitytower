@@ -189,8 +189,11 @@ Enemy.prototype.onHitPlayer = function(){
 //                  WEAKNESSES
 //=================================================================
 Enemy.prototype.onHitJump = function(){
-  if(this.jumpable)
+  if(this.jumpable){
     this.die();
+  }else{
+    this.hitPlayer(this.go);
+  }
 }
 
 Enemy.prototype.onHitBlade = function( _direction ){
