@@ -34,9 +34,24 @@ TutoManager.prototype.create = function(_data){
 		this.button_text = _data.button_text;
 		this.button_text.entity.visible = false;
 	}
+
+	this.levelSave = this.game.playerSave.getActiveLevelSave();
 }
 
 TutoManager.prototype.launchTuto = function(_data){
+
+	console.log(this.levelSave);
+	if( this.levelSave.tutos)
+	console.log(this.levelSave.tutos.indexOf(_data.name));
+	if( this.levelSave.tutos && this.levelSave.tutos.indexOf(_data.name) >= 0){
+		return;
+	}
+
+	if( this.levelSave.tutos == null ){
+		this.levelSave.tutos = new Array();
+		this.levelSave.tutos.push(_data.name);
+	}
+
 	this.entity.visible = true;
 	this.open = true;
 	

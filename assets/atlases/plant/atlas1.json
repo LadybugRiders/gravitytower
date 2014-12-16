@@ -1,8 +1,16 @@
 {"frames":[
 
 {
+	"filename": "thorn1.png",
+	"frame":{"x":0,"y":0,"w":128,"h":48},
+	"rotated":false,
+	"trimmed":false,
+	"spriteSourceSize":{"x":0,"y":0,"w":128,"y":48},
+	"sourceSize":{"w":128,"h":48}
+},
+{
 	"filename": "mushroom_red.png",
-	"frame":{"x":0,"y":0,"w":92,"h":92},
+	"frame":{"x":129,"y":0,"w":92,"h":92},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":92,"y":92},
@@ -10,7 +18,7 @@
 },
 {
 	"filename": "big_flower_blue.png",
-	"frame":{"x":0,"y":93,"w":64,"h":128},
+	"frame":{"x":0,"y":49,"w":64,"h":128},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":64,"y":128},
@@ -18,7 +26,7 @@
 },
 {
 	"filename": "big_flower_red.png",
-	"frame":{"x":93,"y":0,"w":64,"h":128},
+	"frame":{"x":65,"y":93,"w":64,"h":128},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":64,"y":128},
@@ -26,7 +34,7 @@
 },
 {
 	"filename": "tobacco.png",
-	"frame":{"x":158,"y":0,"w":64,"h":64},
+	"frame":{"x":0,"y":178,"w":64,"h":64},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":64,"y":64},

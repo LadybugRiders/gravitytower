@@ -331,9 +331,11 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
   this.canMove = true;
   this.canJump = true;
   this.changeGravity( { "gravity":_gravity });
-  this.entity.body.velocity.x = _vector.x * 300;
-  this.entity.body.velocity.y = _vector.y * -180 - Math.abs(_vector.y) * 240;
-  this.currentSpeed = this.entity.body.velocity.x;
+  if( _vector != null ){
+    this.entity.body.velocity.x = _vector.x * 300;
+    this.entity.body.velocity.y = _vector.y * -180 - Math.abs(_vector.y) * 240;
+    this.currentSpeed = this.entity.body.velocity.x;
+  }
 }
 
 Player.prototype.onCollectCoin = function(_data){
@@ -534,6 +536,7 @@ Player.prototype.checkpoint = function(_dataSent){
   var checkpointData = this.levelSave.checkpoint;
   checkpointData.x = _dataSent.sender.entity.x;
   checkpointData.y = _dataSent.sender.entity.y;
+  checkpointData.active = true;
   if( _dataSent.direction )
     checkpointData.direction = _dataSent.direction;
   //keep collectables
