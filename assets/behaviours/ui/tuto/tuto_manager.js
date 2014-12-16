@@ -40,9 +40,6 @@ TutoManager.prototype.create = function(_data){
 
 TutoManager.prototype.launchTuto = function(_data){
 
-	console.log(this.levelSave);
-	if( this.levelSave.tutos)
-	console.log(this.levelSave.tutos.indexOf(_data.name));
 	if( this.levelSave.tutos && this.levelSave.tutos.indexOf(_data.name) >= 0){
 		return;
 	}

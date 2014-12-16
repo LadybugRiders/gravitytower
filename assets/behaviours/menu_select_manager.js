@@ -6,9 +6,6 @@ var MenuSelectManager = function(_gameobject) {
 	LR.Behaviour.call(this, _gameobject);
   this.levelsGroup = {};
   this.playerSave = this.entity.game.playerSave;
-  this.game.input.keyboard.addKey(Phaser.Keyboard.D).onDown.add(
-      this.playerSave.deleteSave,this 
-  );
   this.checkGameData();
 };
 
@@ -50,8 +47,6 @@ MenuSelectManager.prototype.checkGameData = function() {
   if( save.coins == null ) this.playerSave.setValue("coins",0);
   if( save.currentLevelID == null ) this.playerSave.setValue("currentLevelID",-1);
   if( save.kimis == null ) this.playerSave.setValue("kimis",0);
-
-  console.log(save);
 
   if(isNew){
     this.entity.game.playerSave.writeSave();
