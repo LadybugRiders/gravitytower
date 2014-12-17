@@ -10,11 +10,10 @@ var Player = function(_gameobject) {
   this.speed = this.baseSpeed;
   this.currentSpeed = 0;
   this.maxSpeed = 200;
-  this.airSpeed = this.maxSpeed * 0.4 ;
-  this.runAcc = 7;
-  this.airAcc = this.runAcc * 0.5;
+  this.airSpeed = this.maxSpeed * 0.65 ;
+  this.runAcc = 10;
+  this.airAcc = this.runAcc * 0.75;
   //Jump
-  this.jumpAcc = 26;
   this.jumpHeight = 60;
   this.jumpBaseY = 0;
   this.jumpMinHeight = 26;
@@ -207,7 +206,7 @@ Player.prototype.updateJump = function(){
   //check the height done by jump and button jump pressed
   var delta = Math.abs( this.jumpBaseY - this.entity.y );
   var deltaJumpOver = delta >= this.jumpHeight;
-  
+  //if the jump has reached its maximum height, or the button is not pressed anymore
   if( delta >= this.jumpMinHeight && (deltaJumpOver || !this.isJumpPressed) ){
     this.fall();
     return;
@@ -288,6 +287,12 @@ Player.prototype.onMoveRelease = function(){
 
   if( this.onGround && this.isMovePressed == 0){
     this.idleize();
+  }
+
+  if( !this.onGround ){
+    console.log(this.state);
+    this.go.body.velocity.x = 0;
+    this.currentSpeed = 0;
   }
 }
 
