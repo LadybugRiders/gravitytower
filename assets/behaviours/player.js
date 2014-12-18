@@ -166,6 +166,8 @@ Player.prototype.onEndContact = function(_otherBody,_myShape, _otherShape){
 
   if( _myShape == this.feetSensor && this.isLayerGround(_otherBody.go.layer) ){
     this.groundContacts --;
+    if( this.groundContacts < 0)
+      this.groundContacts = 0;
     if( this.groundContacts == 0 && this.state != "jump"){
       this.fall();
     }
@@ -290,7 +292,6 @@ Player.prototype.onMoveRelease = function(){
   }
 
   if( !this.onGround ){
-    console.log(this.state);
     this.go.body.velocity.x = 0;
     this.currentSpeed = 0;
   }
