@@ -43,7 +43,7 @@ Enemy.prototype.create = function( _data ){
   if( _data.jumpable ) this.jumpable = _data.jumpable;
   if( _data.cutable ) this.cutable = _data.cutable;
   if( _data.hatable ) this.hatable = _data.hatable;
-  if( _data.gravity){
+  if( _data.gravity != null){
     this.gravity = _data.gravity;
     this.go.gravity = this.gravity;
   }

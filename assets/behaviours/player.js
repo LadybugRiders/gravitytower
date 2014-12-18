@@ -13,6 +13,8 @@ var Player = function(_gameobject) {
   this.airSpeed = this.maxSpeed * 0.65 ;
   this.runAcc = 10;
   this.airAcc = this.runAcc * 0.75;
+  //Reference on the current Ground
+  this.currentGround = null;
   //Jump
   this.jumpHeight = 60;
   this.jumpBaseY = 0;
@@ -97,6 +99,8 @@ Player.prototype.update = function() {
   if( this.dead == true )
     return;
   switch(this.state){
+    case "idle" : this.updateIdle();
+      break;
     case "run" : this.updateRun(); 
       break;
     case "jump" : this.updateJump();
@@ -134,6 +138,8 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
       this.blowDust();
       this.groundContacts ++;
       this.onGround = true;
+      this.currentGround = _otherBody.go;
+      //if a direction is pressed, trigger run
       if( this.isMovePressed ){
         this.currentSpeed = this.go.body.velocity.x;
         this.run(this.direction,Math.abs(this.currentSpeed));
@@ -185,6 +191,13 @@ Player.prototype.onEndContact = function(_otherBody,_myShape, _otherShape){
 //=========================================================
 //                  UPDATES
 //=========================================================
+
+Player.prototype.updateIdle = function(){
+  if(this.currentGround && this.currentGround.body.static == false){
+      this.go.body.velocity.x = this.currentGround.body.velocity.x;
+      this.go.body.velocity.y = this.currentGround.body.velocity.y;
+  }
+}
 
 Player.prototype.updateRun = function(){
   if( this.facingWall == this.direction || !this.canMove )
