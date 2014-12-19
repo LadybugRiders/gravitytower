@@ -365,7 +365,8 @@ Player.prototype.onCollectCoin = function(_data){
 }
 
 Player.prototype.onCollectLife = function(){
-  this.entity.game.playerSave["lives"] ++;
+  var lives = this.playerSave.getValue("lives");
+  this.playerSave.setValue("lives",lives+1);
   this.entity.game.pollinator.dispatch("onLivesChanged")
 }
 

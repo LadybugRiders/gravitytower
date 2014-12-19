@@ -36,12 +36,12 @@ UIInGame.prototype.start = function(_data){
 	this.onLivesChanged();
 }
 
-UIInGame.prototype.onLivesChanged = function(_data){
+UIInGame.prototype.onLivesChanged = function(){
 	if(this.lives)
 		this.lives.text = this.playerSave.getValue("lives");
 }
 
-UIInGame.prototype.onCoinsChanged = function(_data){
+UIInGame.prototype.onCoinsChanged = function(){
 	if(this.coins){
 		this.coins.text = this.playerSave.getActiveLevelSave().coins;
 	}
