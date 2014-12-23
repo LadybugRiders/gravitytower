@@ -361,13 +361,12 @@ Player.prototype.onCollectCoin = function(_data){
   var count = 1;
   if( _data.count ) count = _data.count;
   this.levelSave["coins"] += count;
-  this.entity.game.pollinator.dispatch("onCoinsChanged")
 }
 
 Player.prototype.onCollectLife = function(){
   var lives = this.playerSave.getValue("lives");
   this.playerSave.setValue("lives",lives+1);
-  this.entity.game.pollinator.dispatch("onLivesChanged")
+  this.entity.game.pollinator.dispatch("onLivesChanged");
 }
 
 Player.prototype.onGainHealth = function(){
