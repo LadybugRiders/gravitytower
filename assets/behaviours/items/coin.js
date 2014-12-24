@@ -24,6 +24,7 @@ Coin.prototype.create = function(_gameobject){
 Coin.prototype.onCollected = function(_gameobject){
 	if(this.collected)
 		return;
+  	this.entity.game.pollinator.dispatch("onCoinCollected");
 	this.entity.body.destroy();
 	this.collected = true;
 	this.game.playerSave.getActiveLevelSave().coinsIDs.push(this.go.id);
