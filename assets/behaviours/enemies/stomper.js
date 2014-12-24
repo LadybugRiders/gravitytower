@@ -40,6 +40,9 @@ Stomper.prototype.create = function(_data){
 }
 
 Stomper.prototype.update = function(){
+	if(this.entity.hidden){
+		return;
+	}
 	if(this.rope){
 		this.rope.x = this.go.x + this.ropeOffset.x;
 		this.rope.y = this.go.y + this.ropeOffset.y;
@@ -74,6 +77,7 @@ Stomper.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _
 	}
 	if(_otherBody.go.layer == "ground" && this.state == "falling"){
 		var myShapeData = LR.Utils.getRectShapeSides(this.go,_myShape);
+		this.go.playSound("stomp");
 		this.blowDust(myShapeData.bottom);
 		this.entity.body.velocity.y = 0;
 		this.state = "wait_bottom";
@@ -92,6 +96,8 @@ Stomper.prototype.launch = function(){
 }
 
 Stomper.prototype.blowDust = function(_y){ 
+	if(this.entity.hidden)
+		return;
 	this.dusts[0].entity.parent.y = this.go.y;
 	this.dusts.forEach(
 	    function(_element,_index){
@@ -105,4 +111,10 @@ Stomper.prototype.blowDust = function(_y){
 	    },
 	    this
 	);
+}
+
+Stomper.prototype.onHide = function(){
+	this.entity.body.velocity.y = 0;
+	this.dusts.forEach(
+    function(_element,_index){ _element.entity.visible = false; } );
 }
