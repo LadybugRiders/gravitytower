@@ -48,7 +48,7 @@ UIInGame.prototype.start = function(_data){
 
 UIInGame.prototype.onLivesChanged = function(){
 	if(this.lives){
-		this.showLives();
+		//this.showLives();
 		this.lives.text = this.playerSave.getValue("lives");
 	}
 }
@@ -77,7 +77,7 @@ UIInGame.prototype.showCoins = function(){
 	if(! this.coinsUIOpen ){
 		this.coinsUIOpen = true;
 		var tween = this.entity.game.add.tween(this.coinsUI.entity.cameraOffset);
-	    tween.to( {y:this.coinsUIy},350,null,true,0,0,false);
+	    tween.to( {y:this.coinsUIy},350,Phaser.Easing.Default,true,0,0,false);
 	    //timer to close the ui
 	    this.entity.game.time.events.add(
 	      Phaser.Timer.SECOND * 3, 
@@ -90,7 +90,7 @@ UIInGame.prototype.hideCoins = function(){
 	if( this.coinsUIOpen ){
 		this.coinsUIOpen = false;
 		var tween = this.entity.game.add.tween(this.coinsUI.entity.cameraOffset);
-	    tween.to( {y:-30},350,null,true,0,0,false);
+	    tween.to( {y:-30},350,Phaser.Easing.Default,true,0,0,false);
 	}
 }
 
@@ -98,7 +98,7 @@ UIInGame.prototype.showLives = function(){
 	if(! this.livesUIOpen ){
 		this.livesUIOpen = true;
 		var tween = this.entity.game.add.tween(this.livesUI.entity.cameraOffset);
-	    tween.to( {y:this.coinsUIy},350,null,true,0,0,false);
+	    tween.to( {y:this.coinsUIy},350,Phaser.Easing.Default,true,0,0,false);
 	    //timer to close the ui
 	    this.entity.game.time.events.add(
 	      Phaser.Timer.SECOND * 3, 
@@ -111,6 +111,6 @@ UIInGame.prototype.hideLives = function(){
 	if( this.livesUIOpen ){
 		this.livesUIOpen = false;
 		var tween = this.entity.game.add.tween(this.livesUI.entity.cameraOffset);
-	    tween.to( {y:-30},350,null,true,0,0,false);
+	    tween.to( {y:-30},350,Phaser.Easing.Default,true,0,0,false);
 	}
 }

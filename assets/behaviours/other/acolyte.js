@@ -60,5 +60,5 @@ Acolyte.prototype.die = function(){
 Acolyte.prototype.changeForm = function(){
 	this.entity.frame = this.health -1;
 	var tween = this.entity.game.add.tween(this.entity.scale);
-	tween.to( {x:1.2,y:1.2},100,null,true,0,1,true);
+	tween.to( {x:1.2,y:1.2},100,Phaser.Easing.Default,true,0,1,true);
 }

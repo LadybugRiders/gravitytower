@@ -426,6 +426,7 @@ Player.prototype.jump = function(_force, _jumpPower){
       this.go.body.velocity.y = -this.jumpPower * this.gravity;
     this.entity.animations.play('jump');
     this.scaleByGravity();
+    this.go.playSound("jump",0.1);
   }
 }
 
@@ -494,10 +495,10 @@ Player.prototype.hit = function(_data){
     this.acolyte.loseHealth();  
     //blinking alpha  
     var tween = this.entity.game.add.tween(this.entity);
-    tween.to( {alpha : 0},200,null,true,0,11,true);
+    tween.to( {alpha : 0},200,Phaser.Easing.Default,true,0,11,true);
     tween.onComplete.add(this.onEndHit,this);
     tween = this.entity.game.add.tween(this.hair.entity);
-    tween.to( {alpha : 0},200,null,true,0,11,true);
+    tween.to( {alpha : 0},200,Phaser.Easing.Default,true,0,11,true);
     //Compute vector from the GameObject that hits the player
     var vec = new Phaser.Point( this.world.x - _data.sender.world.x,
                                 this.world.y - _data.sender.world.y).normalize();

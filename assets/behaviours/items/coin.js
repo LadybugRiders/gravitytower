@@ -43,7 +43,7 @@ Coin.prototype.goToCoinUI = function(){
 
 	//create tween to the ui coin in the corner of the screen
 	var tween = this.entity.game.add.tween(this.entity.cameraOffset);
-    tween.to( {x:570, y:25},350,null,true,0,0,false);
+    tween.to( {x:570, y:25},350,Phaser.Easing.Default,true,0,0,false);
 
     tween.onComplete.add(
     	function(){

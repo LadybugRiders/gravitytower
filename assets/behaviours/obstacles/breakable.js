@@ -1,6 +1,6 @@
 "use strict";
 //>>LREditor.Behaviour.name: Breakable
-//>>LREditor.Behaviour.params : {  }
+//>>LREditor.Behaviour.params : { "death_effect" : null }
 var Breakable = function(_gameobject) {	
 	LR.Behaviour.call(this,_gameobject);
 	this.broken = false;
@@ -8,6 +8,13 @@ var Breakable = function(_gameobject) {
 
 Breakable.prototype = Object.create(LR.Behaviour.prototype);
 Breakable.prototype.constructor = Breakable;
+
+Breakable.prototype.create = function( _data ){
+	if( _data.death_effect){
+		this.death_effect = _data.death_effect;	
+		this.death_effect.entity.visible = false;
+	}
+}
 
 Breakable.prototype.update = function( _data ){
 	if(this.broken ){
@@ -35,4 +42,8 @@ Breakable.prototype.crush = function(_velocity){
 	this.entity.body.velocity.x = xForce;	
 	this.entity.body.velocity.y = -yForce;
 	this.go.enableSensor();
+	if( this.death_effect){
+		this.death_effect.entity.visible = true;
+		this.death_effect.entity.play("blow").killOnComplete = true;
+	}
 }
