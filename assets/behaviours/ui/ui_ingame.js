@@ -48,7 +48,7 @@ UIInGame.prototype.start = function(_data){
 
 UIInGame.prototype.onLivesChanged = function(){
 	if(this.lives){
-		//this.showLives();
+		this.showLives();
 		this.lives.text = this.playerSave.getValue("lives");
 	}
 }
