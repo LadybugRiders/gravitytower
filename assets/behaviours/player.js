@@ -355,6 +355,7 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
     this.entity.body.velocity.y = _vector.y * -180 - Math.abs(_vector.y) * 240;
     this.currentSpeed = this.entity.body.velocity.x;
   }
+  this.go.playSound("jump2");
 }
 
 Player.prototype.onCollectCoin = function(_data){
@@ -426,7 +427,12 @@ Player.prototype.jump = function(_force, _jumpPower){
       this.go.body.velocity.y = -this.jumpPower * this.gravity;
     this.entity.animations.play('jump');
     this.scaleByGravity();
-    this.go.playSound("jump",0.1);
+    //play a random sound between the two
+    var r = Math.random();
+    if( r > 0.5)
+      this.go.playSound("jump",0.1);
+    else
+      this.go.playSound("jump2",0.1);
   }
 }
 
@@ -595,6 +601,11 @@ Player.prototype.finish = function(_data){
 
 //Called by a trigger finish (in general)
 Player.prototype.changeLevel = function(_data){  
+  //reset checkpoint data
+  var checkpointData = this.levelSave["checkpoint"];
+  if(checkpointData != null){
+    checkpointData.active = false;
+  }
   this.entity.animations.play('win', 10, true);
   //set a timer
   this.entity.game.time.events.add(

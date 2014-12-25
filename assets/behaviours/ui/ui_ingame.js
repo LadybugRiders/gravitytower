@@ -76,10 +76,10 @@ function createDebugSave(_this){
 UIInGame.prototype.showCoins = function(){
 	if(! this.coinsUIOpen ){
 		this.coinsUIOpen = true;
-		var tween = this.entity.game.add.tween(this.coinsUI.entity.cameraOffset);
+		var tween = this.go.game.add.tween(this.coinsUI.entity.cameraOffset);
 	    tween.to( {y:this.coinsUIy},350,Phaser.Easing.Default,true,0,0,false);
 	    //timer to close the ui
-	    this.entity.game.time.events.add(
+	    this.go.game.time.events.add(
 	      Phaser.Timer.SECOND * 3, 
 	      function(){ this.hideCoins();},
 	      this);
@@ -89,7 +89,7 @@ UIInGame.prototype.showCoins = function(){
 UIInGame.prototype.hideCoins = function(){
 	if( this.coinsUIOpen ){
 		this.coinsUIOpen = false;
-		var tween = this.entity.game.add.tween(this.coinsUI.entity.cameraOffset);
+		var tween = this.go.game.add.tween(this.coinsUI.entity.cameraOffset);
 	    tween.to( {y:-30},350,Phaser.Easing.Default,true,0,0,false);
 	}
 }
@@ -97,10 +97,10 @@ UIInGame.prototype.hideCoins = function(){
 UIInGame.prototype.showLives = function(){
 	if(! this.livesUIOpen ){
 		this.livesUIOpen = true;
-		var tween = this.entity.game.add.tween(this.livesUI.entity.cameraOffset);
+		var tween = this.go.game.add.tween(this.livesUI.entity.cameraOffset);
 	    tween.to( {y:this.coinsUIy},350,Phaser.Easing.Default,true,0,0,false);
 	    //timer to close the ui
-	    this.entity.game.time.events.add(
+	    this.go.game.time.events.add(
 	      Phaser.Timer.SECOND * 3, 
 	      function(){ this.hideLives();},
 	      this);
@@ -110,7 +110,7 @@ UIInGame.prototype.showLives = function(){
 UIInGame.prototype.hideLives = function(){
 	if( this.livesUIOpen ){
 		this.livesUIOpen = false;
-		var tween = this.entity.game.add.tween(this.livesUI.entity.cameraOffset);
+		var tween = this.go.game.add.tween(this.livesUI.entity.cameraOffset);
 	    tween.to( {y:-30},350,Phaser.Easing.Default,true,0,0,false);
 	}
 }
