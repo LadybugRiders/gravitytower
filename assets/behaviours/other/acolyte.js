@@ -22,8 +22,10 @@ Acolyte.prototype.update = function(){
 	if(this.sinAngle >= 360)
 		this.sinAngle = 0;
 	var y = Math.sin(this.sinAngle);
-	this.entity.y = this.player.entity.y + this.player.gravity * (this.offsetY + this.rangeY * y);
-	this.entity.x = this.player.entity.x + this.offsetX * this.player.direction;
+	if (this.player) {
+		this.entity.y = this.player.entity.y + this.player.gravity * (this.offsetY + this.rangeY * y);
+		this.entity.x = this.player.entity.x + this.offsetX * this.player.direction;
+	}
 }
 
 Acolyte.prototype.gainHealth = function(){

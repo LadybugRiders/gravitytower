@@ -13,5 +13,7 @@ ScrollingBackground.prototype.create = function(_data){
 }
 
 ScrollingBackground.prototype.update = function(){
-	this.entity.tilePosition.x -= this.player.entity.deltaX * 0.4;
+    if (this.player) {
+        this.entity.tilePosition.x -= this.player.entity.deltaX * 0.4;
+    }
 }

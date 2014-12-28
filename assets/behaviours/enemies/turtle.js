@@ -15,12 +15,13 @@ Turtle.prototype.constructor = Turtle;
 
 Turtle.prototype.create = function( _data ){
 	Enemy.prototype.create.call(this,_data);
-  if(_data.range) this.range = _data.range;
-  if(_data.speed) this.speed = _data.speed;
+  if(_data.range != null) this.range = _data.range;
+  if(_data.speed != null) this.speed = _data.speed;
 }
 
 Turtle.prototype.update = function(){
   if( this.state == "run"){
+    console.log(this.range);
     this.updateRun();
     this.updateMoveRange();
   }
