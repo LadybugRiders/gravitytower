@@ -62,8 +62,10 @@ Enemy.prototype.create = function( _data ){
 //=================================================
 
 Enemy.prototype.updateRun = function(){
-  if(this.range <= 0)
+  if(this.range <= 0){
+    this.entity.body.setZeroVelocity();
     return;
+  }
   if( this.facingWall == this.direction || !this.canMove )
     return;
   this.currentSpeed += this.direction *  this.runAcc * this.entity.game.time.elapsed * 0.1;

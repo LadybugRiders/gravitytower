@@ -21,7 +21,6 @@ Turtle.prototype.create = function( _data ){
 
 Turtle.prototype.update = function(){
   if( this.state == "run"){
-    console.log(this.range);
     this.updateRun();
     this.updateMoveRange();
   }
