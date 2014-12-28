@@ -137,7 +137,7 @@ LR.Behaviour.Trigger.prototype.sendData = function(_otherBody, _myShape, _otherS
 		this.otherNotified.sendMessage(this.callbackName, this.messageObject);
 
 	//call internal function
-	this.onTriggered(_otherBody.go);
+	this.onTriggered(_otherBody.go,_myShape,_otherShape);
 }
 
 /**
@@ -145,6 +145,8 @@ LR.Behaviour.Trigger.prototype.sendData = function(_otherBody, _myShape, _otherS
 *
 * @method onTriggered
 * @param {LR.GameObject} _gameobject Message's target (also the GameObject that collided with this trigger)
+* @param {P2.Shape} myShape
+* @param {P2.Shape} otherShape
 */
-LR.Behaviour.Trigger.prototype.onTriggered = function(_gameobject){
+LR.Behaviour.Trigger.prototype.onTriggered = function(_gameobject,_myShape,_otherShape){
 }

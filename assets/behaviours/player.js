@@ -62,6 +62,7 @@ var Player = function(_gameobject) {
   this.state = "idle";
   this.lastState = this.state;
 
+  this.entity.game.sound.mute = true;
 };
 
 Player.prototype = Object.create(LR.Behaviour.prototype);
