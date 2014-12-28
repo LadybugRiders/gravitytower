@@ -1,7 +1,7 @@
 "use strict";
 
 //>>LREditor.Behaviour.name: Stomper
-//>>LREditor.Behaviour.params : {"delay": 0.5,"delayBottom":1, speed":50,"retractSpeed":30,"rope":null,"dust1":null,"dust2":null}
+//>>LREditor.Behaviour.params : {"delay": 0.5, "delayBottom":1, "speed":50, "retractSpeed":30, "rope":null, "dust1":null,"dust2":null}
 var Stomper = function(_gameobject){
 	LR.Behaviour.call(this,_gameobject);
 	this.speed = 150;
