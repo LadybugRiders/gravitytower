@@ -24,6 +24,7 @@ Coin.prototype.create = function(_gameobject){
 Coin.prototype.onCollected = function(_gameobject){
 	if(this.collected)
 		return;
+	this.go.playSound("pickup",0.5);
   	this.entity.game.pollinator.dispatch("onCoinCollected");
 	this.entity.body.destroy();
 	this.collected = true;

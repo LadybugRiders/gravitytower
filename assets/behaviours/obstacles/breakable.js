@@ -46,4 +46,5 @@ Breakable.prototype.crush = function(_velocity){
 		this.death_effect.entity.visible = true;
 		this.death_effect.entity.play("blow").killOnComplete = true;
 	}
+	this.go.playSound("boom");
 }

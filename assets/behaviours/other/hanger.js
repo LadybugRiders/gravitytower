@@ -100,7 +100,7 @@ Hanger.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
   	if(_otherBody.go.layer == "player" && this.player == null && this.released == false){
 
   		this.playerHair = _otherBody.go.getBehaviour(PlayerHair);
-
+  		
 	  	if( this.playerHair != null && this.playerHair.isShapeAndStatusHook(_otherShape) ){
   			this.hang();
 	  	}

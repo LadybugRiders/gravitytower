@@ -13,7 +13,7 @@ Collectable.prototype.constructor = Collectable;
 Collectable.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
 	if( _otherBody.go.layer == "player"){
 		var player = _otherBody.go.getBehaviour(Player);
-		if( player ){
+		if( player && !player.dead){
 			this.onCollected();
 			LR.Behaviour.Trigger.prototype.onBeginContact.call(this,_otherBody, _myShape, _otherShape, _equation);			
 		}

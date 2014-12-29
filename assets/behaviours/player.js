@@ -62,7 +62,7 @@ var Player = function(_gameobject) {
   this.state = "idle";
   this.lastState = this.state;
 
-  this.entity.game.sound.mute = true;
+  //this.entity.game.sound.mute = true;
 };
 
 Player.prototype = Object.create(LR.Behaviour.prototype);
@@ -73,6 +73,7 @@ Player.prototype.create = function(_data) {
   this.hair = _data.hair.getBehaviour(PlayerHair);
   this.hair.player = this;
   //Acolyte
+  console.log(_data.acolyte);
   this.acolyte = _data.acolyte.getBehaviour(Acolyte);
   this.acolyte.player = this;
   //dusts
@@ -453,7 +454,7 @@ Player.prototype.unfreeze = function(){
   this.canJump = true;
 }
 //=========================================================
-//                  BLINK / DUST
+//                  EYE BLINK / DUST
 //=========================================================
 
 Player.prototype.preBlink = function(){
@@ -503,10 +504,10 @@ Player.prototype.hit = function(_data){
     this.acolyte.loseHealth();  
     //blinking alpha  
     var tween = this.entity.game.add.tween(this.entity);
-    tween.to( {alpha : 0},200,Phaser.Easing.Default,true,0,11,true);
+    tween.to( {alpha : 0},200,Phaser.Easing.Default,true,0,7,true);
     tween.onComplete.add(this.onEndHit,this);
     tween = this.entity.game.add.tween(this.hair.entity);
-    tween.to( {alpha : 0},200,Phaser.Easing.Default,true,0,11,true);
+    tween.to( {alpha : 0},200,Phaser.Easing.Default,true,0,7,true);
     if(_data.forceVector == null){      
       //Compute vector from the GameObject that hits the player
       var vec = new Phaser.Point( this.world.x - _data.sender.world.x,
