@@ -212,6 +212,7 @@ Player.prototype.updateRun = function(){
 }
 
 Player.prototype.updateJump = function(){ 
+
   
   //wait for the body to fall (according to gravity)
   //when this.fall is called, the state changes, so updateJump is not called anymore
@@ -237,7 +238,7 @@ Player.prototype.updateJump = function(){
 }
 
 Player.prototype.updateRunAir = function(){ 
-  if( this.facingWall == this.direction)
+  if( this.facingWall == this.direction || !this.canMove)
     return;
   if( this.isMovePressed ){
     if( Math.abs( this.currentSpeed ) > this.airSpeed){
@@ -506,19 +507,25 @@ Player.prototype.hit = function(_data){
     tween.onComplete.add(this.onEndHit,this);
     tween = this.entity.game.add.tween(this.hair.entity);
     tween.to( {alpha : 0},200,Phaser.Easing.Default,true,0,11,true);
-    if(_data.forceVector != null){      
+    if(_data.forceVector == null){      
       //Compute vector from the GameObject that hits the player
       var vec = new Phaser.Point( this.world.x - _data.sender.world.x,
                                   this.world.y - _data.sender.world.y).normalize();
       //apply force
-      this.currentSpeed = vec.x *150;
+      this.currentSpeed = vec.x *130;
+      this.go.body.velocity.x = this.currentSpeed;
       this.go.body.velocity.y = -200;
     }else{
       this.currentSpeed = _data.forceVector.x;
-      this.go.body.velocity.x = _data.forceVector.x;
+      this.go.body.velocity.x = this.currentSpeed;
       this.go.body.velocity.y = _data.forceVector.y;
     }
     this.isHit = true;
+    this.canMove = false;
+    this.entity.game.time.events.add(
+      Phaser.Timer.SECOND * 0.4, 
+      function(){ this.canMove = true;},
+      this);
   }
 }
 

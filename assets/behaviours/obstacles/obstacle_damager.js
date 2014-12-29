@@ -25,19 +25,20 @@ ObstacleDamager.prototype.create = function(_data){
 }
 
 ObstacleDamager.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
+	
 	if(this.canDamage == true && _otherBody.go.layer == "player" && _otherShape.lr_name == "mainShape"){
 		var side = LR.Utils.getRectCollisionSide(this.go,_myShape,_otherBody.go,_otherShape);
-		
+		console.log(side);
 		var damage = false;
 
 		switch(side){
-			case side == LR.Utils.BOTTOM : if( this.bottomDamage ) damage = true;
+			case(LR.Utils.BOTTOM) : if( this.bottomDamage ) damage = true;
 				break;
-			case side == LR.Utils.RIGHT : if( this.rightDamage ) damage = true;
+			case(LR.Utils.RIGHT) : if( this.rightDamage ) damage = true;
 				break;
-			case side == LR.Utils.LEFT : if( this.leftDamage ) damage = true;
+			case(LR.Utils.LEFT) : if( this.leftDamage ) damage = true;
 				break;
-			case side == LR.Utils.TOP : if( this.topDamage ) damage = true;
+			case(LR.Utils.TOP) : if( this.topDamage ) damage = true;
 				break;
 		}
 		if( damage ){
