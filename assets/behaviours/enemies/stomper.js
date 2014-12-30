@@ -41,7 +41,7 @@ Stomper.prototype.create = function(_data){
 }
 
 Stomper.prototype.update = function(){
-	if(this.entity.hidden){
+	if(this.entity.hidden ){
 		return;
 	}
 	if(this.rope){
@@ -68,7 +68,6 @@ Stomper.prototype.update = function(){
 }
 
 Stomper.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
-	
 	if(_otherBody.go.layer == "player" && _otherShape.lr_name == "mainShape" && this.state == "falling"){
 		var side = LR.Utils.getRectCollisionSide(this.go,_myShape,_otherBody.go,_otherShape);
 		
@@ -115,6 +114,13 @@ Stomper.prototype.blowDust = function(_y){
 }
 
 Stomper.prototype.onHide = function(){
+	this.entity.body.velocity.y = 0;
+	this.dusts.forEach(
+    function(_element,_index){ _element.entity.visible = false; } );
+}
+
+Stomper.prototype.disable = function(){
+	LR.Behaviour.prototype.disable.call(this);
 	this.entity.body.velocity.y = 0;
 	this.dusts.forEach(
     function(_element,_index){ _element.entity.visible = false; } );

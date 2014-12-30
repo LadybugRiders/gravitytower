@@ -73,7 +73,6 @@ Player.prototype.create = function(_data) {
   this.hair = _data.hair.getBehaviour(PlayerHair);
   this.hair.player = this;
   //Acolyte
-  console.log(_data.acolyte);
   this.acolyte = _data.acolyte.getBehaviour(Acolyte);
   this.acolyte.player = this;
   //dusts

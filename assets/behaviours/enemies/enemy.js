@@ -52,10 +52,10 @@ Enemy.prototype.create = function( _data ){
    this.smoke.entity.visible = false;
   }
   if(_data.dead == true ) this.entity.kill();
+  if(_data.active != null) this.active = _data.active;
 
   this.scaleByGravity();
 }
-
 
 //=================================================
 //        ACTIONS
