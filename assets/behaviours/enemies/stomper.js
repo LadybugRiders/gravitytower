@@ -13,6 +13,7 @@ var Stomper = function(_gameobject){
 	this.dusts = new Array();
 
 	this.ropeOffset = new Phaser.Point();
+  	this.initPos = new Phaser.Point(this.entity.x,this.entity.y);
 	this.up = true;
 	this.state = "retracted";
 	this.launch();
@@ -33,15 +34,17 @@ Stomper.prototype.create = function(_data){
 	this.dusts.forEach(
     function(_element,_index){ _element.entity.visible = false; } );
 
-
-	this.ropeOffset.x = this.rope.x - this.go.x;
-	this.ropeOffset.y = this.rope.y - this.go.y;
+	if(this.rope){
+		this.ropeOffset.x = this.rope.x - this.go.x;
+		this.ropeOffset.y = this.rope.y - this.go.y;
+	}
 
 	this.initPosY = this.entity.position.y;
 }
 
 Stomper.prototype.update = function(){
-	if(this.entity.hidden ){
+
+	if( this.entity.hidden ){
 		return;
 	}
 	if(this.rope){
@@ -119,8 +122,11 @@ Stomper.prototype.onHide = function(){
     function(_element,_index){ _element.entity.visible = false; } );
 }
 
+
 Stomper.prototype.disable = function(){
 	LR.Behaviour.prototype.disable.call(this);
+	this.entity.x = this.initPos.x;
+	this.entity.y = this.initPos.y;
 	this.entity.body.velocity.y = 0;
 	this.dusts.forEach(
     function(_element,_index){ _element.entity.visible = false; } );

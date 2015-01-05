@@ -1,6 +1,6 @@
 "use strict";
 //>>LREditor.Behaviour.name: ObstacleDamager
-//>>LREditor.Behaviour.params : { "right": false,"top":false,"bottom":true,"left":false,"forceVectorX":-150,"forceVectorY":-200}
+//>>LREditor.Behaviour.params : { "right": false,"top":false,"bottom":true,"left":false,"forceVectorX":-150,"forceVectorY":-200,"enableForce":true}
 var ObstacleDamager = function(_gameobject) {	
 	LR.Behaviour.call(this,_gameobject);
 	this.canDamage = true;
@@ -10,6 +10,7 @@ var ObstacleDamager = function(_gameobject) {
 	this.bottomDamage = false;
 	this.forceVectorX = -100;
 	this.forceVectorY = -200;
+	this.enableForce = true;
 }
 
 ObstacleDamager.prototype = Object.create(LR.Behaviour.prototype);
@@ -20,15 +21,17 @@ ObstacleDamager.prototype.create = function(_data){
 	if(_data.left == true) this.leftDamage = true;
 	if(_data.top == true) this.topDamage = true;
 	if(_data.bottom == true) this.bottomDamage = true;
-	if(_data.forceVectorX) this.forceVectorX = _data.forceVectorX;
-	if(_data.forceVectorY) this.forceVectorY = _data.forceVectorY;
+	if(_data.forceVectorX != null) this.forceVectorX = _data.forceVectorX;
+	if(_data.forceVectorY != null) this.forceVectorY = _data.forceVectorY;
+	if(_data.enableForce != null) this.enableForce = _data.enableForce;
 }
 
 ObstacleDamager.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
 	
 	if(this.canDamage == true && _otherBody.go.layer == "player" && _otherShape.lr_name == "mainShape"){
-		var side = LR.Utils.getRectCollisionSide(this.go,_myShape,_otherBody.go,_otherShape);
-		console.log(side);
+		var side = LR.Utils.getCollisionSide(this.go,_myShape,_otherBody.go,_otherShape);
+		if( side == null)
+			return;
 		var damage = false;
 
 		switch(side){
@@ -41,10 +44,13 @@ ObstacleDamager.prototype.onBeginContact = function(_otherBody, _myShape, _other
 			case(LR.Utils.TOP) : if( this.topDamage ) damage = true;
 				break;
 		}
+		var forceVector = null;
+		if(this.enableForce)
+			forceVector = new Phaser.Point(this.forceVectorX,this.forceVectorY)
 		if( damage ){
 			_otherBody.go.sendMessage("hit",{shape:_otherShape,
 											sender:this.go,
-											forceVector : new Phaser.Point(this.forceVectorX,this.forceVectorY)
+											forceVector : forceVector
 									});
 		}
 	}

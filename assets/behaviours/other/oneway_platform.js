@@ -19,10 +19,10 @@ OneWayPlatform.prototype.onPostBroadphase = function(_otherBody){
 	if(this.go.body == null)
 		return false;
 	if(this.bottom ){
-		if( this.go.y < _otherBody.go.y)
+		if( this.entity.body.bottom < _otherBody.bottom && _otherBody.velocity.y < 0)
 			return false;
 	}else{		
-		if( this.go.y > _otherBody.go.y)
+		if( this.entity.body.bottom > _otherBody.bottom &&_otherBody.velocity.y > 0)
 			return false;
 	}
 	return true;

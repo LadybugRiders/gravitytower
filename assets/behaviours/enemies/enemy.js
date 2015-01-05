@@ -28,6 +28,8 @@ var Enemy = function(_gameobject) {
 
   this.state = "idle";
   this.lastState = "idle";
+
+  this.initPos = new Phaser.Point(this.entity.x,this.entity.y);
 }
 
 Enemy.prototype = Object.create(LR.Behaviour.prototype);
