@@ -83,6 +83,8 @@ Player.prototype.create = function(_data) {
   this.playerSave = this.entity.game.playerSave;
   this.levelSave = this.playerSave.getActiveLevelSave();
 
+  //set acolyte health
+  this.acolyte.setHealth(this.playerSave.getValue("health"));
   //checkpoint
   var checkpointData = this.levelSave["checkpoint"];
   if(!checkpointData.active){
@@ -606,6 +608,7 @@ Player.prototype.finish = function(_data){
   this.enabled = false;
   this.freeze();
   this.playerSave.setValue("finished",true);
+  this.playerSave.setValue("health",this.acolyte.health);
   //set a timer
   this.entity.game.time.events.add(
     Phaser.Timer.SECOND * 1, 

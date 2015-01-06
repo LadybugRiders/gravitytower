@@ -48,6 +48,13 @@ Acolyte.prototype.loseHealth = function(){
 	}
 }
 
+Acolyte.prototype.setHealth = function(_health){
+	if( _health < 0 || _health > 3)
+		return;
+	this.health =_health;
+	this.entity.frame = this.health -1;
+}
+
 Acolyte.prototype.zing = function(){
 	this.entity.revive();
 	this.dead = false;

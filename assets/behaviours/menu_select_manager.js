@@ -47,6 +47,7 @@ MenuSelectManager.prototype.checkGameData = function() {
   if( save.coins == null ) this.playerSave.setValue("coins",0);
   if( save.currentLevelID == null ) this.playerSave.setValue("currentLevelID",-1);
   if( save.kimis == null ) this.playerSave.setValue("kimis",0);
+  if( save.health == null ) this.playerSave.setValue("health",1);
 
   if(isNew){
     this.entity.game.playerSave.writeSave();
@@ -70,17 +71,20 @@ MenuSelectManager.prototype.checkLevelData = function(_data) {
 
     //Kimis
     //get kimis before playing level
-    var formerKimis = this.playerSave.getPermanentSave().levels[this.playerSave.getValue("currentLevelID")].kimis;
-    var collectedKimis = levelSave["kimis"];
-
-    var kimisCollected = collectedKimis.length - formerKimis.length;
-    this.applyKimisCollected(kimisCollected,this.playerSave.getValue("currentLevelID"),true);
-    this.playerSave.setValue("kimis",this.playerSave.getValue("kimis")+kimisCollected);
-    this.kimisText.text = this.playerSave.getValue("kimis");
-    //finish level
-    this.playerSave.setValue("currentLevelID",-1);
-    this.playerSave.setValue("finished",false);
-    levelSave.finished = true;
+    var levelID = this.playerSave.getValue("currentLevelID");
+    if(levelID >= 0 ){
+      var formerKimis = this.playerSave.getPermanentSave().levels[levelID].kimis;
+      var collectedKimis = levelSave["kimis"];
+      //kimis
+      var kimisCollected = collectedKimis.length - formerKimis.length;
+      this.applyKimisCollected(kimisCollected,levelID,true);
+      this.playerSave.setValue("kimis",this.playerSave.getValue("kimis")+kimisCollected);
+      this.kimisText.text = this.playerSave.getValue("kimis");
+      //finish level
+      this.playerSave.setValue("currentLevelID",-1);
+      this.playerSave.setValue("finished",false);
+      levelSave.finished = true;
+    }
     //save all
     this.entity.game.playerSave.writeSave();
   }
