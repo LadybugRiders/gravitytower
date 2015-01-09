@@ -17,6 +17,14 @@
 	"sourceSize":{"w":64,"h":64}
 },
 {
+	"filename": "window1.png",
+	"frame":{"x":130,"y":0,"w":64,"h":64},
+	"rotated":false,
+	"trimmed":false,
+	"spriteSourceSize":{"x":0,"y":0,"w":64,"y":64},
+	"sourceSize":{"w":64,"h":64}
+},
+{
 	"filename": "column_body_crushed.png",
 	"frame":{"x":0,"y":65,"w":64,"h":32},
 	"rotated":false,
@@ -34,7 +42,7 @@
 },
 {
 	"filename": "wall_crackled_top.png",
-	"frame":{"x":130,"y":0,"w":32,"h":33},
+	"frame":{"x":130,"y":65,"w":32,"h":33},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":32,"y":33},
@@ -42,7 +50,7 @@
 },
 {
 	"filename": "crackle.png",
-	"frame":{"x":163,"y":0,"w":32,"h":32},
+	"frame":{"x":195,"y":0,"w":32,"h":32},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":32,"y":32},
@@ -50,7 +58,7 @@
 },
 {
 	"filename": "guardail_broken32x32.png",
-	"frame":{"x":130,"y":34,"w":32,"h":32},
+	"frame":{"x":195,"y":33,"w":32,"h":32},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":32,"y":32},
@@ -58,7 +66,7 @@
 },
 {
 	"filename": "guardail_end32x32.png",
-	"frame":{"x":163,"y":33,"w":32,"h":32},
+	"frame":{"x":163,"y":66,"w":32,"h":32},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":32,"y":32},
@@ -66,7 +74,7 @@
 },
 {
 	"filename": "wall_crackled_bottom.png",
-	"frame":{"x":196,"y":0,"w":31,"h":35},
+	"frame":{"x":196,"y":66,"w":31,"h":35},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":31,"y":35},
@@ -74,7 +82,7 @@
 },
 {
 	"filename": "anse.png",
-	"frame":{"x":130,"y":67,"w":18,"h":27},
+	"frame":{"x":0,"y":98,"w":18,"h":27},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":18,"y":27},

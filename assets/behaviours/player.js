@@ -115,6 +115,10 @@ Player.prototype.update = function() {
 
 Player.prototype.postUpdate = function(){
   this.hair.followPlayer();
+  //prevents komo from bouncing of walls when hitting them
+  if(! this.onGround ){
+    this.entity.body.velocity.x = this.currentSpeed;
+  }
 }
 
 Player.prototype.onPostBroadphase = function(_otherBody){
