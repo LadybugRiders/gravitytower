@@ -1,67 +1,67 @@
-{"frames":[
+{"frames":{
 
+"thorn1.png":
 {
-	"filename": "thorn1.png",
 	"frame":{"x":0,"y":0,"w":128,"h":48},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":128,"y":48},
 	"sourceSize":{"w":128,"h":48}
 },
+"mushroom_red.png":
 {
-	"filename": "mushroom_red.png",
 	"frame":{"x":129,"y":0,"w":92,"h":92},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":92,"y":92},
 	"sourceSize":{"w":92,"h":92}
 },
+"big_flower_blue.png":
 {
-	"filename": "big_flower_blue.png",
 	"frame":{"x":0,"y":49,"w":64,"h":128},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":64,"y":128},
 	"sourceSize":{"w":64,"h":128}
 },
+"big_flower_red.png":
 {
-	"filename": "big_flower_red.png",
 	"frame":{"x":65,"y":93,"w":64,"h":128},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":64,"y":128},
 	"sourceSize":{"w":64,"h":128}
 },
+"tobacco.png":
 {
-	"filename": "tobacco.png",
 	"frame":{"x":130,"y":93,"w":64,"h":64},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":64,"y":64},
 	"sourceSize":{"w":64,"h":64}
 },
+"bush1.png":
 {
-	"filename": "bush1.png",
 	"frame":{"x":65,"y":49,"w":46,"h":34},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":46,"y":34},
 	"sourceSize":{"w":46,"h":34}
 },
+"spiderweb.png":
 {
-	"filename": "spiderweb.png",
 	"frame":{"x":0,"y":178,"w":37,"h":35},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":37,"y":35},
 	"sourceSize":{"w":37,"h":35}
 },
+"bush_wall.png":
 {
-	"filename": "bush_wall.png",
 	"frame":{"x":222,"y":0,"w":25,"h":52},
 	"rotated":false,
 	"trimmed":false,
 	"spriteSourceSize":{"x":0,"y":0,"w":25,"y":52},
 	"sourceSize":{"w":25,"h":52}
 }
-]}
+}}
