@@ -7,6 +7,7 @@ var MenuSelectManager = function(_gameobject) {
   this.levelsGroup = {};
   this.playerSave = this.entity.game.playerSave;
   this.checkGameData();
+  this.entity.game.sound.stopAll();
 };
 
 MenuSelectManager.prototype = Object.create(LR.Behaviour.prototype);

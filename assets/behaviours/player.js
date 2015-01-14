@@ -363,7 +363,7 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
     this.entity.body.velocity.y = _vector.y * -180 - Math.abs(_vector.y) * 240;
     this.currentSpeed = this.entity.body.velocity.x;
   }
-  this.go.playSound("jump2");
+  this.go.playSound("jump2",0.2);
 }
 
 Player.prototype.onCollectCoin = function(_data){
@@ -438,9 +438,9 @@ Player.prototype.jump = function(_force, _jumpPower){
     //play a random sound between the two
     var r = Math.random();
     if( r > 0.5)
-      this.go.playSound("jump",0.1);
+      this.go.playSound("jump",0.2);
     else
-      this.go.playSound("jump2",0.1);
+      this.go.playSound("jump2",0.2);
   }
 }
 
@@ -550,13 +550,16 @@ Player.prototype.die = function(){
   //Disable contact events
   this.enableEvents = false;
 
+  //loose all health
+  this.acolyte.setHealth(0);
+
   this.entity.animations.play('dead', 10, true);
   this.go.body.moveUp(300);
   this.entity.game.camera.follow(null);
 
   //DEATH !!!
   if(this.entity.game.playerSave.getSave()["lives"] == 0){
-    console.log("DEATH !!!!");
+    console.log(" ULITMATE DEATH !!!!");
     //set a timer
     this.entity.game.time.events.add(
       Phaser.Timer.SECOND * 3, 

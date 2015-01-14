@@ -1,0 +1,1 @@
+{"assets":{"images":[],"atlases":[]},"objects":{"type":"LR.Entity.Sprite","name":"Music","id":365,"x":-68,"y":-262,"scaleX":1,"scaleY":1,"angle":0,"anchor":{"x":0.5,"y":0.5},"width":32,"height":32,"visible":false,"alpha":1,"tint":16777215,"anims":{},"behaviours":[],"sounds":[{"name":"music","key":"music-may_i_help_you.ogg","autoPlay":true,"loop":true,"$$hashKey":"0H9"}]}}
