@@ -8,7 +8,7 @@ var BigRollingRock = function(_gameobject) {
 	this.speed = 100;
 	this.direction = 1;
 	//this.entity.game.camera.follow(this.entity);
-	this.launch();
+	//this.launch();
   	this.go.setPostBroadPhaseCallback(this.onPostBroadphase,this);
 }
 
@@ -26,6 +26,7 @@ BigRollingRock.prototype.create = function(_data){
 }
 
 BigRollingRock.prototype.launch = function(){
+	this.entity.visble = true;
 	this.go.gravity = 1;
 	this.launched = true;
 }
@@ -52,4 +53,8 @@ BigRollingRock.prototype.onBeginContact = function(_otherBody, _myShape, _otherS
 
 BigRollingRock.prototype.changeGravity = function(_data){
 	this.go.gravity = _data.gravity;
+}
+
+BigRollingRock.prototype.changeSpeed = function(_data){
+	this.speed = _data.speed;
 }
