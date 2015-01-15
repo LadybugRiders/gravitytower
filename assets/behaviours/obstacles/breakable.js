@@ -18,9 +18,14 @@ Breakable.prototype.create = function( _data ){
 
 Breakable.prototype.update = function( _data ){
 	if(this.broken ){
-		this.entity.body.angle +=10;
-		if(! this.entity.inCamera)
-			this.entity.kill();
+		this.entity.rotation +=10 * this.entity.game.time.elapsed * 0.001;
+		if(! this.entity.inCamera ){
+			if(this.entity.kill){
+				this.entity.kill();
+			}else{
+				//this.broken = false;
+			}
+		}
 	}
 }
 
@@ -33,10 +38,13 @@ Breakable.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape,
 	}
 }
 
-Breakable.prototype.crush = function(_velocity){
+Breakable.prototype.crush = function(_velocityX){
+	if( this.broken )
+		return;
+	console.log(_velocityX);
 	this.broken = true;
 	this.entity.body.dynamic = true;
-	var xForce = _velocity + Math.random() * 50;
+	var xForce = _velocityX + Math.random() * 50;
 	var yForce = 100 + Math.random() * 100;
 	this.go.body.mass = 1;	
 	this.entity.body.velocity.x = xForce;	

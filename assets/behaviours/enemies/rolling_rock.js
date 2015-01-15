@@ -3,7 +3,6 @@
 //>>LREditor.Behaviour.params : { "direction": 1, "jumpable" : true, "cutable" : true, "hatable":true, "dead":true, "smoke":null}
 var RollingRock = function(_gameobject) {	
 	Enemy.call(this,_gameobject);
-	this.entity.body.setCircle(23,-1,-1);
 	this.onGround = false;
 	this.gravity = 1;
 	this.speed = 100;
@@ -30,6 +29,6 @@ RollingRock.prototype.launch = function(){
 RollingRock.prototype.update = function(){
 	if( this.launched == true ){
 		this.entity.angle += 0.2 * this.game.time.elapsed;
-		this.entity.body.velocity.x = this.direction * 100;
+		this.entity.body.velocity.x = this.direction * this.speed;
 	}
 }
