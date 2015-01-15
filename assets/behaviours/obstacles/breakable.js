@@ -22,8 +22,6 @@ Breakable.prototype.update = function( _data ){
 		if(! this.entity.inCamera ){
 			if(this.entity.kill){
 				this.entity.kill();
-			}else{
-				//this.broken = false;
 			}
 		}
 	}

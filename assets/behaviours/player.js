@@ -360,7 +360,7 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
   this.changeGravity( { "gravity":_gravity });
   if( _vector != null ){
     this.entity.body.velocity.x = _vector.x * 300;
-    this.entity.body.velocity.y = _vector.y * -180 - Math.abs(_vector.y) * 240;
+    this.entity.body.velocity.y = _vector.y * -130 - Math.abs(_vector.y) * 240;
     this.currentSpeed = this.entity.body.velocity.x;
   }
   this.go.playSound("jump2",0.2);

@@ -69,6 +69,10 @@ Hanger.prototype.update = function(){
 
 Hanger.prototype.hang = function(){
 	this.player = this.playerHair.player;
+	if( this.player.dead == true){
+		this.player == null;
+		return;
+	}
 	this.player.onHang();
 
 	this.formerAngle = this.player.entity.angle;
