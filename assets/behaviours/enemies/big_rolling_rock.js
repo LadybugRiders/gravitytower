@@ -7,8 +7,6 @@ var BigRollingRock = function(_gameobject) {
 	this.gravity = 1;
 	this.speed = 100;
 	this.direction = 1;
-	//this.entity.game.camera.follow(this.entity);
-	//this.launch();
   	this.go.setPostBroadPhaseCallback(this.onPostBroadphase,this);
 }
 
@@ -42,12 +40,12 @@ BigRollingRock.prototype.update = function(){
 	if( this.launched == true ){
 		this.entity.angle += 0.2 * this.game.time.elapsed;
 		this.entity.body.velocity.x = this.direction * this.speed;
-		console.log(this.body.velocity.y);
 	}
 }
 
 BigRollingRock.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape){
-	if(_otherBody.layer == "player" && _otherShape.lr_name == "mainShape"){
+	
+	if(_otherBody.go.layer == "player" && _otherShape.lr_name == "mainShape"){
 		this.go.gravity = 1;
 		_otherBody.go.sendMessage("die");
 	}else{

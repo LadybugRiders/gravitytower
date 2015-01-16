@@ -39,7 +39,6 @@ Breakable.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape,
 Breakable.prototype.crush = function(_velocityX){
 	if( this.broken )
 		return;
-	console.log(_velocityX);
 	this.broken = true;
 	this.entity.body.dynamic = true;
 	var xForce = _velocityX + Math.random() * 50;

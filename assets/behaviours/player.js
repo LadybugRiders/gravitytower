@@ -62,7 +62,6 @@ var Player = function(_gameobject) {
   this.state = "idle";
   this.lastState = this.state;
 
-  //this.entity.game.sound.mute = true;
 };
 
 Player.prototype = Object.create(LR.Behaviour.prototype);
@@ -437,7 +436,7 @@ Player.prototype.jump = function(_force, _jumpPower){
     this.scaleByGravity();
     //play a random sound between the two
     var r = Math.random();
-    if( r > 0.5)
+    if( r > 0.7)
       this.go.playSound("jump",0.2);
     else
       this.go.playSound("jump2",0.2);

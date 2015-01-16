@@ -1,11 +1,18 @@
 "use strict";
 //>> LREditor.Behaviour.name : UIInGame
-//>> LREditor.Behaviour.params : {"coins":null,"lives":null}
+//>> LREditor.Behaviour.params : {"coins":null,"lives":null,"quit_button":null,"mute_button":null}
 var UIInGame = function(_gameobject){
 	LR.Behaviour.call(this,_gameobject);
 
 	this.coins = null;
 	this.lives = null;
+	this.quit_button = null;
+	this.mute_button = null;
+
+
+	this.livesUIOpen = false;
+	this.coinsUIOpen = false;
+	this.menuUIOpen = false;
 
 	this.playerSave = this.entity.game.playerSave;
 
@@ -29,15 +36,21 @@ UIInGame.prototype.create = function(_data){
 		this.coinsUI = this.coins.parent.go;
 		this.coinsUIy = this.coinsUI.entity.cameraOffset.y;
 		this.coinsUI.entity.cameraOffset.y = -30;
-		this.coinsUIOpen = false;
 	}
 	if( _data.lives ){
 		this.lives = _data.lives.entity;
 		this.livesUI = this.lives.parent.go;
 		this.livesUIy = this.coinsUI.entity.cameraOffset.y;
 		this.livesUI.entity.cameraOffset.y = -30;
-		this.livesUIOpen = false;
 	}
+	if( _data.mute_button ){
+		this.mute_button = _data.mute_button;
+	}
+	if( _data.quit_button ){
+		this.quit_button = _data.quit_button;
+	}
+
+	console.log(this.quit_button);
 	this.showCoins();
 }
 
@@ -75,6 +88,7 @@ function createDebugSave(_this){
 //===============================================
 UIInGame.prototype.showCoins = function(){
 	if(! this.coinsUIOpen ){
+		this.hideMenu();
 		this.coinsUIOpen = true;
 		var tween = this.go.game.add.tween(this.coinsUI.entity.cameraOffset);
 	    tween.to( {y:this.coinsUIy},350,Phaser.Easing.Default,true,0,0,false);
@@ -88,6 +102,7 @@ UIInGame.prototype.showCoins = function(){
 
 UIInGame.prototype.hideCoins = function(){
 	if( this.coinsUIOpen ){
+		this.showMenu();
 		this.coinsUIOpen = false;
 		var tween = this.go.game.add.tween(this.coinsUI.entity.cameraOffset);
 	    tween.to( {y:-30},350,Phaser.Easing.Default,true,0,0,false);
@@ -96,6 +111,7 @@ UIInGame.prototype.hideCoins = function(){
 
 UIInGame.prototype.showLives = function(){
 	if(! this.livesUIOpen ){
+		this.hideMenu();
 		this.livesUIOpen = true;
 		var tween = this.go.game.add.tween(this.livesUI.entity.cameraOffset);
 	    tween.to( {y:this.coinsUIy},350,Phaser.Easing.Default,true,0,0,false);
@@ -109,8 +125,33 @@ UIInGame.prototype.showLives = function(){
 
 UIInGame.prototype.hideLives = function(){
 	if( this.livesUIOpen ){
+		this.showMenu();
 		this.livesUIOpen = false;
 		var tween = this.go.game.add.tween(this.livesUI.entity.cameraOffset);
 	    tween.to( {y:-30},350,Phaser.Easing.Default,true,0,0,false);
+	}
+}
+
+UIInGame.prototype.showMenu = function(){
+	if(!this.menuUIOpen){
+
+		this.menuUIOpen = true;
+		//quit button
+		var tween = this.go.game.add.tween(this.quit_button.entity.cameraOffset);
+	    tween.to( {x: 30},350,Phaser.Easing.Default,true,0,0,false);
+		//mute button
+		tween = this.go.game.add.tween(this.mute_button.entity.cameraOffset);
+	    tween.to( {x: this.entity.game.camera.width-30},350,Phaser.Easing.Default,true,0,0,false);
+	}
+}
+
+UIInGame.prototype.hideMenu = function(){
+	if(this.menuUIOpen){
+		this.menuUIOpen = false;
+		var tween = this.go.game.add.tween(this.quit_button.entity.cameraOffset);
+	    tween.to( {x: -30},350,Phaser.Easing.Default,true,0,0,false);
+		//mute button
+		tween = this.go.game.add.tween(this.mute_button.entity.cameraOffset);
+	    tween.to( {x: this.entity.game.camera.width+30},350,Phaser.Easing.Default,true,0,0,false);
 	}
 }
