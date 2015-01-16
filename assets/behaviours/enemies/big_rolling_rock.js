@@ -29,6 +29,13 @@ BigRollingRock.prototype.launch = function(){
 	this.entity.visble = true;
 	this.go.gravity = 1;
 	this.launched = true;
+	this.go.playSound("music",0.5,true);
+}
+
+BigRollingRock.prototype.stop = function(){
+	this.entity.visble = false;
+	this.launched = false;
+	this.go.stopSound("music");
 }
 
 BigRollingRock.prototype.update = function(){
