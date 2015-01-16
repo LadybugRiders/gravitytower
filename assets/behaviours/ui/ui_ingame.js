@@ -9,7 +9,6 @@ var UIInGame = function(_gameobject){
 	this.quit_button = null;
 	this.mute_button = null;
 
-
 	this.livesUIOpen = false;
 	this.coinsUIOpen = false;
 	this.menuUIOpen = false;
@@ -20,6 +19,7 @@ var UIInGame = function(_gameobject){
 	this.entity.game.pollinator.on("onCoinsChanged",this.onCoinsChanged,this);
 	this.entity.game.pollinator.on("onCoinCollected",this.showCoins,this);
 
+	this.entity.onDestroy.add(this.onDestroy,this);
 	//DEBUG
 	if( this.entity.game.playerSave.getActiveLevelSave() == null){
 		createDebugSave(this);
@@ -50,8 +50,13 @@ UIInGame.prototype.create = function(_data){
 		this.quit_button = _data.quit_button;
 	}
 
-	console.log(this.quit_button);
 	this.showCoins();
+}
+
+UIInGame.prototype.onDestroy = function(){
+	this.entity.game.pollinator.off("onLivesChanged",this.onLivesChanged,this);
+	this.entity.game.pollinator.off("onCoinsChanged",this.onCoinsChanged,this);
+	this.entity.game.pollinator.off("onCoinCollected",this.showCoins,this);
 }
 
 UIInGame.prototype.start = function(_data){
@@ -152,6 +157,6 @@ UIInGame.prototype.hideMenu = function(){
 	    tween.to( {x: -30},350,Phaser.Easing.Default,true,0,0,false);
 		//mute button
 		tween = this.go.game.add.tween(this.mute_button.entity.cameraOffset);
-	    tween.to( {x: this.entity.game.camera.width+30},350,Phaser.Easing.Default,true,0,0,false);
+		tween.to( {x: this.entity.game.camera.width+30},350,Phaser.Easing.Default,true,0,0,false);
 	}
 }

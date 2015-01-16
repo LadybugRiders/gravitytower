@@ -34,6 +34,7 @@ BigRollingRock.prototype.stop = function(){
 	this.entity.visble = false;
 	this.launched = false;
 	this.go.stopSound("music");
+	this.entity.kill();
 }
 
 BigRollingRock.prototype.update = function(){

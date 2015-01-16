@@ -45,6 +45,7 @@ SelectLevelButton.prototype.onInputDown = function() {
 	if( levelSave.kimis == null){
 		levelSave.kimis = [];
 	}
+	levelSave.completed = false;
 
 	//reset level save for temporary data
 	levelSave.coins = 0;

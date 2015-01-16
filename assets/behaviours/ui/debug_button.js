@@ -16,7 +16,6 @@ DebugButton.prototype.create = function(_data) {
 DebugButton.prototype.onInputDown = function() {
 	switch(this.debugType){
 		case "deleteSave" : 
-				console.log("qsj");
 				this.entity.game.playerSave.deleteSave();
 				this.entity.game.state.start("Level",true,false,{levelName: "menu_select_levels"});
 			break;

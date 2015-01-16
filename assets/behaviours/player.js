@@ -559,6 +559,7 @@ Player.prototype.die = function(){
   //DEATH !!!
   if(this.entity.game.playerSave.getSave()["lives"] == 0){
     console.log(" ULITMATE DEATH !!!!");
+    this.entity.game.playerSave.revertLevelSave();
     //set a timer
     this.entity.game.time.events.add(
       Phaser.Timer.SECOND * 3, 
@@ -614,6 +615,7 @@ Player.prototype.finish = function(_data){
   this.enabled = false;
   this.freeze();
   this.playerSave.setValue("finished",true);
+  this.playerSave.setValue("completed",true);
   this.playerSave.setValue("health",this.acolyte.health);
   //set a timer
   this.entity.game.time.events.add(

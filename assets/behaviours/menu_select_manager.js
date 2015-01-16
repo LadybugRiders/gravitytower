@@ -14,6 +14,7 @@ MenuSelectManager.prototype = Object.create(LR.Behaviour.prototype);
 MenuSelectManager.prototype.constructor = MenuSelectManager;
 
 MenuSelectManager.prototype.create = function(_data) {
+  //Get graphics
   if(_data.levelsGroup){
     this.levelsGroup = _data.levelsGroup;
     this.levelButtons = this.levelsGroup.getBehavioursInChildren(SelectLevelButton);
@@ -32,6 +33,7 @@ MenuSelectManager.prototype.create = function(_data) {
     this.kimisText.text = this.playerSave.getValue("kimis");
   } 
 
+  //data
   this.fillKimisSaved();
   this.checkLevelData();
 }
@@ -92,7 +94,9 @@ MenuSelectManager.prototype.checkLevelData = function(_data) {
 }
 
 /*
-Fill kimis slot per level
+Fill kimis slot per level. This is to be called when we just finished a level
+_kimisCount : the number of kimis collected
+_index : the index of the level
 */
 MenuSelectManager.prototype.applyKimisCollected = function(_kimisCount,_index) {
   var levelGroup = null;
@@ -103,10 +107,10 @@ MenuSelectManager.prototype.applyKimisCollected = function(_kimisCount,_index) {
       break;
     }
   }
-  var startIndex = this.playerSave.getPermanentSave().levels[this.playerSave.getValue("currentLevelID")].kimis.length;
-  // the _add parameters tells us we are coming from a played level, in which case some kimis 
-  // may already have been sloted
 
+  //get from permanent save kimis that have been collected BEFORE playing this level
+  var startIndex = this.playerSave.getPermanentSave().levels[this.playerSave.getValue("currentLevelID")].kimis.length;
+ 
   //search slots and change their frame to make a gold kimis appear
   for(var i=0; i < _kimisCount; i++){
       var slot = LR.GameObject.FindByName(levelGroup,"slot"+(startIndex+i+1));
@@ -117,10 +121,10 @@ MenuSelectManager.prototype.applyKimisCollected = function(_kimisCount,_index) {
 }
 
 MenuSelectManager.prototype.fillKimisSaved = function() {
-
   //For every graphic level
   for(var i=0; i < this.levelButtons.length; i++){
     var levelData = this.playerSave.getLevelSave(this.levelButtons[i].levelID);
+    
     if(levelData){
       var levelGroup = this.levelButtons[i].entity.parent;
       //fill slots according to the number of kimis resued by level 
