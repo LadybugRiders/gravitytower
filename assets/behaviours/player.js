@@ -109,6 +109,7 @@ Player.prototype.update = function() {
       break;
     case "fall" : this.updateRunAir();
       break;
+    case "hanged" : console.log(this.currentSpeed); break;
   }
 }
 
@@ -217,7 +218,6 @@ Player.prototype.updateRun = function(){
 }
 
 Player.prototype.updateJump = function(){ 
-
   
   //wait for the body to fall (according to gravity)
   //when this.fall is called, the state changes, so updateJump is not called anymore
@@ -243,7 +243,7 @@ Player.prototype.updateJump = function(){
 }
 
 Player.prototype.updateRunAir = function(){ 
-  if( this.facingWall == this.direction || !this.canMove)
+  if( this.facingWall == this.direction || !this.canMove )
     return;
   if( this.isMovePressed ){
     if( Math.abs( this.currentSpeed ) > this.airSpeed){
@@ -349,6 +349,7 @@ Player.prototype.onHang = function(){
   this.changeState("hanged");
   this.canMove = false;
   this.canJump = false;
+  this.currentSpeed = 0;
   this.entity.body.setZeroVelocity();
 }
 
@@ -359,7 +360,7 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
   this.changeGravity( { "gravity":_gravity });
   if( _vector != null ){
     this.entity.body.velocity.x = _vector.x * 300;
-    this.entity.body.velocity.y = _vector.y * -130 - Math.abs(_vector.y) * 240;
+    this.entity.body.velocity.y = _vector.y * -160 - Math.abs(_vector.y) * 240;
     this.currentSpeed = this.entity.body.velocity.x;
   }
   this.go.playSound("jump2",0.2);
@@ -615,7 +616,8 @@ Player.prototype.finish = function(_data){
   this.enabled = false;
   this.freeze();
   this.playerSave.setValue("finished",true);
-  this.playerSave.setValue("completed",true);
+  this.levelSave.finshed = true;
+  this.levelSave.completed = true;
   this.playerSave.setValue("health",this.acolyte.health);
   //set a timer
   this.entity.game.time.events.add(

@@ -8,6 +8,7 @@ var MenuSelectManager = function(_gameobject) {
   this.playerSave = this.entity.game.playerSave;
   this.checkGameData();
   this.entity.game.sound.stopAll();
+  this.buttons = new Array();
 };
 
 MenuSelectManager.prototype = Object.create(LR.Behaviour.prototype);
@@ -87,6 +88,7 @@ MenuSelectManager.prototype.checkLevelData = function(_data) {
       this.playerSave.setValue("currentLevelID",-1);
       this.playerSave.setValue("finished",false);
       levelSave.finished = true;
+      this.activateFinishedLevel(levelID+1);
     }
     //save all
     this.entity.game.playerSave.writeSave();
@@ -127,13 +129,25 @@ MenuSelectManager.prototype.fillKimisSaved = function() {
     
     if(levelData){
       var levelGroup = this.levelButtons[i].entity.parent;
-      //fill slots according to the number of kimis resued by level 
-      for(var k=0; k < levelData.kimis.length; k++){
-        var slot = LR.GameObject.FindByName(levelGroup,"slot"+(k+1));
-        if( slot ){
-          slot.frame = 0;
-        }
+      var btn = this.getButton(this.levelButtons[i].levelID);
+      if( btn ){
+        btn.fillSlots(levelData.kimis.length);
       }
+    }
+  }
+}
+
+MenuSelectManager.prototype.activateFinishedLevel = function(_levelID) {
+  var btn = this.getButton(_levelID);
+  if( btn )
+    btn.activate();
+}
+
+MenuSelectManager.prototype.getButton = function(_levelID){
+   for(var i=0; i < this.levelButtons.length; i++){
+    var btn = this.levelButtons[i];
+    if( btn.levelID == _levelID){
+      return btn;
     }
   }
 }

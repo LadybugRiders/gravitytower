@@ -51,5 +51,6 @@ Breakable.prototype.crush = function(_velocityX){
 		this.death_effect.entity.visible = true;
 		this.death_effect.entity.play("blow").killOnComplete = true;
 	}
+	this.go.changeLayer("default");
 	this.go.playSound("boom");
 }

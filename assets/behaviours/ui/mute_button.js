@@ -31,12 +31,12 @@ MuteButton.prototype.mute = function(){
   	this.entity.game.sound.mute = true;
 	this.playerSave.setValue("mute",true); 
 	this.playerSave.writeSave();
-  	this.entity.setFrames(0,0,0,0);
+  	this.entity.setFrames(1,1,1,1);
 }
 
 MuteButton.prototype.unmute = function(){
  	this.entity.game.sound.mute = false;
 	this.playerSave.setValue("mute",false);
 	this.playerSave.writeSave();
-  	this.entity.setFrames(1,1,1,1);
+  	this.entity.setFrames(0,0,0,0);
 }

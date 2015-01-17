@@ -21,12 +21,14 @@ BigRollingRock.prototype.onPostBroadphase = function(_otherBody){
 
 BigRollingRock.prototype.create = function(_data){
 	if(_data.speed != null ) this.speed = _data.speed;
+	this.go.playSound("levelMusic",0.5,true);
 }
 
 BigRollingRock.prototype.launch = function(){
 	this.entity.visble = true;
 	this.go.gravity = 1;
 	this.launched = true;
+	this.go.stopSound("levelMusic");
 	this.go.playSound("music",0.5,true);
 }
 
@@ -34,6 +36,7 @@ BigRollingRock.prototype.stop = function(){
 	this.entity.visble = false;
 	this.launched = false;
 	this.go.stopSound("music");
+	this.go.playSound("levelMusic",0.5,true);
 	this.entity.kill();
 }
 
@@ -49,6 +52,7 @@ BigRollingRock.prototype.onBeginContact = function(_otherBody, _myShape, _otherS
 	if(_otherBody.go.layer == "player" && _otherShape.lr_name == "mainShape"){
 		this.go.gravity = 1;
 		_otherBody.go.sendMessage("die");
+		this.go.stopSound("music");
 	}else{
 		var brkBH = _otherBody.go.getBehaviour(Breakable);
 		if(brkBH){
