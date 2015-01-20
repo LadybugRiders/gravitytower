@@ -1,6 +1,6 @@
 "use strict";
 //>>LREditor.Behaviour.name: Enemy
-//>>LREditor.Behaviour.params : { "direction": 1, "gravity":1, "jumpable" : true, "cutable" : true, "hatable":true, "dead":false, "smoke":null}
+//>>LREditor.Behaviour.params : { "direction": 1, "gravity":1, "jumpable" : true, "cutable" : true, "hatable":true, "dead":false, "blocker":false, "smoke":null}
 var Enemy = function(_gameobject) {	
 	LR.Behaviour.call(this,_gameobject);
 	this.onGround = false;
@@ -12,6 +12,7 @@ var Enemy = function(_gameobject) {
   this.jumpable = true;
   this.cutable = true;
   this.hatable = true;
+  this.blocker = false;
   //speed
   this.baseSpeed = 10;
   this.speed = this.baseSpeed;
@@ -45,6 +46,7 @@ Enemy.prototype.create = function( _data ){
   if( _data.jumpable ) this.jumpable = _data.jumpable;
   if( _data.cutable ) this.cutable = _data.cutable;
   if( _data.hatable ) this.hatable = _data.hatable;
+  if( _data.blocker ) this.blocker = _data.blocker;
   if( _data.gravity != null){
     this.gravity = _data.gravity;
     this.go.gravity = this.gravity;
@@ -142,6 +144,7 @@ Enemy.prototype.die = function(_direction, _speed ){
     this.smoke.entity.revive();
     this.smoke.entity.animations.play("blow").killOnComplete = true;
   }
+  this.go.playSound("death");
 }
 
 //=================================================================

@@ -1,6 +1,6 @@
 "use strict";
 //>>LREditor.Behaviour.name: Turtle
-//>>LREditor.Behaviour.params : { "direction": 1, "smoke":null, "range":100, "maxSpeed":50}
+//>>LREditor.Behaviour.params : { "direction": 1, "smoke":null, "range":100, "maxSpeed":50, "turtle":false}
 var Turtle = function(_gameobject) {	
 	Enemy.call(this,_gameobject);
   this.state = "run";

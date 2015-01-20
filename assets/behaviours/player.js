@@ -97,6 +97,17 @@ Player.prototype.create = function(_data) {
   }
 }
 
+Player.prototype.onPostBroadphase = function(_otherBody){
+  if( this.isHit && _otherBody.go.layer=="enemy" ){
+    var enemyBH = _otherBody.go.getBehaviour(Enemy);
+    if(enemyBH.blocker == true)
+      return true;
+
+    return false;
+  }
+  return true;
+}
+
 Player.prototype.update = function() {
   if( this.dead == true )
     return;
@@ -119,12 +130,6 @@ Player.prototype.postUpdate = function(){
   if(! this.onGround ){
     this.entity.body.velocity.x = this.currentSpeed;
   }
-}
-
-Player.prototype.onPostBroadphase = function(_otherBody){
-  if( this.isHit && _otherBody.go.layer=="enemy" )
-    return false;
-  return true;
 }
 
 //This method is automatically called when the body of the player collides with another cody
@@ -363,7 +368,6 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
     this.entity.body.velocity.y = _vector.y * -160 - Math.abs(_vector.y) * 240;
     this.currentSpeed = this.entity.body.velocity.x;
   }
-  this.go.playSound("jump2",0.2);
 }
 
 Player.prototype.onCollectCoin = function(_data){

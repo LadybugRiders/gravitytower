@@ -95,6 +95,7 @@ Hanger.prototype.release = function(){
 		this.player = null;
 		this.playerHair = null;
 		this.released = true;
+		this.go.playSound("release",0.5);
 	}
 }
 
