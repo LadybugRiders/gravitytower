@@ -120,7 +120,7 @@ Player.prototype.update = function() {
       break;
     case "fall" : this.updateRunAir();
       break;
-    case "hanged" : console.log(this.currentSpeed); break;
+    case "hanged" : break;
   }
 }
 
@@ -368,12 +368,6 @@ Player.prototype.onReleaseHang = function(_gravity,_vector){
     this.entity.body.velocity.y = _vector.y * -160 - Math.abs(_vector.y) * 240;
     this.currentSpeed = this.entity.body.velocity.x;
   }
-}
-
-Player.prototype.onCollectCoin = function(_data){
-  var count = 1;
-  if( _data.count ) count = _data.count;
-  this.levelSave["coins"] += count;
 }
 
 Player.prototype.onCollectLife = function(){

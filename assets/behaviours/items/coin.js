@@ -5,6 +5,8 @@
 
 var Coin = function(_gameobject) {	
 	Collectable.call(this,_gameobject);
+	this.respawnable = false;
+	this.coinValue = 1;
 }
 
 Coin.prototype = Object.create(Collectable.prototype);
@@ -28,7 +30,11 @@ Coin.prototype.onCollected = function(_gameobject){
   	this.entity.game.pollinator.dispatch("onCoinCollected");
 	this.entity.body.destroy();
 	this.collected = true;
-	this.game.playerSave.getActiveLevelSave().coinsIDs.push(this.go.id);
+	//level save
+	var levelSave = this.game.playerSave.getActiveLevelSave();
+  	levelSave["coins"] += this.coinValue;
+	if( !this.respawnable )
+		levelSave.coinsIDs.push(this.go.id);
 	this.goToCoinUI();
 }
 

@@ -60,8 +60,8 @@ Hanger.prototype.update = function(){
   	rotatedPoint.x *= this.distance;
   	rotatedPoint.y *= this.distance;
 
-  	this.player.go.x = this.entity.world.x + this.hookX + rotatedPoint.x ;
-  	this.player.go.y = this.entity.world.y + this.hookY + rotatedPoint.y ;
+  	this.player.go.worldX = this.entity.world.x + this.hookX + rotatedPoint.x ;
+  	this.player.go.worldY = this.entity.world.y + this.hookY + rotatedPoint.y ;
 
   	this.player.entity.angle = this.currentAngle - 90;
   }

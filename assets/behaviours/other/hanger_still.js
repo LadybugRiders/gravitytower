@@ -19,8 +19,9 @@ HangerStill.prototype.create = function(_data){
 HangerStill.prototype.update = function(){
 	if(this.player && this.released == false){
 		var vec = this.deltaVector.normalize();
-		this.player.go.x = this.hookPosition.x - vec.x * this.distanceToHook;
-	  	this.player.go.y = this.hookPosition.y - vec.y * this.distanceToHook;
+		console.log(this.player.go.x);
+		this.player.go.worldX = this.hookPosition.x - vec.x * this.distanceToHook;
+	  	this.player.go.worldY = this.hookPosition.y - vec.y * this.distanceToHook;
 	  	this.distanceToHook -= 20 * this.entity.game.time.elapsed * 0.01;
 	  	if( this.distanceToHook <= 0)
 	  		this.distanceToHook = 0;
@@ -31,7 +32,7 @@ HangerStill.prototype.hang = function(){
 	Hanger.prototype.hang.call(this);
 	this.hookPosition.x = this.entity.world.x + this.hookX;
 	this.hookPosition.y = this.entity.world.y + this.hookY ;
-	this.deltaVector = Phaser.Point.subtract(this.hookPosition,this.player.entity.position);
+	this.deltaVector = Phaser.Point.subtract(this.hookPosition,this.player.entity.world);
 	this.distanceToHook = this.deltaVector.getMagnitude();
 }
 

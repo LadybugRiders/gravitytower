@@ -145,6 +145,7 @@ Enemy.prototype.die = function(_direction, _speed ){
     this.smoke.entity.animations.play("blow").killOnComplete = true;
   }
   this.go.playSound("death");
+  this.entity.game.pollinator.dispatch("onEnemyDied",{"sender":this.entity});
 }
 
 //=================================================================
