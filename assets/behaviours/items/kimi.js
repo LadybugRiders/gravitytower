@@ -34,6 +34,7 @@ Kimi.prototype.onTriggered = function(_gameobject){
 		this.go.getShape().sensor = true;
 		this.go.gravity = 0;
 		this.game.playerSave.getActiveLevelSave().kimis.push(this.kimi_id);
+		this.go.playSound("collect",0.3);
 	}
 }
 
@@ -48,7 +49,8 @@ Kimi.prototype.update = function(_gameobject){
 				this.goToPlayer = true;
 			this.lastCos = cos;
 		}else{
-			var vector = Phaser.Point.subtract(this.playerGO.entity.position,this.entity.position);
+			var vector = Phaser.Point.subtract(this.playerGO.entity.world,this.entity.world);
+			console.log(vector);
 			var speedVector = new Phaser.Point(vector.x, vector.y).normalize();
 			var accelerator = 4 + vector.getMagnitude() *0.02;
 			speedVector.x *= accelerator;

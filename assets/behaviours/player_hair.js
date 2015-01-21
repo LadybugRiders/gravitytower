@@ -43,6 +43,7 @@ PlayerHair.prototype.activatePower = function(_power){
 	if( _power == this.state )
 		return;
 	this.state = _power;
+	this.go.playSound("power");
 	this.changeForm();
 }
 

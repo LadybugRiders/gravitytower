@@ -21,5 +21,6 @@ Collectable.prototype.onBeginContact = function(_otherBody, _myShape, _otherShap
 }
 
 Collectable.prototype.onCollected = function(_gameobject){
+	this.go.playSound("collect");
 	this.entity.kill();
 }
