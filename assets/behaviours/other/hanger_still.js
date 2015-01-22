@@ -19,7 +19,6 @@ HangerStill.prototype.create = function(_data){
 HangerStill.prototype.update = function(){
 	if(this.player && this.released == false){
 		var vec = this.deltaVector.normalize();
-		console.log(this.player.go.x);
 		this.player.go.worldX = this.hookPosition.x - vec.x * this.distanceToHook;
 	  	this.player.go.worldY = this.hookPosition.y - vec.y * this.distanceToHook;
 	  	this.distanceToHook -= 20 * this.entity.game.time.elapsed * 0.01;

@@ -161,20 +161,17 @@ Enemy.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _eq
   }
 
   if( this.dead == false &&  _otherBody.go.layer == "player"){
-    var playerHair = _otherBody.go.getBehaviour(PlayerHair);
-    //hit by a blade
-    if( playerHair ){
-      if(playerHair.isShapeAndStatusBlade(_otherShape)){
-        console.log("HS");
-        this.onHitBlade(playerHair.x > this.entity.x ? -1 : 1);
-      }
-      //if hit by a hat
-      if( playerHair.isShapeAndStatusHat(_otherShape)){
-        this.onHitHat();
-      }
-    }else{//else we hit the player
-      this.hitPlayer(_otherBody.go,_otherShape,_equation);
+    //check player hair
+    var isHit = this.checkPlayerHairHit(_otherBody.go,_otherShape);
+    //if not hit by player hair
+    if(!isHit){
+      //check player feet
+      isHit = this.checkPlayerFeetHit(_otherBody.go,_otherShape);
     }    
+    //if not it by any of those
+    if(!isHit && _otherShape.lr_name == "mainShape"){      
+      this.hitPlayer(_otherBody.go,_otherShape,_equation);
+    }
   }
 }
 
@@ -200,6 +197,37 @@ Enemy.prototype.onHitPlayer = function(){
 //=================================================================
 //                  WEAKNESSES
 //=================================================================
+
+Enemy.prototype.checkPlayerHairHit = function(_playerGO,_otherShape){
+  var playerHair = _playerGO.getBehaviour(PlayerHair);
+  
+  if( playerHair ){
+    //hit by a blade
+    if(playerHair.isShapeAndStatusBlade(_otherShape)){
+      this.onHitBlade(playerHair.x > this.entity.x ? -1 : 1);
+      return true;
+    }
+    //if hit by a hat
+    if( playerHair.isShapeAndStatusHat(_otherShape)){
+      this.onHitHat();
+      return true;
+    }
+  }
+  return false;
+}
+
+Enemy.prototype.checkPlayerFeetHit = function(_playerGO,_otherShape){
+  if( _otherShape.lr_name != "feet")
+    return false;
+  var player = _playerGO.getBehaviour(Player);
+  if( player && this.jumpable){
+    this.onHitJump(player.entity);
+    player.jump(true);
+    return true;
+  }
+  return false;
+}
+
 Enemy.prototype.onHitJump = function(){
   if(this.jumpable){
     this.die();

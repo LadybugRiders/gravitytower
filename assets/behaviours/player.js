@@ -140,11 +140,7 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
   if( _myShape == this.feetSensor ){
     //Enemy collision
     if(_otherBody.go.layer == "enemy"){
-      var enemy = _otherBody.go.getBehaviour(Enemy);
-      if( enemy && enemy.jumpable){
-        _otherBody.go.sendMessage("onHitJump");
-        this.jump(true);
-      }
+      
     //any solid collision
     }else if( _otherShape.sensor == false || _otherShape.sensor == null){
       this.blowDust();

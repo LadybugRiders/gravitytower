@@ -80,7 +80,6 @@ SelectLevelButton.prototype.deactivate = function(){
 }
 
 SelectLevelButton.prototype.fillSlots = function(_count) {
-	console.log("co");
 	if(_count > 3) _count=3;
 	for(var i=0; i < _count ; i++){
 		this.slots[i].frame = 0;

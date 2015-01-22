@@ -80,7 +80,7 @@ Hanger.prototype.hang = function(){
 
 	this.player.go.gravity = 0;
 	//compute base values
-	var toPlayer = Phaser.Point.subtract(this.player.entity.position,this.entity.position);
+	var toPlayer = Phaser.Point.subtract(this.player.entity.world,this.entity.world);
 	this.currentAngle = LR.Utils.angle(new Phaser.Point(1,0), toPlayer.normalize());	 		
 	this.direction = this.player.direction > 0 ? -1 : 1;
 }
@@ -88,8 +88,12 @@ Hanger.prototype.hang = function(){
 Hanger.prototype.release = function(){
 	if( this.player ){
 		//compute direction of the release
-		var vector = Phaser.Point.subtract(this.player.entity.position,this.entity.position);
+		var vector = Phaser.Point.subtract(this.player.entity.world,this.entity.world);
+		//safety to avoiding kiming jumping to vertically
+		if(vector.y > 30)
+			vector.y = 30;
 		Phaser.Point.normalize(vector,vector);
+
 		//unhang the player
 		this.player.onReleaseHang(this.formerGrav, vector);	
 		this.player = null;
