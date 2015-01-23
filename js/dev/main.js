@@ -5,7 +5,7 @@ window.onload = function() {
     expandPhaserElement();
 
 	//last parameter == debug
-	var game = new KRGame("phaser", 640, 320,Phaser.ScaleManager.SHOW_ALL,false);
+	var game = new KRGame("phaser", 640, 320,Phaser.ScaleManager.SHOW_ALL,true);
 }
 
 var KRGame = function(_containerId, _width, _height, _scaleMode, _debug) {

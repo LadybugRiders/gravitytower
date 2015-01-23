@@ -11,6 +11,8 @@ var BubbleFly = function(_gameobject){
 	this.jumpPressed = false;
 	this.direction = 1;
 
+	this.dead = false;
+
 	this.currentSpeedX = 0;
 	this.currentSpeedY = 0;
 
@@ -36,7 +38,7 @@ BubbleFly.prototype.create = function(_data){
 }
 
 BubbleFly.prototype.update = function(_data){
-	if( this.playerScript ){
+	if( this.playerScript && this.dead == false){
 		this.playerScript.go.x = this.entity.x;
 		this.playerScript.go.y = this.entity.y;
 		this.playerScript.entity.angle += 10 * this.entity.game.time.elapsed * 0.001;
@@ -46,7 +48,7 @@ BubbleFly.prototype.update = function(_data){
 }
 
 BubbleFly.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
-	if(_otherBody.go.layer == "player" && this.playerScript == null ){
+	if(this.dead == false && _otherBody.go.layer == "player" && this.playerScript == null ){
 		this.playerScript = _otherBody.go.getBehaviour(Player);
 		if(this.playerScript == null)
 			return;
@@ -65,6 +67,8 @@ BubbleFly.prototype.processSpeed = function(){
 }
 
 BubbleFly.prototype.activate = function(){	
+	if(this.dead)
+		return;
 	this.playerScript.freeze();
 	this.playerScript.go.gravity = 0;
 	this.entity.go.gravity = 0.06;
@@ -72,11 +76,26 @@ BubbleFly.prototype.activate = function(){
 }
 
 BubbleFly.prototype.deactivate = function(){	
+	console.log("deactivate");
+	//Reset player proper properties
 	this.playerScript.unfreeze();
 	this.playerScript.go.gravity = 1;
+	this.playerScript.entity.angle = 0;
+	this.playerScript.go.body.setZeroVelocity();
+	//change this entity's properties
 	this.entity.go.gravity = 0;
 	this.go.changeLayer("default");
+	this.playerScript = null;
+	this.dead = true;
+	this.entity.kill();
 }
+
+BubbleFly.prototype.pop = function(){
+	this.dead = true;
+	this.playerScript.die();
+	this.deactivate();
+}
+
 //========================================================
 //					MOVES
 //========================================================
