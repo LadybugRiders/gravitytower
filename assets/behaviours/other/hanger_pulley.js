@@ -38,8 +38,8 @@ HangerPulley.prototype.update = function(){
 	
 	if(this.player && this.released == false){
 
-		this.player.go.x = this.entity.world.x + this.hookX ;
-	  	this.player.go.y = this.entity.world.y + this.hookY ;
+		this.player.go.worldX = this.entity.world.x + this.hookX ;
+	  	this.player.go.worldY = this.entity.world.y + this.hookY ;
 
 	  	//move camera to target if asked
 		if(this.isCameraMoving){
