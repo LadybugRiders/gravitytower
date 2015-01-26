@@ -117,6 +117,7 @@ SelectLevelButton.prototype.onInputDown = function() {
 	//Write data
 	playerSave.writeSave();
 
+    this.entity.game.sound.stopAll();
 	//start level
 	this.entity.game.state.start("Level",true,false,
 								{levelName: this.level}

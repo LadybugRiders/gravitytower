@@ -7,14 +7,16 @@ var MenuSelectManager = function(_gameobject) {
   this.levelsGroup = {};
   this.playerSave = this.entity.game.playerSave;
   this.checkGameData();
-  this.entity.game.sound.stopAll();
+
   this.buttons = new Array();
+
 };
 
 MenuSelectManager.prototype = Object.create(LR.Behaviour.prototype);
 MenuSelectManager.prototype.constructor = MenuSelectManager;
 
 MenuSelectManager.prototype.create = function(_data) {
+  this.checkMusic();
   //Get graphics
   if(_data.levelsGroup){
     this.levelsGroup = _data.levelsGroup;
@@ -37,6 +39,23 @@ MenuSelectManager.prototype.create = function(_data) {
   //data
   this.fillKimisSaved();
   this.checkLevelData();
+}
+
+MenuSelectManager.prototype.checkMusic = function(){
+  var currentSounds = this.entity.game.sound._sounds;
+  var mySoundKey = this.go.getSound("music").key;
+  var soundPlaying = false;
+  for(var i=0; i < currentSounds.length; i++){
+    var snd = currentSounds[i];
+    if( snd.key == mySoundKey && snd.isPlaying == true){
+      soundPlaying = true;
+      break;
+    }
+  }
+  if( ! soundPlaying ){    
+      this.entity.game.sound.stopAll();
+      this.go.playSound("music");
+  }
 }
 
 /*
