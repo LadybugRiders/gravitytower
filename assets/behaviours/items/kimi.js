@@ -50,7 +50,6 @@ Kimi.prototype.update = function(_gameobject){
 			this.lastCos = cos;
 		}else{
 			var vector = Phaser.Point.subtract(this.playerGO.entity.world,this.entity.world);
-			console.log(vector);
 			var speedVector = new Phaser.Point(vector.x, vector.y).normalize();
 			var accelerator = 4 + vector.getMagnitude() *0.02;
 			speedVector.x *= accelerator;

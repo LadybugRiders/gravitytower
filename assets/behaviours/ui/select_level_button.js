@@ -41,11 +41,12 @@ SelectLevelButton.prototype.create = function(_data) {
 		//console.log(playerSave);
 		//if the current level is completed, do nothing
 		var levelSave = playerSave.levels[this.currentLevelID]; 
+
+		//if already completed, no need to go further
 		if( levelSave && levelSave.completed == true )
 			return;
 
 		this.deactivate();
-
 		//if a previous levelID is given
 		if(_data.previousLevelID != null ){
 			//Search the previous level data

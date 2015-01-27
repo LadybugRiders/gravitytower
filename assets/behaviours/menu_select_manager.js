@@ -81,6 +81,7 @@ MenuSelectManager.prototype.checkGameData = function() {
 Check if we just arrive from a level and assign/write data save accordingly
 */
 MenuSelectManager.prototype.checkLevelData = function(_data) {
+  
   if( this.playerSave.getValue("finished") == true ){
     var levelSave = this.playerSave.getActiveLevelSave();
     
@@ -108,6 +109,7 @@ MenuSelectManager.prototype.checkLevelData = function(_data) {
       this.playerSave.setValue("finished",false);
       levelSave.finished = true;
       this.activateFinishedLevel(levelID+1);
+      this.fillKimisSaved();
     }
     //save all
     this.entity.game.playerSave.writeSave();
@@ -144,9 +146,10 @@ MenuSelectManager.prototype.applyKimisCollected = function(_kimisCount,_index) {
 MenuSelectManager.prototype.fillKimisSaved = function() {
   //For every graphic level
   for(var i=0; i < this.levelButtons.length; i++){
-    var levelData = this.playerSave.getLevelSave(this.levelButtons[i].levelID);
     
-    if(levelData){
+    var levelData = this.playerSave.getLevelSave(this.levelButtons[i].levelID);
+
+    if(levelData && levelData.finished == true){
       var levelGroup = this.levelButtons[i].entity.parent;
       var btn = this.getButton(this.levelButtons[i].levelID);
       if( btn ){

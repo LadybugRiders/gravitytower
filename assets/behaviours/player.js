@@ -46,6 +46,8 @@ var Player = function(_gameobject) {
   this.go.game.inputManager.bindKeyRelease("left", this.onMoveRelease, this);
   this.go.game.inputManager.bindKeyRelease("right", this.onMoveRelease, this);
 
+  this.go.game.inputManager.bindKeyPress("F", this.finish, this);
+
   //inputs variables
   this.isMovePressed = false;
   this.isJumpPressed = false;
