@@ -132,6 +132,7 @@ BubbleFly.prototype.onJump = function(_key){
 		return;
 	this.entity.body.velocity.y = -70;
 	this.jumpPressed = true;
+	this.go.playSound("up",0.5);
 }
 
 BubbleFly.prototype.onJumpRelease = function(_key){
