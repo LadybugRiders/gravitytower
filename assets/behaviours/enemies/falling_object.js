@@ -35,17 +35,20 @@ FallingObject.prototype.onHitPlayer = function(){
 	this.die();
 }
 
-FallingObject.prototype.die = function(){
+FallingObject.prototype.die = function(_deathAnim){
+	if(_deathAnim == null)
+		_deathAnim = true;
   	this.dead = true;
   	this.entity.visible = false;
   	this.go.x = -100000;
-	if(this.smoke){
+	if(_deathAnim && this.smoke){
 	  	this.smoke.entity.x = this.entity.x;
 	  	this.smoke.entity.y = this.entity.y;
 	  	this.smoke.entity.revive();
 	  	this.smoke.entity.animations.play("blow").killOnComplete = true;
 	}
-	this.go.playSound("death");
+	if(_deathAnim)
+		this.go.playSound("death");
 	//this.entity.game.pollinator.dispatch("onEnemyDied",{"sender":this.entity});
 	
 	this.go.x = this.initPos.x;

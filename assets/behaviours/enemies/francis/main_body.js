@@ -25,6 +25,8 @@ Francis.MainBody.prototype.create = function(_data){
 		this.playerScript = _data.player.getBehaviour(Player);
 	}
 
+	this.arm.mainBodyScript = this;
+
 	//signals
 	this.arm.onStomp.add(this.onArmStomp,this);
 
@@ -57,9 +59,41 @@ Francis.MainBody.prototype.bouldering = function(){
 
 }
 
+//=====================================================
+//================ STUN ===============================
+//=====================================================
+
+Francis.MainBody.prototype.beginBoulderMe = function(){	
+	this.entity.game.camera.unfollow();
+	this.moveCamera(-200,-150);
+	this.playerScript.freeze();
+}
+
+//called by the head trigger callback
+Francis.MainBody.prototype.onHitByRock = function(_data){
+	if(_data.sender.name == "head"){
+		this.stun();
+	}
+}
+
+Francis.MainBody.prototype.stun = function(){
+	this.state = "stunned";
+	this.tail.stun();
+	//eye
+	this.eye.stopAnim("blink");
+	this.eye.playAnim("stunned");
+}
+
+Francis.MainBody.prototype.unstun = function(){
+	this.state = "wait";
+	this.arm.idleize();
+}
+
+
 Francis.MainBody.prototype.moveTo = function(){
 
 }
+
 
 //=====================================================
 //				  SIGNALS
@@ -79,7 +113,7 @@ Francis.MainBody.prototype.onArmStomp = function(){
 //first make the camera move to Francis
 Francis.MainBody.prototype.launchIntro = function(){
 	this.onIntroBackToPlayerTweenFinished();
-	this.changeDeadZone(100,200,this.onIntroBackToPlayerTweenFinished);
+	this.changeDeadZone(100,200);
 	return;
 	this.state = "intro";
 	this.changeDeadZone(-200,250,this.introPincerAct);
@@ -93,6 +127,7 @@ Francis.MainBody.prototype.introPincerAct = function(){
 
 //When the camera is back to the player, make the block wall appear
 Francis.MainBody.prototype.onIntroBackToPlayerTweenFinished = function(){
+	//make the block appear with smoke
 	LR.Entity.FindByName(this.block_wall.entity,"wall_block").revive();
 	var smoke = LR.Entity.FindByName(this.block_wall.entity,"smoke");
 	smoke.revive();
@@ -105,6 +140,7 @@ Francis.MainBody.prototype.onIntroBackToPlayerTweenFinished = function(){
       Phaser.Timer.SECOND * 1, 
       this.boulder,
       this);
+
 }
 
 //=====================================================
@@ -113,6 +149,13 @@ Francis.MainBody.prototype.onIntroBackToPlayerTweenFinished = function(){
 
 Francis.MainBody.prototype.changeDeadZone = function(_x,_y,_promise){
 	var tween = this.entity.game.add.tween(this.entity.game.camera.deadzone);
+	if(_promise)
+		tween.onComplete.add(_promise,this);
+	tween.to( {"x": _x, "y":_y}, this.duration , Phaser.Easing.Linear.None,true);
+}
+
+Francis.MainBody.prototype.moveCamera = function(_x,_y,_promise){
+	var tween = this.entity.game.add.tween(this.entity.game.camera);
 	if(_promise)
 		tween.onComplete.add(_promise,this);
 	tween.to( {"x": _x, "y":_y}, this.duration , Phaser.Easing.Linear.None,true);

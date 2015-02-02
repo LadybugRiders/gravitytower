@@ -12,6 +12,8 @@ Francis.Arm = function(_gameobject){
 	this.go.onTweenComplete.add(this.onTweenComplete,this);
 
 	this.onStomp = new Phaser.Signal();
+
+	this.mainBodyScript = null;
 }
 
 Francis.Arm.prototype = Object.create(LR.Behaviour.prototype);
@@ -36,9 +38,11 @@ Francis.Arm.prototype.create = function(_data){
 			var rockGroup = this.boulders.entity.children[i];
 			var rockScript = LR.Entity.FindByName(rockGroup,"rock").go.getBehaviour(FallingObject);
 			this.bouldersScripts.push(rockScript);
-			rockScript.die();
+			rockScript.die(false);
 		}
 	}
+
+	if(_data.boulderMe) this.boulderMe = _data.boulderMe;
 }
 
 Francis.Arm.prototype.update = function(){
@@ -48,11 +52,12 @@ Francis.Arm.prototype.update = function(){
 }
 
 Francis.Arm.prototype.idleize = function(){
-	//this.parts.forEach(function(element){element.idleize()});
+	this.go.launchTween("idle");
 }
 
 Francis.Arm.prototype.boulder = function(){
-	this.state = "bouldering";
+	this.state ="boulderingMe"; //DEBUG
+	//this.state = "bouldering";
 	this.boulderCount = 2;
 	this.boulderMax = 2;
 	this.launchStompBoulder();
@@ -93,6 +98,14 @@ Francis.Arm.prototype.bouldering = function(){
 }
 
 //================================================
+//				   STUN
+//================================================
+
+Francis.Arm.prototype.stun = function(){
+
+}
+
+//================================================
 //				   STOMP
 //================================================
 
@@ -108,9 +121,20 @@ Francis.Arm.prototype.onTweenComplete = function(_data){
 		//continue bouldering
 		if(this.state == "bouldering"){
 			this.launchBoulder();
+			console.log(thi)
 			if(this.boulderCount > 0){
 				this.launchStompBoulder();
+			}else{
+				this.launchStompBoulder();
+				this.state = "boulderingMe";
 			}
+		}else if(this.state == "boulderingMe"){
+			this.entity.game.time.events.add(
+		      Phaser.Timer.SECOND * 1.5, 
+		      this.boulderMe.getBehaviour(FallingObject).launch,
+		      this.boulderMe.getBehaviour(FallingObject));
+			
+			this.mainBodyScript.beginBoulderMe();
 		}
 	}
 }

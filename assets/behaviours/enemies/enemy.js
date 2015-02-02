@@ -252,7 +252,7 @@ Enemy.prototype.onHitHat = function(){
 //=================================================================
 
 Enemy.prototype.scaleByGravity = function(){
-  this.entity.scale.x = this.direction  * this.gravity;
+  this.entity.scale.x *= this.direction  * this.gravity;
 }
 
 Enemy.prototype.changeState = function(_newState){

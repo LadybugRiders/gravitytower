@@ -24,3 +24,6 @@ Francis.Tail.prototype.idleize = function(){
 	this.go.launchTween("idle");
 	this.entity.children.forEach(function(element){element.go.launchTween("idle")});
 }
+
+Francis.Tail.prototype.stun = function(){
+}
