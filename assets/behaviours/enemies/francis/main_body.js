@@ -19,11 +19,13 @@ Francis.MainBody.prototype.create = function(_data){
 	if(_data.tail) this.tail = _data.tail.getBehaviour(Francis.Tail);
 	if(_data.stinger ) this.stinger = _data.stinger.getBehaviour(Francis.Stinger);
 	if(_data.arm ) this.arm = _data.arm.getBehaviour(Francis.Arm);
-	if(_data.legs) this.legs = _data.legs;
+	if(_data.legs) this.legs = _data.legs.getBehaviour(Francis.Legs);
 	if(_data.eye) this.eye = _data.eye;
 	if(_data.player){
 		this.playerScript = _data.player.getBehaviour(Player);
 	}
+
+	this.bodyGO = LR.GameObject.FindByName(this.go,"body");
 
 	this.arm.mainBodyScript = this;
 
@@ -79,9 +81,13 @@ Francis.MainBody.prototype.onHitByRock = function(_data){
 Francis.MainBody.prototype.stun = function(){
 	this.state = "stunned";
 	this.tail.stun();
+	this.arm.stun();
+	this.legs.stun();
 	//eye
 	this.eye.stopAnim("blink");
 	this.eye.playAnim("stunned");
+	//other parts
+	this.bodyGO.playTween("stunned",true);
 }
 
 Francis.MainBody.prototype.unstun = function(){

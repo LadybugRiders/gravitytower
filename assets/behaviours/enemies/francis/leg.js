@@ -15,3 +15,8 @@ Francis.Leg.prototype.create = function(_data){
 	if(_data.part1) this.part1 = _data.part1;
 	if(_data.part2) this.part2 = _data.part2;
 }
+
+Francis.Leg.prototype.stun = function(){
+	this.part1.playTween("stunned",true);
+	this.part2.playTween("stunned",true);
+}

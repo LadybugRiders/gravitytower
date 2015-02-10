@@ -52,7 +52,7 @@ Francis.Arm.prototype.update = function(){
 }
 
 Francis.Arm.prototype.idleize = function(){
-	this.go.launchTween("idle");
+	this.go.playTween("idle");
 }
 
 Francis.Arm.prototype.boulder = function(){
@@ -102,7 +102,7 @@ Francis.Arm.prototype.bouldering = function(){
 //================================================
 
 Francis.Arm.prototype.stun = function(){
-
+	this.go.playTween("stunned",true);
 }
 
 //================================================
@@ -111,7 +111,7 @@ Francis.Arm.prototype.stun = function(){
 
 Francis.Arm.prototype.stomp = function(){
 	this.go.stopTween("idle");
-	this.go.launchChainedTweens("ready_quick","stomp");
+	this.go.playChainedTweens("ready_quick","stomp");
 }
 
 Francis.Arm.prototype.onTweenComplete = function(_data){

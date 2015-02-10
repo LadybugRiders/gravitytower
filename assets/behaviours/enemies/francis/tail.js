@@ -21,9 +21,13 @@ Francis.Tail.prototype.start = function(){
 }
 
 Francis.Tail.prototype.idleize = function(){
-	this.go.launchTween("idle");
-	this.entity.children.forEach(function(element){element.go.launchTween("idle")});
+	this.go.playTween("idle");
+	this.entity.children.forEach(function(element){element.go.playTween("idle")});
 }
 
 Francis.Tail.prototype.stun = function(){
+	this.go.playTween("stunned",true);
+	for(var i=0; i < this.entity.children.length; i ++){
+		this.entity.children[i].go.playTween("stunned",true);
+	}
 }
