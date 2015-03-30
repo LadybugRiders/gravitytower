@@ -98,6 +98,7 @@ Francis.Stinger.prototype.attack = function(_data){
 		this.retreat();
 		return;
 	}
+	this.attackData = null;
 	//change transform
 	this.entity.parent.go.stopTweenAll();
 	this.entity.parent.x = -79; this.entity.parent.y = 34;
@@ -149,23 +150,32 @@ Francis.Stinger.prototype.retreat = function(){
 	this.retreatVector = new Phaser.Point(xVector,yVector);
 	this.retreatVector = this.retreatVector.normalize();
 
+	this.lastMagnitude = Number.MAX_VALUE;
+
 	this.state = "retreat";
 }
 
 Francis.Stinger.prototype.retreating = function(){
+	//move
 	this.tailScript.go.x += this.retreatVector.x * this.speedRetreat * this.entity.game.time.elapsed * 0.001;
 	this.tailScript.go.y += this.retreatVector.y * this.speedRetreat * this.entity.game.time.elapsed * 0.001;
 
-	//compute attack direction
-	var xVector = this.currentRetreatTargetPos.x - this.go.worldX;
-	var yVector = this.currentRetreatTargetPos.y - this.go.worldY;
-
-	var vector = new Phaser.Point(xVector,yVector);
-
-	if( vector.getMagnitude() < 100){
+	//distance to the target from the next point
+	var newMag = Phaser.Point.subtract(this.currentRetreatTargetPos, this.tailScript.go.position).getMagnitude();
+	
+	if( newMag > this.lastMagnitude ){
 		this.tailScript.entity.angle = 0;
-		this.attack(this.attackData);
+		this.state = "wait";
+		if( this.attackData != null)
+			this.attack(this.attackData);
+	}else{
+		this.lastMagnitude = newMag;
 	}
+}
+
+Francis.Stinger.prototype.onOrbHit = function(){	
+	this.entity.parent.x = 0; this.entity.parent.y = 0;
+	this.entity.parent.angle = 0;
 }
 
 Francis.Stinger.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){

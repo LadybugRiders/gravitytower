@@ -71,8 +71,8 @@ Francis.Tail.prototype.tailAttack = function(_data){
 		//stop tween and get parts in attack position
 		this.go.stopTweenAll();
 		for(var i=0; i < this.entity.children.length; i ++){
-			if(this.entity.children[i].go.tweenExists("attack"))
-				this.entity.children[i].go.playTween("attack",true);
+			//if(this.entity.children[i].go.tweenExists("attack"))
+			this.entity.children[i].go.stopTweenAll();//.playTween("attack",true);
 		}
 	}
 	//tell stinger to attack
@@ -80,6 +80,15 @@ Francis.Tail.prototype.tailAttack = function(_data){
 	this.state = "attack";
 }
 
-Francis.Tail.prototype.attacking = function(){
+Francis.Tail.prototype.tailRetreat = function(){
+	if(this.stingerScript.state == "stuck")
+		this.stingerScript.retreat();
+}
+
+Francis.Tail.prototype.onOrbHit = function(){
+	this.stingerScript.onOrbHit();
+}
+
+Francis.Tail.prototype.lastAttack = function(){
 	
 }

@@ -10,7 +10,7 @@ Francis.MainBody = function(_gameobject){
 	this.stinger = null;
 
 	this.state = "none";
-	this.changeDeadZone(100,140,1000);
+	this.changeDeadZone(0,100,1000);
 }
 
 Francis.MainBody.prototype = Object.create(LR.Behaviour.prototype);
@@ -39,6 +39,8 @@ Francis.MainBody.prototype.create = function(_data){
 		LR.Entity.FindByName(this.block_wall.entity,"wall_block").kill();
 		LR.Entity.FindByName(this.block_wall.entity,"smoke").kill();
 	}
+
+	this.initPos = this.go.position;
 }
 
 
@@ -72,11 +74,12 @@ Francis.MainBody.prototype.beginBoulderMe = function(){
 	this.entity.game.camera.unfollow();
 	this.moveCamera(-200,-150,1000);
 	this.playerScript.freeze();
+	this.state = "boulderMe";
 }
 
 //called by the head trigger callback
 Francis.MainBody.prototype.onHitByRock = function(_data){
-	if(_data.sender.name == "head"){
+	if(this.state == "boulderMe" && _data.sender.name == "head"){
 		this.stun();
 	}
 }
@@ -122,6 +125,31 @@ Francis.MainBody.prototype.throwPlayer1 = function(){
 
 Francis.MainBody.prototype.onPlayerHung = function(){
 	this.unstun();
+}
+
+//============= LAST ATTACK ==================
+//call by the last tail attack trigger
+Francis.MainBody.prototype.lastAttack = function(_data){
+	if( this.state == "lastAttack")
+		return;
+
+	this.changeDeadZone(320,100,1000);
+	this.state = "lastAttack";
+	var tween = this.go.playTween("moveRight")[0];
+	this.attackData = _data;
+	tween.onComplete.add(this.onLastAttackReady,this);
+	this.tail.go.playTween("lastAttackRotate",true);
+}
+
+Francis.MainBody.prototype.onLastAttackReady = function(){
+	this.tail.tailAttack(this.attackData);	
+}
+
+//========= HIT !!!! =====================
+Francis.MainBody.prototype.onOrbHit = function(){
+	this.moveCamera(200,-240,1000);
+	this.tail.onOrbHit();
+	var tween = this.tail.go.playTween("comeBack");
 }
 
 
@@ -191,6 +219,7 @@ Francis.MainBody.prototype.changeDeadZone = function(_x,_y,_duration,_promise){
 }
 
 Francis.MainBody.prototype.moveCamera = function(_x,_y,_duration,_promise){
+	this.entity.game.camera.unfollow();
 	var tween = this.entity.game.add.tween(this.entity.game.camera);
 	if(_promise)
 		tween.onComplete.add(_promise,this);
