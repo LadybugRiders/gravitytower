@@ -18,8 +18,15 @@ Francis.Legs.prototype.create = function(_data){
 	}
 }
 
+//============ STUN ========================
 Francis.Legs.prototype.stun = function(){
 	for(var i=0;  i < this.legs.length; i ++){
 		this.legs[i].stun();
+	}
+}
+
+Francis.Legs.prototype.unstun = function(){
+	for(var i=0;  i < this.legs.length; i ++){
+		this.legs[i].unstun();
 	}
 }

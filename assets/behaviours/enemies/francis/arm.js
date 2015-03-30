@@ -55,9 +55,16 @@ Francis.Arm.prototype.idleize = function(){
 	this.go.playTween("idle");
 }
 
+Francis.Arm.prototype.wait = function(){
+	this.state = "wait";
+}
+
 Francis.Arm.prototype.boulder = function(){
-	this.state ="boulderingMe"; //DEBUG
-	//this.state = "bouldering";
+	//this.state ="boulderingMe"; //DEBUG
+	if( this.state == "wait"){
+		return;
+	}
+	this.state = "bouldering";
 	this.boulderCount = 2;
 	this.boulderMax = 2;
 	this.launchStompBoulder();
@@ -102,7 +109,13 @@ Francis.Arm.prototype.bouldering = function(){
 //================================================
 
 Francis.Arm.prototype.stun = function(){
-	this.go.playTween("stunned",true);
+	this.state = "stunned";
+	var tween = this.go.playTween("stunned",true);
+}
+
+Francis.Arm.prototype.unstun = function(){
+	this.state = "unstun";
+	this.go.playTween("unstun",true);
 }
 
 //================================================
@@ -110,6 +123,7 @@ Francis.Arm.prototype.stun = function(){
 //================================================
 
 Francis.Arm.prototype.stomp = function(){
+	console.log(this.state);
 	this.go.stopTween("idle");
 	this.go.playChainedTweens("ready_quick","stomp");
 }
@@ -121,7 +135,6 @@ Francis.Arm.prototype.onTweenComplete = function(_data){
 		//continue bouldering
 		if(this.state == "bouldering"){
 			this.launchBoulder();
-			console.log(thi)
 			if(this.boulderCount > 0){
 				this.launchStompBoulder();
 			}else{

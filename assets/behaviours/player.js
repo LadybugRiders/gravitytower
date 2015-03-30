@@ -102,7 +102,7 @@ Player.prototype.create = function(_data) {
 Player.prototype.onPostBroadphase = function(_otherBody){
   if( this.isHit && _otherBody.go.layer=="enemy" ){
     var enemyBH = _otherBody.go.getBehaviour(Enemy);
-    if(enemyBH.blocker == true)
+    if(enemyBH==null || enemyBH.blocker == true)
       return true;
 
     return false;
@@ -494,8 +494,11 @@ Player.prototype.blowDust = function(){
 //=========================================================
 //                  DEATH
 //=========================================================
-
+// _data must be passed with at least:
+// { sender : GameObject, shape : P2Shape (player shape that is hit) }
+// optional => forceVector : Phaser.Point
 Player.prototype.hit = function(_data){
+  console.log(_data);
   if( ( _data.shape !== this.mainShape && _data.shape != null) 
        || this.isHit == true || this.dead ==true)
     return;

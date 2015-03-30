@@ -16,7 +16,13 @@ Francis.Leg.prototype.create = function(_data){
 	if(_data.part2) this.part2 = _data.part2;
 }
 
+//============ STUN ========================
 Francis.Leg.prototype.stun = function(){
 	this.part1.playTween("stunned",true);
 	this.part2.playTween("stunned",true);
+}
+
+Francis.Leg.prototype.unstun = function(){
+	this.part1.playTween("unstun",true);
+	this.part2.playTween("unstun",true);
 }

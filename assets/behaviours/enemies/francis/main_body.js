@@ -10,6 +10,7 @@ Francis.MainBody = function(_gameobject){
 	this.stinger = null;
 
 	this.state = "none";
+	this.changeDeadZone(100,140,1000);
 }
 
 Francis.MainBody.prototype = Object.create(LR.Behaviour.prototype);
@@ -53,6 +54,8 @@ Francis.MainBody.prototype.idle = function(){
 }
 
 Francis.MainBody.prototype.boulder = function(){
+	if(this.state == "stunned")
+		return;
 	this.state = "bouldering";
 	this.arm.boulder();
 }
@@ -67,7 +70,7 @@ Francis.MainBody.prototype.bouldering = function(){
 
 Francis.MainBody.prototype.beginBoulderMe = function(){	
 	this.entity.game.camera.unfollow();
-	this.moveCamera(-200,-150);
+	this.moveCamera(-200,-150,1000);
 	this.playerScript.freeze();
 }
 
@@ -79,6 +82,8 @@ Francis.MainBody.prototype.onHitByRock = function(_data){
 }
 
 Francis.MainBody.prototype.stun = function(){
+	if(this.state == "stunned")
+		return;
 	this.state = "stunned";
 	this.tail.stun();
 	this.arm.stun();
@@ -88,11 +93,35 @@ Francis.MainBody.prototype.stun = function(){
 	this.eye.playAnim("stunned");
 	//other parts
 	this.bodyGO.playTween("stunned",true);
+	//release player
+	this.playerScript.unfreeze();
+	this.changeDeadZone(100,200,1000,this.onIntroBackToPlayerTweenFinished);
 }
 
 Francis.MainBody.prototype.unstun = function(){
 	this.state = "wait";
-	this.arm.idleize();
+	this.arm.unstun();
+	this.tail.unstun();
+	this.legs.unstun();
+	var tween = this.bodyGO.playTween("unstun",true)[0];
+	console.log(tween);
+	tween.onComplete.add(this.throwPlayer1,this);
+
+	this.eye.stopAnim("stunned");
+	this.eye.playAnim("blink");
+
+	this.changeDeadZone(100,100,1000);
+}
+
+//=============THROW PLAYER ================
+
+Francis.MainBody.prototype.throwPlayer1 = function(){
+	this.tail.throwPlayer1();	
+	this.changeDeadZone(100,140,1000);
+}
+
+Francis.MainBody.prototype.onPlayerHung = function(){
+	this.unstun();
 }
 
 
@@ -100,14 +129,13 @@ Francis.MainBody.prototype.moveTo = function(){
 
 }
 
-
 //=====================================================
 //				  SIGNALS
 //=====================================================
 
 Francis.MainBody.prototype.onArmStomp = function(){
 	if(this.state == "intro"){
-		this.changeDeadZone(100,200,this.onIntroBackToPlayerTweenFinished);
+		this.changeDeadZone(100,200,1000,this.onIntroBackToPlayerTweenFinished);
 	}
 }
 
@@ -119,10 +147,12 @@ Francis.MainBody.prototype.onArmStomp = function(){
 //first make the camera move to Francis
 Francis.MainBody.prototype.launchIntro = function(){
 	this.onIntroBackToPlayerTweenFinished();
-	this.changeDeadZone(100,200);
+	this.changeDeadZone(100,200,1000);
+	this.stun();
+	this.playerScript.freeze();
 	return;
 	this.state = "intro";
-	this.changeDeadZone(-200,250,this.introPincerAct);
+	this.changeDeadZone(-200,250,3000,this.introPincerAct);
 	this.playerScript.freeze();
 }
 
@@ -153,16 +183,16 @@ Francis.MainBody.prototype.onIntroBackToPlayerTweenFinished = function(){
 //				  PLACE CAMERA
 //=====================================================
 
-Francis.MainBody.prototype.changeDeadZone = function(_x,_y,_promise){
+Francis.MainBody.prototype.changeDeadZone = function(_x,_y,_duration,_promise){
 	var tween = this.entity.game.add.tween(this.entity.game.camera.deadzone);
 	if(_promise)
 		tween.onComplete.add(_promise,this);
-	tween.to( {"x": _x, "y":_y}, this.duration , Phaser.Easing.Linear.None,true);
+	tween.to( {"x": _x, "y":_y}, _duration , Phaser.Easing.Linear.None,true);
 }
 
-Francis.MainBody.prototype.moveCamera = function(_x,_y,_promise){
+Francis.MainBody.prototype.moveCamera = function(_x,_y,_duration,_promise){
 	var tween = this.entity.game.add.tween(this.entity.game.camera);
 	if(_promise)
 		tween.onComplete.add(_promise,this);
-	tween.to( {"x": _x, "y":_y}, this.duration , Phaser.Easing.Linear.None,true);
+	tween.to( {"x": _x, "y":_y}, _duration , Phaser.Easing.Linear.None,true);
 }
