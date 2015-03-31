@@ -6,7 +6,8 @@ Francis.Orb = function(_gameobject){
 	LR.Behaviour.call(this, _gameobject);	
 	this.player = null;
 	this.hookPosition = new Phaser.Point();
-	this.hookX = 45;
+	this.hookX = 35;
+	this.health = 1;
 }
 Francis.Orb.prototype = Object.create(Hanger.prototype);
 Francis.Orb.prototype.constructor = Francis.Orb;
@@ -26,7 +27,15 @@ Francis.Orb.prototype.hang = function(_player){
 	this.deltaVector = Phaser.Point.subtract(this.hookPosition,this.player.entity.world);
 	this.distanceToHook = this.deltaVector.getMagnitude();
 
-	this.mainBody.onOrbHit();
+	this.health --;
+	this.entity.game.time.events.add(
+      Phaser.Timer.SECOND * 1, 
+      this.onEndHit,
+      this);
+}
+
+Francis.Orb.prototype.onEndHit = function(){	
+	this.mainBody.onOrbHit(this.health);
 }
 
 Francis.Orb.prototype.update = function(){
@@ -52,4 +61,10 @@ Francis.Orb.prototype.onBeginContact = function(_otherBody, _myShape, _otherShap
 			this.hang(playerHair.player);
 		}
 	}
+}
+
+Francis.Orb.prototype.release = function(){
+	this.player.go.gravity = 1;
+	this.player.unfreeze();
+	this.player = null;
 }

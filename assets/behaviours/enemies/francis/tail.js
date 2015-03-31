@@ -27,10 +27,12 @@ Francis.Tail.prototype.create = function(_data){
 	this.stingerGroup = _data.stinger;
 	this.stingerScript = this.stingerGroup.getBehaviourInChildren(Francis.Stinger);
 	this.stingerScript.tailScript = this;
+	this.mainBody = _data.mainBody.getBehaviour(Francis.MainBody);
 }
 
 Francis.Tail.prototype.start = function(){
-	this.idleize();
+	//this.idleize();
+	this.smallIdleize();
 }
 
 Francis.Tail.prototype.update = function(){
@@ -40,6 +42,10 @@ Francis.Tail.prototype.update = function(){
 Francis.Tail.prototype.idleize = function(){
 	this.go.playTween("idle");
 	this.entity.children.forEach(function(element){element.go.playTween("idle")});
+}
+
+Francis.Tail.prototype.smallIdleize = function(){
+	this.go.playTween("idleSmall",true);
 }
 
 Francis.Tail.prototype.stun = function(){
@@ -55,7 +61,7 @@ Francis.Tail.prototype.unstun = function(){
 	for(var i=0; i < this.entity.children.length; i ++){
 		//this.entity.children[i].go.playTween("unstun",true);
 	}
-	this.stingerScript.onUnreadyHang();
+	//this.stingerScript.onUnreadyHang();
 }
 
 Francis.Tail.prototype.throwPlayer1 = function(){
@@ -91,4 +97,16 @@ Francis.Tail.prototype.onOrbHit = function(){
 
 Francis.Tail.prototype.lastAttack = function(){
 	
+}
+
+Francis.Tail.prototype.struggle = function(){
+	//this.entity.children.forEach(function(element){element.go.playTween("idle")});
+	var tween = this.go.playTween("struggle",true,this.onStruggleEnded,this);
+	console.log("Struggle Begins");
+}
+
+Francis.Tail.prototype.onStruggleEnded = function(){
+	console.log("Struggle Ended");
+	this.stingerScript.orb.getBehaviour(Francis.Orb).release();
+	this.mainBody.onEndStruggle();
 }

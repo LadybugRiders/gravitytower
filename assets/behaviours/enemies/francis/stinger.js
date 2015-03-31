@@ -58,15 +58,9 @@ Francis.Stinger.prototype.update = function(_data){
 	}
 }
 
-Francis.Stinger.prototype.hang = function(){
-	Hanger.prototype.hang.call(this);
-	this.state = "hung";
-	this.hookPosition.x = this.entity.world.x + this.hookX;
-	this.hookPosition.y = this.entity.world.y + this.hookY ;
-	this.deltaVector = Phaser.Point.subtract(this.hookPosition,this.player.entity.world);
-	this.distanceToHook = this.deltaVector.getMagnitude();
-	this.mainBody.onPlayerHung();
-}
+//==============================================
+//============= HANG ===========================
+//==============================================
 
 //Called by the tail
 Francis.Stinger.prototype.onReadyHang = function(_data){
@@ -77,9 +71,42 @@ Francis.Stinger.prototype.onUnreadyHang = function(_data){
 	this.state = "idle";
 }
 
+Francis.Stinger.prototype.hang = function(){
+	Hanger.prototype.hang.call(this);
+	this.state = "hung";
+	this.hookPosition.x = this.entity.world.x + this.hookX;
+	this.hookPosition.y = this.entity.world.y + this.hookY ;
+	this.deltaVector = Phaser.Point.subtract(this.hookPosition,this.player.entity.world);
+	this.distanceToHook = this.deltaVector.getMagnitude();
+	this.mainBody.onPlayerHung();
+}
+
+Francis.Stinger.prototype.updateHung = function(){
+	if(this.player && this.released == false){
+		this.hookPosition.x = this.go.worldX + this.hookX;
+		this.hookPosition.y = this.go.worldY + this.hookY;
+		//hook smooting
+		this.deltaVector = Phaser.Point.subtract(this.hookPosition,this.player.entity.world);
+		var vec = this.deltaVector.normalize();
+		//place player
+		this.player.go.worldX = this.hookPosition.x - vec.x * this.distanceToHook;
+	  	this.player.go.worldY = this.hookPosition.y - vec.y * this.distanceToHook;
+	  	this.player.hair.followPlayer();
+	  	// hook smooting
+	  	this.distanceToHook -= 20 * this.entity.game.time.elapsed * 0.01;
+	  	if( this.distanceToHook <= 0)
+	  		this.distanceToHook = 0;
+	}
+}
+
 //=============== THROW player =============
 //called by mainbody
 Francis.Stinger.prototype.throwPlayer1 = function(){
+	var tween = this.tailScript.go.playTween("throw1",false)[0];
+	tween.onComplete.add( this.onThrow1Ended, this);
+}
+
+Francis.Stinger.prototype.onThrow1Ended = function(){
 	//compute direction of the release
 	var vector = new Phaser.Point(-1.5,1.2);	
 	//unhang the player
@@ -87,6 +114,7 @@ Francis.Stinger.prototype.throwPlayer1 = function(){
 	this.player = null;
 	this.playerHair = null;
 	this.released = true;
+	this.tailScript.smallIdleize();
 }
 
 //=============== ATTACK =============
@@ -176,6 +204,7 @@ Francis.Stinger.prototype.retreating = function(){
 Francis.Stinger.prototype.onOrbHit = function(){	
 	this.entity.parent.x = 0; this.entity.parent.y = 0;
 	this.entity.parent.angle = 0;
+	this.state = "idle";
 }
 
 Francis.Stinger.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
@@ -200,21 +229,6 @@ Francis.Stinger.prototype.onBeginContact = function(_otherBody, _myShape, _other
 Francis.Stinger.prototype.placeOrb = function(_data){
 	this.orb.x = this.entity.x + this.orbOffset.x;
 	this.orb.y = this.entity.y + this.orbOffset.y;
-}
-
-
-Francis.Stinger.prototype.updateHung = function(){
-	if(this.player && this.released == false){
-		this.hookPosition.x = this.go.worldX + this.hookX;
-		this.hookPosition.y = this.go.worldY + this.hookY;
-		var vec = this.deltaVector.normalize();
-		this.player.go.worldX = this.hookPosition.x - vec.x * this.distanceToHook;
-	  	this.player.go.worldY = this.hookPosition.y - vec.y * this.distanceToHook;
-	  	this.player.hair.followPlayer();
-	  	this.distanceToHook -= 20 * this.entity.game.time.elapsed * 0.01;
-	  	if( this.distanceToHook <= 0)
-	  		this.distanceToHook = 0;
-	}
 }
 
 
