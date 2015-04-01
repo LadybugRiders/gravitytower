@@ -7,7 +7,7 @@ Francis.Orb = function(_gameobject){
 	this.player = null;
 	this.hookPosition = new Phaser.Point();
 	this.hookX = 35;
-	this.health = 1;
+	this.health = 0;
 }
 Francis.Orb.prototype = Object.create(Hanger.prototype);
 Francis.Orb.prototype.constructor = Francis.Orb;
@@ -28,13 +28,16 @@ Francis.Orb.prototype.hang = function(_player){
 	this.distanceToHook = this.deltaVector.getMagnitude();
 
 	this.health --;
+	this.go.playTweenColor( 0xff0000, 100, null, 3, true);
 	this.entity.game.time.events.add(
       Phaser.Timer.SECOND * 1, 
       this.onEndHit,
       this);
 }
 
-Francis.Orb.prototype.onEndHit = function(){	
+Francis.Orb.prototype.onEndHit = function(){
+	if(this.health < 0 )
+		this.player = null;	
 	this.mainBody.onOrbHit(this.health);
 }
 
@@ -67,4 +70,8 @@ Francis.Orb.prototype.release = function(){
 	this.player.go.gravity = 1;
 	this.player.unfreeze();
 	this.player = null;
+}
+
+Francis.Orb.prototype.rot = function(_color,_time){
+	this.go.playTweenColor(_color,_time);
 }

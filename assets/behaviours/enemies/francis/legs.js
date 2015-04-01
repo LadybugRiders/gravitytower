@@ -30,3 +30,9 @@ Francis.Legs.prototype.unstun = function(){
 		this.legs[i].unstun();
 	}
 }
+
+Francis.Legs.prototype.rot = function(_color,_time){
+	for(var i=0;  i < this.legs.length; i ++){
+		this.legs[i].rot(_color,_time);
+	}
+}

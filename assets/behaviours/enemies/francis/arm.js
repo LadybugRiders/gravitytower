@@ -43,6 +43,8 @@ Francis.Arm.prototype.create = function(_data){
 	}
 
 	if(_data.boulderMe) this.boulderMe = _data.boulderMe;
+	this.secondArm = _data.secondArm;
+	this.pincer = _data.pincer;
 }
 
 Francis.Arm.prototype.update = function(){
@@ -57,6 +59,30 @@ Francis.Arm.prototype.idleize = function(){
 
 Francis.Arm.prototype.wait = function(){
 	this.state = "wait";
+}
+
+Francis.Arm.prototype.die = function(){
+	this.state = "die";
+	this.secondArm.stopTweenAll();
+	for(var i=0; i < this.pincer.entity.children.length; i++){
+		var child = this.pincer.entity.children[i];
+		child.go.stopTweenAll();
+	}
+}
+
+Francis.Arm.prototype.rot = function(_color,_time){
+	this.secondArm.playTweenColor(_color,_time);
+	for(var i=0; i < this.pincer.entity.children.length; i++){
+		var child = this.pincer.entity.children[i];
+		child.go.playTweenColor(_color,_time);
+	}
+	//unreferenced parts
+	for(var i=0; i < this.entity.children.length; i++){
+		var child = this.entity.children[i];
+		if(child.type == 0){
+			child.go.playTweenColor(_color,_time);
+		}
+	}
 }
 
 Francis.Arm.prototype.boulder = function(){

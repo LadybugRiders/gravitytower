@@ -100,13 +100,23 @@ Francis.Tail.prototype.lastAttack = function(){
 }
 
 Francis.Tail.prototype.struggle = function(){
+	console.error("ldsjf");
 	//this.entity.children.forEach(function(element){element.go.playTween("idle")});
 	var tween = this.go.playTween("struggle",true,this.onStruggleEnded,this);
-	console.log("Struggle Begins");
 }
 
 Francis.Tail.prototype.onStruggleEnded = function(){
-	console.log("Struggle Ended");
 	this.stingerScript.orb.getBehaviour(Francis.Orb).release();
 	this.mainBody.onEndStruggle();
+}
+
+Francis.Tail.prototype.rot = function(_color,_time){
+	//unreferenced parts
+	for(var i=0; i < this.entity.children.length; i++){
+		var child = this.entity.children[i];
+		if(child.type == 0){
+			child.go.playTweenColor(_color,_time);
+		}
+	}
+	this.stingerScript.go.playTweenColor(_color,_time);
 }

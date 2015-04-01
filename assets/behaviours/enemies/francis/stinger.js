@@ -108,7 +108,7 @@ Francis.Stinger.prototype.throwPlayer1 = function(){
 
 Francis.Stinger.prototype.onThrow1Ended = function(){
 	//compute direction of the release
-	var vector = new Phaser.Point(-1.5,1.2);	
+	var vector = new Phaser.Point(-1.7,1.2);	
 	//unhang the player
 	this.player.onReleaseHang(this.formerGrav, vector);	
 	this.player = null;
@@ -169,6 +169,7 @@ Francis.Stinger.prototype.attacking = function(){
 Francis.Stinger.prototype.stuck = function(){
 	this.state = "stuck";
 	this.playSmoke();
+	this.go.playSound("crash");
 }
 
 Francis.Stinger.prototype.retreat = function(){

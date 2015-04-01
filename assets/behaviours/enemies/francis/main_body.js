@@ -42,10 +42,15 @@ Francis.MainBody.prototype.create = function(_data){
 		LR.Entity.FindByName(this.block_wall.entity,"wall_block").kill();
 		LR.Entity.FindByName(this.block_wall.entity,"smoke").kill();
 	}
+	this.fallingWalls = _data.fwManager.getBehaviour(FallingWallsManager);
+	this.finishWall = _data.finishWall;
+	//finish block
+	this.finishBlock = _data.finishBlock;
+	this.finishBlock.entity.alpha = 0;
+	this.finishBlock.enableSensor();
 
 	this.initPos = this.go.position;
 }
-
 
 Francis.MainBody.prototype.update = function(){
 	switch(this.state){
@@ -151,12 +156,24 @@ Francis.MainBody.prototype.onLastAttackReady = function(){
 
 //========= HIT !!!! =====================
 Francis.MainBody.prototype.onOrbHit = function(_orbHealth){
-	this.moveCamera(200,-240,1500,this.struggle);
-	this.tail.onOrbHit();
-	var tween = this.tail.go.playTween("comeBack")[0];
+	//this.tail.onOrbHit();
 	//eye
 	this.eye.stopAnim("blink");
 	this.eye.playAnim("stunned");
+	var tween = this.tail.go.playTween("comeBack")[0];
+	//Death
+	if(_orbHealth < 0){
+		this.playerScript.freeze();
+		//make parts die
+		this.arm.die();
+		//push the player
+		var vector = new Phaser.Point(1.5,0.2);
+		this.playerScript.onReleaseHang(1, vector);	
+		//die after camera's moved
+		this.moveCamera(200,-100,1500,this.die);
+	}else{
+		this.moveCamera(200,-240,1500,this.struggle);
+	}
 }
 
 Francis.MainBody.prototype.struggle = function(){
@@ -187,6 +204,8 @@ Francis.MainBody.prototype.moveBack = function(){
 Francis.MainBody.prototype.onMovedBack = function(){
 	this.playerScript.unfreeze();
 	this.entity.game.camera.follow(this.playerScript.entity);
+	this.boulder();
+	this.fallingWalls.cleanAll();
 }
 
 //=====================================================
@@ -239,11 +258,79 @@ Francis.MainBody.prototype.onIntroBackToPlayerTweenFinished = function(){
 	this.playerScript.unfreeze();
 	this.entity.game.time.events.add(
       Phaser.Timer.SECOND * 1, 
-      this.boulder,
-      this);
-
+      this.boulder, this);
 }
 
+//====================== DIE SCENE =============================
+
+Francis.MainBody.prototype.die = function(){
+	this.state = "dying";
+	this.playerScript.freeze();
+	//eye
+	this.eye.stopAnim("blink");
+	this.eye.playAnim("stunned");
+	this.tail.stun();
+	this.arm.stun();
+	this.legs.stun();
+	//eye
+	this.eye.stopAnim("blink");
+	this.eye.playAnim("stunned");
+	//other parts
+	this.bodyGO.playTween("stunned",true);
+
+	//make block appear	
+	this.finishBlock.entity.alphaBeforeHide = 1;
+	this.finishBlock.disableSensor();
+
+	this.entity.game.time.events.add(
+      Phaser.Timer.SECOND * 1, 
+      this.rot,
+      this);
+}
+
+Francis.MainBody.prototype.rot = function(){
+	this.moveCameraToFinishWall();
+	return;
+	var color = 0x8d8d8d;
+	var time = 3000;
+	this.arm.rot(color,time);
+	this.tail.rot(color,time);
+	this.legs.rot(color,time);
+	//unreferenced parts
+	for(var i=0; i < this.bodyGO.entity.children.length; i++){
+		var child = this.bodyGO.entity.children[i];
+		if(child.type == 0){
+			child.go.playTweenColor(color,time);
+		}
+	}
+	this.entity.game.time.events.add( time + 1000, this.rotOrb, this);
+}
+
+Francis.MainBody.prototype.rotOrb = function(){
+	this.tail.stingerScript.orb.getBehaviour(Francis.Orb).rot(0x8d8d8d,2000);
+	this.entity.game.time.events.add(3000, this.moveCameraToFinishWall, this);
+}
+
+Francis.MainBody.prototype.moveCameraToFinishWall = function(){	
+	this.moveCamera(600,-500,1500,this.moveFinishWall);
+}
+
+Francis.MainBody.prototype.moveFinishWall = function(){	
+	this.finishWall.playTween("budge",false);
+	this.finishWall.playTween("tremble",false);
+	this.entity.game.time.events.add( 3000, this.endDieCutscene, this);
+}
+
+Francis.MainBody.prototype.endDieCutscene = function(){	
+	var instance = this;
+	var tween = this.moveCamera(500,-500);
+	tween.onComplete.add(
+		function(){
+			instance.playerScript.unfreeze();
+			instance.entity.game.camera.follow(instance.playerScript.entity);
+		},this
+	);
+}
 //=====================================================
 //				  PLACE CAMERA
 //=====================================================
@@ -253,6 +340,7 @@ Francis.MainBody.prototype.changeDeadZone = function(_x,_y,_duration,_promise){
 	if(_promise)
 		tween.onComplete.add(_promise,this);
 	tween.to( {"x": _x, "y":_y}, _duration , Phaser.Easing.Linear.None,true);
+	return tween;
 }
 
 Francis.MainBody.prototype.moveCamera = function(_x,_y,_duration,_promise){
@@ -261,4 +349,5 @@ Francis.MainBody.prototype.moveCamera = function(_x,_y,_duration,_promise){
 	if(_promise)
 		tween.onComplete.add(_promise,this);
 	tween.to( {"x": _x, "y":_y}, _duration , Phaser.Easing.Linear.None,true);
+	return tween;
 }

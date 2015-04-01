@@ -1,6 +1,6 @@
 "use strict";
 //>>LREditor.Behaviour.name: ObstacleDamager
-//>>LREditor.Behaviour.params : { "right": false,"top":false,"bottom":true,"left":false,"forceVectorX":-150,"forceVectorY":-200,"enableForce":true}
+//>>LREditor.Behaviour.params : { "right": false,"top":false,"bottom":true,"left":false,"forceVectorX":-150,"forceVectorY":-200,"enableForce":true,"forcePush":false}
 var ObstacleDamager = function(_gameobject) {	
 	LR.Behaviour.call(this,_gameobject);
 	this.canDamage = true;
@@ -10,7 +10,10 @@ var ObstacleDamager = function(_gameobject) {
 	this.bottomDamage = false;
 	this.forceVectorX = -100;
 	this.forceVectorY = -200;
+	//enable pushing when hit
 	this.enableForce = true;
+	//force pushing even if the player can't be hit (lose health)
+	this.forcePush = true;
 }
 
 ObstacleDamager.prototype = Object.create(LR.Behaviour.prototype);
@@ -50,7 +53,8 @@ ObstacleDamager.prototype.onBeginContact = function(_otherBody, _myShape, _other
 		if( damage ){
 			_otherBody.go.sendMessage("hit",{shape:_otherShape,
 											sender:this.go,
-											forceVector : forceVector
+											forceVector : forceVector,
+											forcePush : this.forcePush
 									});
 		}
 	}

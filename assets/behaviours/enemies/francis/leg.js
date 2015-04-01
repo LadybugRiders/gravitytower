@@ -26,3 +26,8 @@ Francis.Leg.prototype.unstun = function(){
 	this.part1.playTween("unstun",true);
 	this.part2.playTween("unstun",true);
 }
+
+Francis.Leg.prototype.rot = function(_color,_time){
+	this.part1.playTweenColor(_color,_time);
+	this.part2.playTweenColor(_color,_time);
+}

@@ -498,10 +498,19 @@ Player.prototype.blowDust = function(){
 // { sender : GameObject, shape : P2Shape (player shape that is hit) }
 // optional => forceVector : Phaser.Point
 Player.prototype.hit = function(_data){
-  console.log(_data);
+  //Cases where player can't be hit
   if( ( _data.shape !== this.mainShape && _data.shape != null) 
-       || this.isHit == true || this.dead ==true)
+       || this.isHit == true || this.dead ==true){
+
+    //if push is forced
+    if(_data.forcePush == true){      
+      this.currentSpeed = _data.forceVector.x;
+      this.go.body.velocity.x = this.currentSpeed;
+      this.go.body.velocity.y = _data.forceVector.y;
+    }
     return;
+  }
+
   if( this.acolyte.dead){
     this.die();
   }else{
@@ -542,6 +551,7 @@ Player.prototype.onEndHit =function(){
 Player.prototype.die = function(){
   if(this.dead == true)
     return;
+  this.freeze();
   this.dead = true;
   this.onGround = false;
   //Enable all shapes to be sensors
