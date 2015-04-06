@@ -12,6 +12,7 @@ Francis.MainBody = function(_gameobject){
 	this.state = "none";
 
 	this.cameraFirstPos = new Phaser.Point(-300,-200);
+	this.cameraTempPos = new Phaser.Point();
 	this.dzPlayerPart1 = new Phaser.Point(100,200);
 	this.dzPlayerPart2 = new Phaser.Point(100,140);
 }
@@ -36,12 +37,15 @@ Francis.MainBody.prototype.create = function(_data){
 	//signals
 	this.arm.onStomp.add(this.onArmStomp,this);
 
-	//WALL BLOCKING THE PLAYER
+	//WALL BLOCKING THE PLAYER in the left
 	if(_data.block_wall != null){
 		this.block_wall = _data.block_wall;
 		LR.Entity.FindByName(this.block_wall.entity,"wall_block").kill();
 		LR.Entity.FindByName(this.block_wall.entity,"smoke").kill();
 	}
+	//Blocker - prevents Komo from going throught Francis Body
+	this.blocker = _data.blocker;
+
 	this.fallingWalls = _data.fwManager.getBehaviour(FallingWallsManager);
 	this.finishWall = _data.finishWall;
 	//finish block
@@ -57,6 +61,14 @@ Francis.MainBody.prototype.update = function(){
 		case "idle":this.idle(); break;
 		case "bouldering" : this.bouldering(); break;
 	}
+}
+
+Francis.MainBody.prototype.followPlayer = function(){
+	this.entity.game.camera.follow(this.playerScript.entity,Phaser.Camera.FOLLOW_PLATFORMER);
+}
+
+Francis.MainBody.prototype.unfollowPlayer = function(){
+	this.entity.game.camera.unfollow();
 }
 
 Francis.MainBody.prototype.idle = function(){
@@ -80,6 +92,7 @@ Francis.MainBody.prototype.bouldering = function(){
 
 Francis.MainBody.prototype.beginBoulderMe = function(){	
 	this.entity.game.camera.unfollow();
+	this.cameraTempPos = new Phaser.Point(this.entity.game.camera.x, this.entity.game.camera.y);
 	this.moveCamera(-200,-150,1000);
 	this.playerScript.freeze();
 	this.state = "boulderMe";
@@ -106,8 +119,15 @@ Francis.MainBody.prototype.stun = function(){
 	this.bodyGO.playTween("stunned",true);
 	//release player
 	this.playerScript.unfreeze();
-	this.changeDeadZone(this.dzPlayerPart1.x,this.dzPlayerPart2,
-						1000,this.onIntroBackToPlayerTweenFinished);
+
+	this.blocker.playTween("moveRight");
+
+	var instance = this;
+	this.moveCamera(this.cameraTempPos.x,this.cameraTempPos.y,1000,
+					function(){
+						instance.followPlayer();
+					}
+	);
 }
 
 Francis.MainBody.prototype.unstun = function(){
@@ -127,12 +147,12 @@ Francis.MainBody.prototype.unstun = function(){
 //=============THROW PLAYER ================
 
 Francis.MainBody.prototype.throwPlayer1 = function(){
-	console.log("throwPlayer1");
 	this.tail.throwPlayer1();	
 	this.changeDeadZone(this.dzPlayerPart2.x,this.dzPlayerPart2.y,1000);
 }
 
 Francis.MainBody.prototype.onPlayerHung = function(){
+	this.blocker.enableSensor();
 	this.unstun();
 }
 
@@ -187,13 +207,13 @@ Francis.MainBody.prototype.onEndStruggle = function(){
 	var vector = new Phaser.Point(-2.5,-0.2);
 	this.playerScript.onReleaseHang(1, vector);	
 	this.moveCamera(this.cameraFirstPos.x,this.cameraFirstPos.y,1000);
+	this.tail.stingerScript.resetPos();
 
 	this.entity.game.time.events.add(
       Phaser.Timer.SECOND * 1, 
       this.moveBack,
       this);
 }
-
 
 Francis.MainBody.prototype.moveBack = function(){
 	this.go.playTween("moveLeft",true,this.onMovedBack,this);
@@ -202,6 +222,8 @@ Francis.MainBody.prototype.moveBack = function(){
 }
 
 Francis.MainBody.prototype.onMovedBack = function(){
+	this.blocker.playTween("goBack");
+	this.blocker.disableSensor();
 	this.playerScript.unfreeze();
 	this.entity.game.camera.follow(this.playerScript.entity);
 	this.boulder();
@@ -233,10 +255,11 @@ Francis.MainBody.prototype.launchIntro = function(){
 	this.onIntroBackToPlayerTweenFinished();
 	this.changeDeadZone(100,200,1000);
 	this.stun();
-	this.playerScript.freeze();
 	return;
 	this.state = "intro";
-	this.changeDeadZone(-200,250,3000,this.introPincerAct);
+	this.unfollowPlayer();
+	this.moveCamera(200,100,1000);
+	//this.changeDeadZone(-200,250,3000,this.introPincerAct);
 	this.playerScript.freeze();
 }
 
@@ -289,8 +312,6 @@ Francis.MainBody.prototype.die = function(){
 }
 
 Francis.MainBody.prototype.rot = function(){
-	this.moveCameraToFinishWall();
-	return;
 	var color = 0x8d8d8d;
 	var time = 3000;
 	this.arm.rot(color,time);

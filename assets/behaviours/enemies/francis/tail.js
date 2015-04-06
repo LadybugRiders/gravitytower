@@ -100,7 +100,6 @@ Francis.Tail.prototype.lastAttack = function(){
 }
 
 Francis.Tail.prototype.struggle = function(){
-	console.error("ldsjf");
 	//this.entity.children.forEach(function(element){element.go.playTween("idle")});
 	var tween = this.go.playTween("struggle",true,this.onStruggleEnded,this);
 }

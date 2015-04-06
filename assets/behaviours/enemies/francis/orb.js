@@ -4,10 +4,11 @@ if(!Francis)
 
 Francis.Orb = function(_gameobject){
 	LR.Behaviour.call(this, _gameobject);	
+	this.stinger = null;
 	this.player = null;
 	this.hookPosition = new Phaser.Point();
 	this.hookX = 35;
-	this.health = 0;
+	this.health = 1;
 }
 Francis.Orb.prototype = Object.create(Hanger.prototype);
 Francis.Orb.prototype.constructor = Francis.Orb;
@@ -20,6 +21,7 @@ Francis.Orb.prototype.hang = function(_player){
 	this.player = _player;
 	this.player.freeze();
 	this.player.go.gravity = 0;
+	this.stinger.onOrbHit();
 
 	this.hookPosition.x = this.entity.world.x + this.hookX;
 	this.hookPosition.y = this.entity.world.y + 0 ;

@@ -91,7 +91,7 @@ Francis.Arm.prototype.boulder = function(){
 		return;
 	}
 	this.state = "bouldering";
-	this.boulderCount = 2;
+	this.boulderCount = 1;
 	this.boulderMax = 2;
 	this.launchStompBoulder();
 }

@@ -36,6 +36,7 @@ Francis.Stinger.prototype.create = function(_data){
 		this.orb = _data.orb;
 		this.orbOffset.x = this.orb.x - this.go.x;
 		this.orbOffset.y = this.orb.y - this.go.y;
+		this.orb.getBehaviour(Francis.Orb).stinger = this;
 	} 
 	if(_data.mainBody){
 		this.mainBody = _data.mainBody.getBehaviour(Francis.MainBody);
@@ -74,6 +75,7 @@ Francis.Stinger.prototype.onUnreadyHang = function(_data){
 Francis.Stinger.prototype.hang = function(){
 	Hanger.prototype.hang.call(this);
 	this.state = "hung";
+	this.player.go.gravity = 0;
 	this.hookPosition.x = this.entity.world.x + this.hookX;
 	this.hookPosition.y = this.entity.world.y + this.hookY ;
 	this.deltaVector = Phaser.Point.subtract(this.hookPosition,this.player.entity.world);
@@ -203,9 +205,12 @@ Francis.Stinger.prototype.retreating = function(){
 }
 
 Francis.Stinger.prototype.onOrbHit = function(){	
+	this.state = "idle";
+}
+
+Francis.Stinger.prototype.resetPos = function(){	
 	this.entity.parent.x = 0; this.entity.parent.y = 0;
 	this.entity.parent.angle = 0;
-	this.state = "idle";
 }
 
 Francis.Stinger.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
