@@ -36,7 +36,9 @@ Francis.Tail.prototype.start = function(){
 }
 
 Francis.Tail.prototype.update = function(){
-	
+	switch(this.state){
+		case "attack" : this.attacking(); break;
+	}
 }
 
 Francis.Tail.prototype.idleize = function(){
@@ -77,8 +79,19 @@ Francis.Tail.prototype.tailAttack = function(_data){
 		//stop tween and get parts in attack position
 		this.go.stopAllTweens();
 		for(var i=0; i < this.entity.children.length; i ++){
-			//if(this.entity.children[i].go.tweenExists("attack"))
-			this.entity.children[i].go.stopAllTweens();//.playTween("attack",true);
+			var childGo = this.entity.children[i].go;
+			childGo.stopAllTweens();
+			var tweenData = childGo.tweensData["attack"];
+			if( tweenData ){
+				var properties = JSON.parse(tweenData.data.properties);
+				childGo.entity.x = properties.x;
+				childGo.entity.y = properties.y;
+				childGo.entity.angle = properties.angle;
+			}
+
+			/*
+			if(this.entity.children[i].go.tweenExists("attack"));
+				this.entity.children[i].go.playTween("attack",true);*/
 		}
 	}
 	//tell stinger to attack
@@ -93,6 +106,20 @@ Francis.Tail.prototype.tailRetreat = function(){
 
 Francis.Tail.prototype.onOrbHit = function(){
 	this.stingerScript.onOrbHit();
+}
+
+Francis.Tail.prototype.attacking = function(){
+	for(var i=0; i < this.entity.children.length; i ++){
+		var childGo = this.entity.children[i].go;
+		childGo.stopAllTweens();
+		var tweenData = childGo.tweensData["attack"];
+		if( tweenData ){
+			var properties = JSON.parse(tweenData.data.properties);
+			childGo.entity.x = properties.x;
+			childGo.entity.y = properties.y;
+			childGo.entity.angle = properties.angle;
+		}
+	}
 }
 
 Francis.Tail.prototype.lastAttack = function(){

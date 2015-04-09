@@ -179,6 +179,7 @@ Francis.MainBody.prototype.onLastAttackReady = function(){
 //========= HIT !!!! =====================
 Francis.MainBody.prototype.onOrbHit = function(_orbHealth){
 	//this.tail.onOrbHit();
+	this.blocker.enableSensor();
 	//eye
 	this.eye.stopAnim("blink");
 	this.eye.playAnim("stunned");
