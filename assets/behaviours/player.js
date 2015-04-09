@@ -138,13 +138,14 @@ Player.prototype.postUpdate = function(){
 Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _equation){
   if(this.dead == true)
     return;
-  //if the collision is from the feet shape
+  var solidCollision =  _otherShape.sensor == false || _otherShape.sensor == null ;
+  //===== FEET COLLISION ===========
   if( _myShape == this.feetSensor ){
     //Enemy collision
     if(_otherBody.go.layer == "enemy"){
       
     //any solid collision
-    }else if( _otherShape.sensor == false || _otherShape.sensor == null){
+    }else if(solidCollision){
       this.blowDust();
       this.groundContacts ++;
       this.onGround = true;
@@ -158,8 +159,9 @@ Player.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _e
       }
     }
   }
+  //========= SIDE COLLISION ==============
   //If collision from the front (left or right given the direction)
-  if( this.collidesFront(_myShape) && !_otherBody.dynamic ){
+  if( solidCollision && this.collidesFront(_myShape) && !_otherBody.dynamic ){
     //if the collision s solid
     if( _otherShape.sensor == false || _otherShape.sensor == null ){
       var mySides = LR.Utils.getRectShapeSides(this.go,_myShape);

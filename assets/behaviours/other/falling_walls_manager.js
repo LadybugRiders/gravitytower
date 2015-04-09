@@ -54,7 +54,7 @@ FallingWallsManager.prototype.launch = function(){
 }
 
 FallingWallsManager.prototype.launchWall = function(){
-	if(this.state == "stopped")
+	if(this.state != "launched")
 		return;
 	var wall = this.getFreeWall();
 	if( wall == null)
@@ -71,9 +71,14 @@ FallingWallsManager.prototype.launchWall = function(){
 	//play tween
 	var tween = wall.go.playTween("fall")[0];
 	tween.onComplete.add(this.onWallFallEnded,this);
+
+	var timeNext = this.deltaTime;
+	if(this.fallCount < 2){
+		timeNext = this.deltaTime * 2;
+	}
 	//set timer for next spawn
 	this.entity.game.time.events.add(
-      this.deltaTime, 
+      timeNext, 
       this.launchWall,
       this);
 }
@@ -91,16 +96,17 @@ FallingWallsManager.prototype.onWallFallEnded = function(_entity){
 FallingWallsManager.prototype.stop = function(){
 	if( this.state != "launched" )
 		return;
-	this.state = "stopped";
+	this.state = "idle";
 }
 
 FallingWallsManager.prototype.cleanAll = function(){
-	for(var i=0 ; i < this.fallenWalls.length; i++){
-		var wall = this.fallenWalls[i];
+	for(var i=0 ; i < this.walls.length; i++){
+		var wall = this.walls[i];
 		wall._FWMlaunched = false;
 		wall.go.y = this.ySpawn;
 	}
 	this.blocker.enableSensor();
+	this.fallenWalls = new Array();
 }
 
 FallingWallsManager.prototype.getFreeWall = function(){

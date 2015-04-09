@@ -14,6 +14,8 @@ Francis.Arm = function(_gameobject){
 	this.onStomp = new Phaser.Signal();
 
 	this.mainBodyScript = null;
+
+	this.bouldersToLaunch = new Array();
 }
 
 Francis.Arm.prototype = Object.create(LR.Behaviour.prototype);
@@ -34,13 +36,18 @@ Francis.Arm.prototype.create = function(_data){
 	//get boulders scripts
 	if(this.boulders){
 		this.bouldersScripts = new Array();
+		this.hintsGroups = new Array();
 		for(var i=0; i < this.boulders.entity.children.length; i++){
 			var rockGroup = this.boulders.entity.children[i];
 			var rockScript = LR.Entity.FindByName(rockGroup,"rock").go.getBehaviour(FallingObject);
 			this.bouldersScripts.push(rockScript);
 			rockScript.die(false);
+			//hints
+			var hintGroup = LR.Entity.FindByName(rockGroup,"hintGroup");
+			this.hintsGroups.push( hintGroup);
 		}
 	}
+	this.stopHints();
 
 	if(_data.boulderMe) this.boulderMe = _data.boulderMe;
 	this.secondArm = _data.secondArm;
@@ -48,9 +55,9 @@ Francis.Arm.prototype.create = function(_data){
 }
 
 Francis.Arm.prototype.update = function(){
-	switch(this.state){
-		case "bouldering" : this.bouldering(); break;
-	}
+	/*switch(this.state){
+		//case "bouldering" : this.bouldering(); break;
+	}*/
 }
 
 Francis.Arm.prototype.idleize = function(){
@@ -63,10 +70,10 @@ Francis.Arm.prototype.wait = function(){
 
 Francis.Arm.prototype.die = function(){
 	this.state = "die";
-	this.secondArm.stopTweenAll();
+	this.secondArm.stopAllTweens();
 	for(var i=0; i < this.pincer.entity.children.length; i++){
 		var child = this.pincer.entity.children[i];
-		child.go.stopTweenAll();
+		child.go.stopAllTweens();
 	}
 }
 
@@ -106,19 +113,28 @@ Francis.Arm.prototype.launchStompBoulder = function(){
 }
 
 Francis.Arm.prototype.launchBoulder = function(){
+	//wait a little before launching boulders
+	this.entity.game.time.events.add(
+      Phaser.Timer.SECOND * 1, 
+      this.onHintsEnded,
+      this);
 	var count = 0;
+	//Try launching a random boulder
 	var r = Math.round( Math.random() * this.bouldersScripts.length );
 	var bS = this.bouldersScripts[r];
 	if( bS && bS.dead ){
-		bS.launch();
+		this.bouldersToLaunch.push(bS);
+		this.playHint(this.hintsGroups[r]);
 		count ++;
 		if( count >= this.boulderMax)
 			return;
 	}
+	//launch others 
 	for(var i=0; i < this.bouldersScripts.length; i ++){
 		bS = this.bouldersScripts[i];
 		if(bS.dead){
-			bS.launch();
+			this.bouldersToLaunch.push(bS);
+			this.playHint(this.hintsGroups[i]),
 			count ++;
 			if(count >= this.boulderMax)
 				break;
@@ -126,10 +142,32 @@ Francis.Arm.prototype.launchBoulder = function(){
 	}
 }
 
-Francis.Arm.prototype.bouldering = function(){
-
+Francis.Arm.prototype.onHintsEnded = function(){
+	for(var i=0 ; i < this.bouldersToLaunch.length; i++){
+		this.bouldersToLaunch[i].launch();
+	}
+	this.bouldersToLaunch = new Array();
+	this.stopHints();
 }
 
+Francis.Arm.prototype.playHint = function(_hintGroup){
+	for(var i=0 ; i < _hintGroup.children.length; i++){
+		_hintGroup.children[i].alpha = 1;
+		_hintGroup.children[i].go.playTween("openHint",true);
+	}
+}
+
+
+Francis.Arm.prototype.stopHints = function(){
+	for(var i=0 ; i < this.hintsGroups.length; i++){
+		var hintGroup = this.hintsGroups[i];
+		for( var j = 0 ; j< hintGroup.children.length; j++){
+			hintGroup.children[j].go.stopAllTweens();
+			hintGroup.children[j].alpha = 0;
+			hintGroup.children[j].angle = 0;
+		}
+	}
+}
 //================================================
 //				   STUN
 //================================================
@@ -161,8 +199,10 @@ Francis.Arm.prototype.onTweenComplete = function(_data){
 		//continue bouldering
 		if(this.state == "bouldering"){
 			this.launchBoulder();
+			//if we haven't launched enough times
 			if(this.boulderCount > 0){
 				this.launchStompBoulder();
+			//It's time to boulder itself
 			}else{
 				this.launchStompBoulder();
 				this.state = "boulderingMe";

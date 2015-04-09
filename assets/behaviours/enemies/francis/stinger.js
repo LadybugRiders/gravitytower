@@ -83,6 +83,9 @@ Francis.Stinger.prototype.hang = function(){
 	this.mainBody.onPlayerHung();
 }
 
+//override hanger behaviour when jump is hit
+Francis.Stinger.prototype.release = function(){}
+
 Francis.Stinger.prototype.updateHung = function(){
 	if(this.player && this.released == false){
 		this.hookPosition.x = this.go.worldX + this.hookX;
@@ -130,7 +133,7 @@ Francis.Stinger.prototype.attack = function(_data){
 	}
 	this.attackData = null;
 	//change transform
-	this.entity.parent.go.stopTweenAll();
+	this.entity.parent.go.stopAllTweens();
 	this.entity.parent.x = -79; this.entity.parent.y = 34;
 	this.entity.parent.angle = 21;
 	//compute target position

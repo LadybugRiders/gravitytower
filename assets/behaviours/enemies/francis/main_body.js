@@ -11,6 +11,8 @@ Francis.MainBody = function(_gameobject){
 
 	this.state = "none";
 
+	this.changeDeadZone(100,200,100);
+
 	this.cameraFirstPos = new Phaser.Point(-300,-200);
 	this.cameraTempPos = new Phaser.Point();
 	this.dzPlayerPart1 = new Phaser.Point(100,200);
@@ -236,8 +238,7 @@ Francis.MainBody.prototype.onMovedBack = function(){
 
 Francis.MainBody.prototype.onArmStomp = function(){
 	if(this.state == "intro"){
-		this.changeDeadZone(this.dzPlayerPart1.x,this.dzPlayerPart1.y,
-							1000,this.onIntroBackToPlayerTweenFinished);
+		this.moveCamera(-600,-100,1000,this.onIntroBackToPlayerTweenFinished);
 	}
 }
 
@@ -252,14 +253,13 @@ Francis.MainBody.prototype.launchIntro = function(){
 	this.cameraFirstPos = new Phaser.Point(this.entity.game.camera.x,this.entity.game.camera.y);
 	
 	//DEBUG
-	this.onIntroBackToPlayerTweenFinished();
+	/*this.onIntroBackToPlayerTweenFinished();
 	this.changeDeadZone(100,200,1000);
 	this.stun();
-	return;
+	return;*/
 	this.state = "intro";
 	this.unfollowPlayer();
-	this.moveCamera(200,100,1000);
-	//this.changeDeadZone(-200,250,3000,this.introPincerAct);
+	this.moveCamera(-200,-150,2000,this.introPincerAct);
 	this.playerScript.freeze();
 }
 

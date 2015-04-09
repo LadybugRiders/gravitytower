@@ -75,10 +75,10 @@ Francis.Tail.prototype.tailAttack = function(_data){
 	this.currentTriggerAttackID = _data.sender.id;
 	if( this.state != "attack"){
 		//stop tween and get parts in attack position
-		this.go.stopTweenAll();
+		this.go.stopAllTweens();
 		for(var i=0; i < this.entity.children.length; i ++){
 			//if(this.entity.children[i].go.tweenExists("attack"))
-			this.entity.children[i].go.stopTweenAll();//.playTween("attack",true);
+			this.entity.children[i].go.stopAllTweens();//.playTween("attack",true);
 		}
 	}
 	//tell stinger to attack
