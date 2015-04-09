@@ -159,7 +159,7 @@ Enemy.prototype.onBeginContact = function(_otherBody, _myShape, _otherShape, _eq
   	this.onGround = true;
     this.onTouchGround();
   }
-
+  
   if( this.dead == false &&  _otherBody.go.layer == "player"){
     //check player hair
     var isHit = this.checkPlayerHairHit(_otherBody.go,_otherShape);

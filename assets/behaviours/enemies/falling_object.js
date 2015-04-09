@@ -18,6 +18,7 @@ FallingObject.prototype.create = function(_data){
 }
 
 FallingObject.prototype.launch = function(){
+ 	this.dead=false;
 	this.entity.visible = true;
 	this.go.x = this.initPos.x;
 	this.go.y = this.initPos.y;

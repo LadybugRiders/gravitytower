@@ -9,6 +9,9 @@ Francis.Arm = function(_gameobject){
 	this.pincer = null;
 	this.state = "idle";
 
+	this.boulderCountBase = 2;
+	this.boulderMax = 2;
+
 	this.go.onTweenComplete.add(this.onTweenComplete,this);
 
 	this.onStomp = new Phaser.Signal();
@@ -98,8 +101,7 @@ Francis.Arm.prototype.boulder = function(){
 		return;
 	}
 	this.state = "bouldering";
-	this.boulderCount = 1;
-	this.boulderMax = 2;
+	this.boulderCount = this.boulderCountBase;
 	this.launchStompBoulder();
 }
 
@@ -205,6 +207,8 @@ Francis.Arm.prototype.onTweenComplete = function(_data){
 			//It's time to boulder itself
 			}else{
 				this.launchStompBoulder();
+				this.boulderCountBase = 3;
+				this.boulderMax = 3;
 				this.state = "boulderingMe";
 			}
 		}else if(this.state == "boulderingMe"){
