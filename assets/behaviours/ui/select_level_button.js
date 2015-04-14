@@ -28,7 +28,7 @@ SelectLevelButton.prototype.create = function(_data) {
 	if(this.star) this.star.entity.visible = false;
 
 	var slot = null;
-	for(var i=0; i < 3 ; i++){
+	for(var i=1; i < 4 ; i++){
 		slot = LR.Entity.FindByName(this.entity.parent,"slot"+i);
 		
 		if( slot )
@@ -83,7 +83,13 @@ SelectLevelButton.prototype.deactivate = function(){
 SelectLevelButton.prototype.fillSlots = function(_count) {
 	if(_count > 3) _count=3;
 	for(var i=0; i < _count ; i++){
-		this.slots[i].frame = 0;
+		try{
+			this.slots[i].frame = 0;
+		}catch(err){
+			console.log(this.levelID);
+			console.log("slotToFill:"+_count + " i:" + i);
+			console.log(this.slots);
+		}
 	}
 	if(this.star) this.star.entity.visible = true;
 }

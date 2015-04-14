@@ -86,14 +86,13 @@ Enemy.prototype.updateMoveRange = function(){
   var rangeDone = this.initX - this.entity.x ;
   if(this.direction < 0 && rangeDone > this.range * 0.5){
     this.direction = 1;
-    this.scaleByGravity();
     this.currentSpeed = 0;
   }
   if(this.direction > 0 && rangeDone < -this.range *0.5){
     this.direction = -1;
-    this.scaleByGravity();
     this.currentSpeed = 0;
   }
+  this.scaleByGravity();
 }
 
 Enemy.prototype.pop = function( _data){
@@ -252,7 +251,7 @@ Enemy.prototype.onHitHat = function(){
 //=================================================================
 
 Enemy.prototype.scaleByGravity = function(){
-  this.entity.scale.x *= this.direction  * this.gravity;
+  this.entity.scale.x = Math.abs(this.entity.scale.x) * this.direction  * this.gravity;
 }
 
 Enemy.prototype.changeState = function(_newState){
