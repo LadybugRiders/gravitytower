@@ -11,12 +11,18 @@ var BubbleFly = function(_gameobject){
 	this.jumpPressed = false;
 	this.direction = 1;
 
+	this.rightIsPressed = false;
+	this.leftIsPressed = false;
+
 	this.dead = false;
 
 	this.currentSpeedX = 0;
 	this.currentSpeedY = 0;
 
 	this.maxSpeedX = 100;
+
+	this.maxVelocityY = -110;
+	this.accY = -50;
 
 	//============= INPUTS =======================
   	//use the inputManager to be notified when the JUMP key is pressed
@@ -39,11 +45,11 @@ BubbleFly.prototype.create = function(_data){
 
 BubbleFly.prototype.update = function(_data){
 	if( this.playerScript && this.dead == false){
+		this.processSpeed();
+
 		this.playerScript.go.x = this.entity.x;
 		this.playerScript.go.y = this.entity.y;
-		this.playerScript.entity.angle += 10 * this.entity.game.time.elapsed * 0.001;
-	
-		this.processSpeed();
+		this.playerScript.entity.angle += 10 * this.entity.game.time.elapsed * 0.001;	
 	}
 }
 
@@ -75,8 +81,7 @@ BubbleFly.prototype.activate = function(){
 	this.go.changeLayer("noplayer");
 }
 
-BubbleFly.prototype.deactivate = function(){	
-	console.log("deactivate");
+BubbleFly.prototype.deactivate = function(){
 	//Reset player proper properties
 	this.playerScript.unfreeze();
 	this.playerScript.go.gravity = 1;
@@ -104,35 +109,50 @@ BubbleFly.prototype.pop = function(){
 BubbleFly.prototype.onMoveLeft = function(_key){
 	if(this.playerScript == null)
 		return;
+	this.leftIsPressed = true;
 	this.movePressed = true;
 	if(this.direction > 0){
 		this.currentSpeedX *= 0.5;
 	}
+	
 	this.direction = -1;
 }
 
 BubbleFly.prototype.onMoveRight = function(_key){
 	if(this.playerScript == null)
 		return;
+	this.rightIsPressed = true;
 	this.movePressed = true;
 	if(this.direction < 0){
 		this.currentSpeedX *= 0.5;
 	}
+
 	this.direction = 1;
 }
 
-BubbleFly.prototype.onMoveRelease = function(){
+BubbleFly.prototype.onMoveRelease = function(_data){
+	if(_data.lr_name == "left") this.leftIsPressed = false;
+	if(_data.lr_name == "right") this.rightIsPressed = false;
 	if(this.playerScript == null)
 		return;
-	this.movePressed = false;
+
+	if( ! this.leftIsPressed && !this.rightIsPressed )
+		this.movePressed = false;
 }
 
 BubbleFly.prototype.onJump = function(_key){
 	if(this.playerScript == null)
 		return;
-	this.entity.body.velocity.y = -70;
+	if(this.entity.body.velocity.y > 0){
+		this.entity.body.velocity.y = this.accY;
+	}else{
+		this.entity.body.velocity.y += this.accY;
+		if(this.entity.body.velocity.y < this.maxVelocityY){
+			this.entity.body.velocity.y = this.maxVelocityY;
+		}
+	}
 	this.jumpPressed = true;
-	this.go.playSound("up",0.5);
+	this.go.playSound("up",0.2);
 }
 
 BubbleFly.prototype.onJumpRelease = function(_key){

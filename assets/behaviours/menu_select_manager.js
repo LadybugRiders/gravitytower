@@ -8,6 +8,8 @@ var MenuSelectManager = function(_gameobject) {
   this.playerSave = this.entity.game.playerSave;
   this.checkGameData();
 
+  this.levelRestrict = false;
+
   this.buttons = new Array();
 
 };
@@ -39,6 +41,10 @@ MenuSelectManager.prototype.create = function(_data) {
   //data
   this.fillKimisSaved();
   this.checkLevelData();
+
+  if(this.levelRestrict == false ){
+    this.activateAllLevels();
+  }
 }
 
 MenuSelectManager.prototype.checkMusic = function(){
@@ -163,6 +169,12 @@ MenuSelectManager.prototype.activateFinishedLevel = function(_levelID) {
   var btn = this.getButton(_levelID);
   if( btn )
     btn.activate();
+}
+
+MenuSelectManager.prototype.activateAllLevels = function(){
+  for(var i=0; i < this.levelButtons.length; i++){
+    this.levelButtons[i].activate();
+  }
 }
 
 MenuSelectManager.prototype.getButton = function(_levelID){
