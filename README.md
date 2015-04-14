@@ -1,4 +1,4 @@
-gravitytower
+Kimis' Rescue
 ============
 
-The LREditor based GravityTower game
+The LREditor based Kimis' Rescue game
