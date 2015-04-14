@@ -579,6 +579,7 @@ Player.prototype.die = function(){
       this);
     return;
   }
+  this.playerSave.setValue("health",1);
 
   //Accounts
   this.entity.game.playerSave.getSave()["lives"] --; 
@@ -639,6 +640,7 @@ Player.prototype.finish = function(_data){
 
 //Called by a trigger finish (in general)
 Player.prototype.changeLevel = function(_data){  
+  this.playerSave.setValue("health",this.acolyte.health);
   //reset checkpoint data
   var checkpointData = this.levelSave["checkpoint"];
   if(checkpointData != null){

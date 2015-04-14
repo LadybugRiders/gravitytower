@@ -28,7 +28,6 @@ Collectable.prototype.onCollected = function(_gameobject){
 }
 
 Collectable.prototype.kill = function(){
-	console.log("fqjs");
 	this.dead = true;
 	this.go.x = -100000;
 	this.entity.visible = false;
