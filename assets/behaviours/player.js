@@ -596,6 +596,8 @@ Player.prototype.die = function(){
 
 Player.prototype.checkpoint = function(_dataSent){
   var checkpointData = this.levelSave.checkpoint;
+  console.log(_dataSent);
+  checkpointData.id = _dataSent.sender.id;
   checkpointData.x = _dataSent.sender.entity.x;
   checkpointData.y = _dataSent.sender.entity.y;
   checkpointData.active = true;

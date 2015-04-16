@@ -13,11 +13,15 @@ LootManager.prototype.constructor = LootManager;
 
 LootManager.prototype.create = function(_data){
 	this.entity.x =0; this.entity.y = 0;
-	for(var i=0; i < this.entity.children.length ; i++){
-		var child = this.entity.children[i];
-		var lootS = child.go.getBehaviour(Collectable);
-		this.lootsScripts.push(lootS);
-		lootS.kill();
+
+	var bhs = this.go.getBehavioursInChildren(Collectable);
+	if(bhs.length == 0)
+		bhs = this.go.getBehavioursInChildren(Coin);
+	
+	for(var i=0; i < bhs.length ; i++){
+		var loot = bhs[i];
+		this.lootsScripts.push(loot);
+		loot.kill();
 	}
 }
 

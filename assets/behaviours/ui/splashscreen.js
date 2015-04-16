@@ -10,6 +10,8 @@ var SplashScreen = function(_gameobject) {
 
 	this.alphaTime = 1000;
 	this.stillTime = 2000;
+	
+	this.entity.game.getCurrentState().loadText.visible = false;
 };
 
 SplashScreen.prototype = Object.create(LR.Behaviour.prototype);

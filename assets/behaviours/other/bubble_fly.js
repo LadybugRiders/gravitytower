@@ -1,7 +1,7 @@
 "use strict";
 
 //>>LREditor.Behaviour.name: BubbleFly
-//>>LREditor.Behaviour.params : {"bottom":true}
+//>>LREditor.Behaviour.params : {"checkpoint":null}
 var BubbleFly = function(_gameobject){
 	LR.Behaviour.call(this,_gameobject);
 	this.playerScript = null;
@@ -24,23 +24,35 @@ var BubbleFly = function(_gameobject){
 	this.maxVelocityY = -110;
 	this.accY = -50;
 
-	//============= INPUTS =======================
-  	//use the inputManager to be notified when the JUMP key is pressed
-  	this.go.game.inputManager.bindKeyPress("jump",this.onJump,this);
- 	this.go.game.inputManager.bindKeyRelease("jump",this.onJumpRelease,this);
-  	//press to move
-  	this.go.game.inputManager.bindKeyPress("left", this.onMoveLeft, this);
-  	this.go.game.inputManager.bindKeyPress("right", this.onMoveRight, this);
-  	//Stop on release
-  	this.go.game.inputManager.bindKeyRelease("left", this.onMoveRelease, this);
-  	this.go.game.inputManager.bindKeyRelease("right", this.onMoveRelease, this);
 }
 
 BubbleFly.prototype = Object.create(LR.Behaviour);
 BubbleFly.prototype.constructor = BubbleFly;
 
 BubbleFly.prototype.create = function(_data){
-	
+	var toCreate = true;
+	if(_data.checkpoint != null){
+  		var playerSave = this.entity.game.playerSave;
+ 		var levelSave = playerSave.getActiveLevelSave();
+ 		if( levelSave.checkpoint == null || levelSave.checkpoint.id != _data.checkpoint.id){
+ 			toCreate = false;
+ 		}
+	}
+
+	if( toCreate ){
+		//============= INPUTS =======================
+	  	//use the inputManager to be notified when the JUMP key is pressed
+	  	this.go.game.inputManager.bindKeyPress("jump",this.onJump,this);
+	 	this.go.game.inputManager.bindKeyRelease("jump",this.onJumpRelease,this);
+	  	//press to move
+	  	this.go.game.inputManager.bindKeyPress("left", this.onMoveLeft, this);
+	  	this.go.game.inputManager.bindKeyPress("right", this.onMoveRight, this);
+	  	//Stop on release
+	  	this.go.game.inputManager.bindKeyRelease("left", this.onMoveRelease, this);
+	  	this.go.game.inputManager.bindKeyRelease("right", this.onMoveRelease, this);
+	}else{
+		this.entity.kill();
+	}
 }
 
 BubbleFly.prototype.update = function(_data){
